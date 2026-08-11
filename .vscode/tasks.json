@@ -1,0 +1,47 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Project: Check",
+      "type": "shell",
+      "command": "uv run python scripts/project.py check",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "MCP: Run HTTP",
+      "type": "shell",
+      "command": "uv run python scripts/project.py mcp-http",
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "MCP: Inspector",
+      "type": "shell",
+      "command": "uv run python scripts/project.py inspect",
+      "problemMatcher": []
+    },
+    {
+      "label": "Workbench: Doctor",
+      "type": "shell",
+      "command": "uv run python scripts/project.py doctor",
+      "problemMatcher": []
+    },
+    {
+      "label": "Workbench: Model Preflight",
+      "type": "shell",
+      "command": "uv run python scripts/project.py model-preflight",
+      "problemMatcher": []
+    },
+    {
+      "label": "Workbench: Check",
+      "type": "shell",
+      "command": "uv run python scripts/project.py workbench-check",
+      "group": "test",
+      "problemMatcher": []
+    }
+  ]
+}

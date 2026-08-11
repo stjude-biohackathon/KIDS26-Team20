@@ -1,0 +1,32 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "autoupdate": false,
+  "share": "disabled",
+  "plugin": [
+    "superpowers@git+https://github.com/obra/superpowers.git#d884ae04edebef577e82ff7c4e143debd0bbec99"
+  ],
+  "instructions": ["AGENTS.md", "CONTRIBUTING.md"],
+  "permission": {
+    "edit": "allow",
+    "bash": "ask",
+    "webfetch": "ask",
+    "skill": {
+      "*": "allow"
+    }
+  },
+  "mcp": {
+    "learning-assistant": {
+      "type": "local",
+      "command": ["uv", "run", "learning-assistant", "stdio"],
+      "environment": {
+        "LEARNING_ASSISTANT_OFFLINE": "false",
+        "LEARNING_ASSISTANT_SOURCES": "corpus/sources.yaml"
+      },
+      "enabled": true,
+      "timeout": 30000
+    }
+  },
+  "watcher": {
+    "ignore": [".venv/**", ".git/**", ".pytest_cache/**", ".ruff_cache/**"]
+  }
+}

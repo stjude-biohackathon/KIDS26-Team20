@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling==1.31.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "stjude-learning-assistant"
+version = "0.1.0"
+description = "Minimal MCP server for listing and reading The Turing Way and approved institutional learning resources"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "httpx>=0.28,<1",
+    "mcp[cli]>=2,<3",
+    "pydantic>=2.11,<3",
+    "pyyaml>=6.0,<7",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.4,<9",
+    "pytest-asyncio>=1.1,<2",
+    "ruff>=0.12,<1",
+]
+
+[project.scripts]
+learning-assistant = "learning_assistant.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/learning_assistant"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+asyncio_mode = "auto"
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]

@@ -1,0 +1,17 @@
+sources:
+  - id: turing-way
+    title: The Turing Way
+    repository: the-turing-way/the-turing-way
+    ref: bb3f7abb56a40cd92a654fb51e4ec91f429cca2a
+    content_root: book/website
+    license: CC-BY-4.0
+    enabled: true
+
+  # Enable after access, scope, and licensing are confirmed with the owners.
+  - id: stjude-learning-resources
+    title: St. Jude Data and AI Learning Resources
+    repository: stjude/data-ai-learning-resources
+    ref: main
+    content_root: ""
+    license: REVIEW_REQUIRED
+    enabled: false

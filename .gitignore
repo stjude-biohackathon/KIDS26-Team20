@@ -155,3 +155,22 @@ dmypy.json
 .pyre/
 .myenv/
 requirements.txt
+
+# Learning assistant workbench
+#
+# config/workbench.env holds a personal API key and the approved gateway
+# values. The .env rules above do NOT cover it, because they only match a file
+# named exactly .env, so this entry is what keeps the credential out of Git.
+# Never remove it.
+config/workbench.env
+config/local-certs/
+
+# Pinned agent tools, installed from tools/package-lock.json
+tools/node_modules/
+
+# Agent and editor working directories
+.claude/
+.superpowers/
+.worktrees/
+.ruff_cache/
+.idea/

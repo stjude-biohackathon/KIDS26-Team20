@@ -1,0 +1,9 @@
+{
+  "name": "workbench-tools",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@modelcontextprotocol/inspector": "2.0.0",
+    "opencode-ai": "1.18.9"
+  }
+}
