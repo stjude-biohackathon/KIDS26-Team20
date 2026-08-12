@@ -4,7 +4,7 @@
 
 The supported environment runs directly on Windows, macOS, or Linux with pinned tools.
 
-1. Install Git and Node.js 20 or newer.
+1. Install Git and Node.js 22.19 or newer.
 2. Follow [docs/SETUP.md](docs/SETUP.md) from top to bottom. It takes a machine with nothing installed to OpenCode running with the Superpowers skills, the project skills, and the Turing Way MCP server started on launch.
 3. If you prefer the OpenCode desktop application to the command line, also follow [docs/Local_Opencode_Instructions.md](docs/Local_Opencode_Instructions.md).
 

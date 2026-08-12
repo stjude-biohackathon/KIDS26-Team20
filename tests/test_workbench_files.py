@@ -190,12 +190,3 @@ def test_vscode_exposes_workbench_tasks() -> None:
     labels = {task["label"] for task in config["tasks"]}
     assert "Workbench: Model Preflight" in labels
     assert "Workbench: Check" in labels
-
-
-def test_ci_validates_both_contributor_platforms() -> None:
-    text = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
-    assert "windows-workbench:" in text
-    assert "runs-on: windows-2025" in text
-    assert "macos-workbench:" in text
-    assert "runs-on: macos-15" in text
-    assert "scripts/project.py check" in text

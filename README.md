@@ -54,7 +54,7 @@ src/learning_assistant/  The MCP server: source loading and two typed tools
 corpus/                  The source manifest and a small offline snapshot
 tests/                   Offline test suite, no credentials or network needed
 scripts/                 Task runner, diagnostics, and skill validation
-docs/                    Setup, project brief, implementation plan, and guides
+docs/                    Setup, project brief, and contributor guides
 project-management/      Team plan, roles, and the team lead checklist
 ```
 
@@ -100,7 +100,8 @@ or clinical data.** Personal provider settings belong in `config/workbench.env`,
 which is ignored by Git and must stay that way. Check the source and licence
 before adding external data or media.
 
-Source provenance and licensing are recorded in [PROVENANCE.md](PROVENANCE.md).
+Source repository, commit, and licensing metadata are recorded in the manifests
+under [`corpus/`](corpus/).
 
 ## Licence
 

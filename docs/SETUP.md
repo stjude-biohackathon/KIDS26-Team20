@@ -16,7 +16,8 @@ to 4 here, then switch to
 ## 1. Install Git and Node.js
 
 Install [Git](https://git-scm.com/downloads) and [Node.js](https://nodejs.org)
-version 20 or newer. Node.js provides `npm`, which OpenCode needs.
+version 22.19 or newer. Node.js provides `npm`, which OpenCode and MCP
+Inspector need.
 
 Open a new terminal and confirm both:
 
@@ -60,7 +61,7 @@ uv run python scripts/project.py doctor
 ```
 
 The diagnostic prints one line per component. At this point the first four
-should read PASS, including the Turing Way MCP server answering a live search.
+should read PASS, including the Turing Way MCP server listing live resources.
 The remaining lines will read WARN until you finish the steps below; WARN means
 optional, not broken.
 
@@ -171,7 +172,7 @@ alone; confirm the tools answer.
    `origin` field: `github` means the server reached GitHub, `snapshot` means it
    fell back to the three pages committed here.
 3. "List your available skills." Expect the Superpowers skills alongside the
-   project skill, `skill-template`.
+  `skill-template` project skill.
 
 If any of the three fails, run `uv run python scripts/project.py doctor` again
 and work through the FAIL lines in order.

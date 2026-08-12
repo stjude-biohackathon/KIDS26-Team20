@@ -58,7 +58,7 @@ def main() -> int:
     elif task == "tools":
         npm = which("npm")
         if npm is None:
-            print("npm was not found; install Node.js 20 or newer first.", file=sys.stderr)
+            print("npm was not found; install Node.js 22.19 or newer first.", file=sys.stderr)
             return 2
         run(npm, "ci", "--ignore-scripts", cwd=ROOT / "tools")
         # opencode-ai stages its platform binary in its own postinstall script.

@@ -10,7 +10,6 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 
 OPERATIONAL_FILES = (
-    ".github/workflows/ci.yml",
     "config/workbench-env.sh",
     "scripts/project.py",
     "scripts/workbench.py",
@@ -88,15 +87,3 @@ def test_enabled_corpus_sources_use_commit_pins() -> None:
                 assert re.fullmatch(r"[0-9a-f]{40}", source.get("ref", "main")), (
                     f"{manifest.name}: {source['id']}"
                 )
-
-
-def test_workflow_actions_are_sha_pinned() -> None:
-    workflows = list((ROOT / ".github/workflows").glob("*.yml"))
-    workflows += (ROOT / ".github/workflows").glob("*.yaml")
-    assert workflows, "no workflows found"
-    for workflow in workflows:
-        matches = re.findall(r"uses:\s*(\S+)", workflow.read_text(encoding="utf-8"))
-        assert matches, workflow.name
-        for used in matches:
-            _, _, ref = used.partition("@")
-            assert re.fullmatch(r"[0-9a-f]{40}", ref), f"{workflow.name}: {used}"

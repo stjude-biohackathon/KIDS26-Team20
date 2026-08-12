@@ -168,7 +168,7 @@ def check_node() -> Result:
     if _which("node") is None:
         return _warn(
             "Node.js was not found, so OpenCode cannot be installed",
-            "install Node.js 20 or newer, then open a new terminal",
+            "install Node.js 22.19 or newer, then open a new terminal",
         )
     return _ok("Node.js is available for OpenCode")
 

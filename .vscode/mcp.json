@@ -5,7 +5,7 @@
       "command": "uv",
       "args": ["run", "learning-assistant", "stdio"],
       "env": {
-        "LEARNING_ASSISTANT_OFFLINE": "true",
+        "LEARNING_ASSISTANT_OFFLINE": "false",
         "LEARNING_ASSISTANT_SOURCES": "${workspaceFolder}/corpus/sources.yaml"
       }
     }
