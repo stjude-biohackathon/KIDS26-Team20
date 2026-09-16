@@ -40,7 +40,9 @@ TTW certification and not St. Jude policy.
 
 ## Skill Structure
 
-The skill will be stored exactly one level below `.agents/skills`:
+This document is an implementation specification, not a discoverable Agent
+Skill. The implemented skill and all of its runtime references will be stored
+exactly one level below `.agents/skills`:
 
 ```text
 .agents/skills/turing-healthcheck-prototype/
@@ -56,6 +58,32 @@ failure behavior, and positive and negative evaluation cases.
 `references/rubric.md` will contain the complete scoring rules and detailed
 five-level grid. Keeping the grid separate makes the main workflow concise
 without hiding scoring criteria from users or reviewers.
+
+No skill runtime file will be placed under `docs/`. The implementation design
+remains under `docs/superpowers/specs` so it is not mistaken for an installed
+skill by contributors or tooling.
+
+## Skill Formatter Compliance
+
+After drafting the skill, the implementation will apply the repository's
+`skill-formatter` workflow as a final semantic-preserving audit. In particular:
+
+- `SKILL.md` will use YAML frontmatter followed by Markdown, with supported
+  fields ordered as `name`, `description`, `license`, `compatibility`, and
+  `metadata`; optional fields that add no value will be omitted;
+- the frontmatter name will exactly match the lowercase directory name, and the
+  description will identify both the behavior and concrete activation cases;
+- repository-required trigger, exclusion, failure, and evaluation sections
+  will be retained;
+- instructions will be concrete and ordered, without invented commands,
+  tools, dependencies, citations, or domain rules;
+- the detailed rubric will use progressive disclosure through the linked
+  `references/rubric.md` file, while `SKILL.md` remains concise;
+- local links, semantic intent, safety boundaries, examples, and source
+  provenance will be preserved during formatting; and
+- the changed skill will be checked with `skills-ref validate` when that tool
+  is installed, followed by the repository skill validator and full project
+  check.
 
 ## Review Scope
 
@@ -226,6 +254,7 @@ Focused automated tests will verify:
 Required verification commands:
 
 ```bash
+skills-ref validate .agents/skills/turing-healthcheck-prototype  # when installed
 uv run python scripts/validate_skills.py
 uv run python scripts/project.py check
 ```
@@ -233,6 +262,9 @@ uv run python scripts/project.py check
 ## Acceptance Criteria
 
 - OpenCode discovers the skill under its valid lowercase name after restart.
+- All implemented skill files are contained within
+  `.agents/skills/turing-healthcheck-prototype/` and pass the
+  `skill-formatter` audit without semantic drift.
 - A whole-repository request triggers the skill and produces the defined
   evidence-backed 100-point report.
 - A change-review request scores only the requested change and does not deduct
