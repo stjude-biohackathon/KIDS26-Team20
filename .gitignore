@@ -164,6 +164,11 @@ requirements.txt
 # Never remove it.
 config/workbench.env
 
+# config/profile.local.yaml holds a per-user learning profile created by the
+# profile-creator skill (role, goals, preferences). It is personal data about
+# the user, not project data, and must never be committed.
+config/profile.local.yaml
+
 # Pinned agent tools, installed from tools/package-lock.json
 tools/node_modules/
 
