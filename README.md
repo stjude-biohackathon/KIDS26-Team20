@@ -17,7 +17,7 @@ educational resources, built for KIDS Biohackathon 2026.
 - **Tools and stack:** Python 3.12, uv, the official MCP Python SDK v2 (stdio and Streamable HTTP), the GitHub API, pytest, ruff, and OpenCode as the agent interface. Retrieval approach is an open decision for the team.
 - **Team lead:** [Name and GitHub handle]
 - **Team members and roles:** See [project-management/team.md](project-management/team.md)
-- **Communication:** [Add the agreed channel or contact]
+- **Communication:** [Slack-Team20](https://stjudebiohackathon.slack.com/archives/C0BRYK69JBH)
 
 ## Vision and Mission
 
