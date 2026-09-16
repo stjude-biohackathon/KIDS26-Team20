@@ -1,0 +1,23 @@
+Model artifact saved to: random_forest_hybrid_model.pkl
+
+How to use:
+1. Load the pkl file.
+2. Build a feature vector with this exact order:
+   ['vector_scores_answer_mean', 'bm25_scores_answer_mean', 'vector_scores_question_mean', 'bm25_scores_question_mean', 'reranked_score_question_mean', 'vector_scores_answer_max', 'bm25_scores_answer_max', 'vector_scores_answer_min', 'bm25_scores_answer_min', 'vector_scores_answer_std', 'bm25_scores_answer_std', 'vector_scores_question_max', 'bm25_scores_question_max', 'reranked_score_question_max', 'vector_scores_question_min', 'bm25_scores_question_min', 'reranked_score_question_min', 'vector_scores_question_std', 'bm25_scores_question_std', 'reranked_score_question_std', 'rerank_sentiments_answer_contradiction_count', 'rerank_sentiments_answer_entailment_count']
+3. Run model.predict_proba(X_new)[:, 1] to get incorrectness probabilities.
+4. Decision rules:
+   - Default single-threshold: predict incorrect if proba >= 0.50
+   - Best single-threshold from this run: predict incorrect if proba >= 0.44
+
+Minimal example:
+import pickle
+import numpy as np
+
+with open('random_forest_hybrid_model.pkl', 'rb') as f:
+    artifact = pickle.load(f)
+
+model = artifact['model']
+X_new = np.array([[... 22 features in artifact['feature_names'] order ...]])
+proba = model.predict_proba(X_new)[:, 1]
+pred = (proba >= artifact['best_cutoff']).astype(int)
+print(proba, pred)

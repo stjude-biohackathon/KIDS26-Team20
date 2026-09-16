@@ -173,3 +173,17 @@ tools/node_modules/
 .worktrees/
 .ruff_cache/
 .idea/
+
+data/*
+MyGPT_backend/static/*
+MyGPT_backend/media/*
+MyGPT_backend/chroma_storage/*
+MyGPT_backend/chroma/*
+MyGPT_backend/data/data_chunks/*
+!MyGPT_backend/data/data_chunks/Turing_Way.txt
+MyGPT_backend/data/reranker/**/model.safetensors
+MyGPT_backend/data/pdfs/*
+!MyGPT_backend/data/pdfs/Turing_Way
+MyGPT_backend/data/pdfs/Turing_Way/*_highlighted.pdf
+!MyGPT_backend/requirements.txt
+MyGPT_backend/.env
