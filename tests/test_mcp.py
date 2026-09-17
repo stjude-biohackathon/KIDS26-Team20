@@ -157,7 +157,7 @@ async def test_mygpt_library_tools_return_typed_api_data() -> None:
                         "resource_id": resource_id,
                         "repository_fact": {
                             "statement": "The repository has no environment file.",
-                            "url": "https://github.com/example/repository",
+                            "url": "https://github.com/example/repository/tree/1234567",
                         },
                     }
                 ]
@@ -172,7 +172,7 @@ async def test_mygpt_library_tools_return_typed_api_data() -> None:
         assert packet["retrieval"]["relevance_score"] == 61.0
         assert packet["repository_fact"] == {
             "statement": "The repository has no environment file.",
-            "url": "https://github.com/example/repository",
+            "url": "https://github.com/example/repository/tree/1234567",
         }
         invalid_fact = await client.call_tool(
             "get_turing_way_evidence_packets",
@@ -190,6 +190,22 @@ async def test_mygpt_library_tools_return_typed_api_data() -> None:
             },
         )
         assert invalid_fact.is_error
+        unscoped_fact = await client.call_tool(
+            "get_turing_way_evidence_packets",
+            {
+                "requests": [
+                    {
+                        "claim": "Use a reproducible environment for analysis.",
+                        "resource_id": resource_id,
+                        "repository_fact": {
+                            "statement": "The repository has no environment file.",
+                            "url": "https://github.com/example/repository",
+                        },
+                    }
+                ]
+            },
+        )
+        assert unscoped_fact.is_error
         unknown_resource = await client.call_tool(
             "get_turing_way_evidence_packets",
             {

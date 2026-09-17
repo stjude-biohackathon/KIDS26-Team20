@@ -11,6 +11,7 @@ from pydantic import BaseModel, field_validator
 GITHUB_REPOSITORY_PATTERN = re.compile(
     r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?/[A-Za-z0-9._-]{1,100}"
 )
+GIT_COMMIT_PATTERN = re.compile(r"[0-9a-fA-F]{7,40}")
 FORBIDDEN_REF_CHARACTERS = frozenset(" ~^:?*[\\#%")
 
 
@@ -182,17 +183,37 @@ class RepositoryFact(BaseModel):
     def validate_url(cls, value: str) -> str:
         parsed = urlsplit(value)
         path_parts = [part for part in parsed.path.split("/") if part]
-        if (
-            parsed.scheme != "https"
-            or parsed.hostname != "github.com"
-            or parsed.username
-            or parsed.password
-            or parsed.query
-            or parsed.fragment
-            or len(path_parts) < 2
-        ):
+        if parsed.scheme != "https" or parsed.username or parsed.password or parsed.fragment:
             raise ValueError("repository fact URL must be a public GitHub HTTPS URL")
-        return value
+
+        if parsed.hostname == "github.com":
+            if parsed.query or len(path_parts) < 4:
+                raise ValueError(
+                    "repository fact URL must point to a commit-pinned GitHub file, tree, or commit"
+                )
+            evidence_kind, commit = path_parts[2], path_parts[3]
+            if evidence_kind not in {"blob", "tree", "commit"} or not GIT_COMMIT_PATTERN.fullmatch(
+                commit
+            ):
+                raise ValueError(
+                    "repository fact URL must point to a commit-pinned GitHub file, tree, or commit"
+                )
+            return value
+
+        if parsed.hostname == "api.github.com":
+            if (
+                len(path_parts) != 6
+                or path_parts[:3] != ["repos", path_parts[1], path_parts[2]]
+                or path_parts[3:5] != ["git", "trees"]
+                or not GIT_COMMIT_PATTERN.fullmatch(path_parts[5])
+                or parsed.query != "recursive=1"
+            ):
+                raise ValueError(
+                    "repository fact API URL must be a commit-pinned recursive Git tree endpoint"
+                )
+            return value
+
+        raise ValueError("repository fact URL must be a public GitHub HTTPS URL")
 
 
 class TuringWayEvidenceRequest(BaseModel):

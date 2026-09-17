@@ -29,11 +29,37 @@ def test_turing_way_review_skill_uses_the_citation_preserving_mcp_tools() -> Non
     assert "Each fact entry must describe one fact only" in text
     assert "separate fact entries and a separate proving URL\n   for every part" in text
     assert "related or nearby file is not evidence for an unshown\n   fact" in text
+    assert (
+        "A positive file URL proves only the content it displays and must not\n"
+        "   be used to prove the absence of unrelated files"
+    ) in text
+    assert (
+        "Each separately asserted\n"
+        "   absence requires its own repository-fact entry and exact tree or API-listing\n"
+        "   URL" in text
+    )
+    assert (
+        "one exact GitHub recursive-tree or API listing demonstrably\n"
+        "   covers every claimed path at the checked commit" in text
+    )
     assert "every content claim uses the exact public GitHub file or\ncommit URL" in text
     assert (
         "every absence claim uses the exact\npublic GitHub repository tree or API listing URL"
         in text
     )
+    assert (
+        "A positive file URL must not be used as absence evidence for an\nunrelated path"
+    ) in text
+    assert "distinct repository-fact entries and URLs for separately\nasserted absences" in text
+    assert (
+        "MyGPT provides retrieval\n"
+        "evidence and relevance; the MCP resource tool resolves the pinned Turing Way\n"
+        "URL"
+    ) in text
+    assert "Use the exact commit SHA,\n   never a mutable branch or tag" in text
+    assert 'confirm that its response has `"truncated": false`' in text
+    assert "_Sourced only from direct, commit-pinned repository inspection" in text
+    assert "_MyGPT relevance scores support the Turing Way citation choice only" in text
     assert "A\nstandalone bibliography, an uncited improvement" in text
     assert "do\nnot assign a rating" in text
     assert "rating out of 6" in text

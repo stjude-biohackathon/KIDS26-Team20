@@ -68,7 +68,15 @@ request.
    that proves that fact. Each fact entry must describe one fact only. For a
    multi-part finding, provide separate fact entries and a separate proving URL
    for every part; a related or nearby file is not evidence for an unshown
-   fact. Use only the returned packet's citation and matching relevance score;
+   fact. A positive file URL proves only the content it displays and must not
+   be used to prove the absence of unrelated files. Each separately asserted
+   absence requires its own repository-fact entry and exact tree or API-listing
+   URL, unless one exact GitHub recursive-tree or API listing demonstrably
+   covers every claimed path at the checked commit. Use the exact commit SHA,
+   never a mutable branch or tag. Before relying on a recursive API listing,
+   confirm that its response has `"truncated": false`; a truncated listing does
+   not establish absence. Use only the returned packet's
+   citation and matching relevance score;
    the three area-level queries cannot substitute for this step.
 8. Return a concise report containing the rating, evidence observed, gaps,
    prioritized improvements, expected benefit, and a Turing Way citation for
@@ -90,12 +98,19 @@ Use this format for every completed review:
 ```markdown
 ### Repository evidence
 
+_Sourced only from direct, commit-pinned repository inspection (GitHub
+file/tree/API URLs), never from MyGPT retrieval._
+
 - **Fact:** Tests are documented in the contributor guide.
   **Evidence:** [Exact file proving the content claim](https://github.com/OWNER/REPOSITORY/blob/COMMIT/CONTRIBUTING.md)
 - **Gap:** No issue template is present.
-  **Evidence:** [Exact repository tree or API listing covering the checked ref](https://github.com/OWNER/REPOSITORY/tree/COMMIT/.github)
+  **Evidence:** [Exact repository tree or complete, non-truncated API listing covering the checked commit](https://github.com/OWNER/REPOSITORY/tree/COMMIT/.github)
 
 ### RAG evidence
+
+_MyGPT relevance scores support the Turing Way citation choice only; they are
+not evidence about the reviewed repository. The MCP resource tool resolves the
+pinned Turing Way URL._
 
 | Review area | MyGPT RAG relevance | Turing Way source |
 | --- | --- | --- |
@@ -118,8 +133,15 @@ Render the returned packet's `repository_fact` separately from its Turing Way
 citation. State that every content claim uses the exact public GitHub file or
 commit URL that shows its content, and every absence claim uses the exact
 public GitHub repository tree or API listing URL that covers the searched
-scope and ref. Label deductions as reviewer inferences rather than source
-facts. A Turing Way citation supports the recommendation; it does not prove a
+scope and ref. A positive file URL must not be used as absence evidence for an
+unrelated path. Use distinct repository-fact entries and URLs for separately
+asserted absences, unless one exact GitHub recursive-tree or API listing
+demonstrably covers all claimed paths at the checked commit. Never cite a
+mutable branch or tag: use the exact commit SHA. A recursive API listing is
+adequate only when its response confirms `"truncated": false`. Label deductions
+as reviewer inferences rather than source facts. MyGPT provides retrieval
+evidence and relevance; the MCP resource tool resolves the pinned Turing Way
+URL. A Turing Way citation supports the recommendation; it does not prove a
 claim about the reviewed repository.
 
 ## Failure behavior
