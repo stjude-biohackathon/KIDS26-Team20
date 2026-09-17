@@ -1,6 +1,6 @@
 ---
 name: turing-healthcheck-prototype
-description: Looks at a repository's code and gives it a score against a rubric built from The Turing Way's Reproducible Research guide and Community Handbook (version control, environments, testing, CI, code quality, documentation, licensing, community and collaboration health). Asks the user up front which of the eight categories to score, or all of them for a full 100-point analysis, then saves the report to TURING_HEALTHCHECK.md so it can be checked back on later. Use for repository health checks, code-development scoring, reproducibility reviews, or Turing-Way-aligned improvement advice.
+description: Looks at a repository's code and gives it a score against a rubric built from The Turing Way's Reproducible Research guide, Project Design guide, and Community Handbook (version control, environments, testing, CI, code quality, documentation, licensing, community and stakeholder management). Also checks the repository against the Project Design guide's before/during/after checklist (team, funding, question, methodology, approval, license, version control, documentation, archiving, publishing). Asks the user up front which of the eight categories to score, or all of them for a full 100-point analysis, then saves the report to TURING_HEALTHCHECK.md so it can be checked back on later. Use for repository health checks, code-development scoring, reproducibility reviews, or Turing-Way-aligned improvement advice.
 license: MIT
 compatibility: Requires Git and local file and command tools.
 metadata:
@@ -17,7 +17,8 @@ software repository or a specified set of code changes against The Turing Way
 (TTW), the handbook to reproducible, ethical, and collaborative data science.
 Also use it for a 100-point review of version control, reproducible
 environments, testing, continuous integration, code quality, documentation,
-licensing, and community and collaboration health.
+licensing, and community and stakeholder management, plus a check against the
+Project Design guide's before/during/after project checklist.
 
 ## Do not use this skill when
 
@@ -37,8 +38,13 @@ result as official TTW certification or institutional policy.
 
 Read [references/rubric.md](references/rubric.md) before gathering evidence.
 Its eight categories and their weights come directly from named chapters of The
-Turing Way's Reproducible Research guide and Community Handbook / Guide for
-Collaboration, not invented criteria. A user may
+Turing Way's Reproducible Research guide, Project Design guide, and Community
+Handbook / Guide for Collaboration, not invented criteria. The rubric also
+embeds the Project Design guide's before/during/after project checklist
+(team, funding, question, methodology, approval, license, version control,
+documentation, archiving, publishing); use it as supporting evidence for the
+Version control, Licensing, and Community and stakeholder management
+categories, not as a separately scored item. A user may
 choose to score all eight categories for a full 100-point analysis, or only a
 subset when they do not want a full analysis; see Workflow step 1. No live TTW retrieval tool is available yet, so cite The Turing Way only through the pinned
 source map at the bottom of `references/rubric.md`; do not fetch or invent

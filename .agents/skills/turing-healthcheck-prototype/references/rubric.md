@@ -1,16 +1,18 @@
 # Turing Healthcheck Rubric
 
 This rubric scores a codebase against eight practices from The Turing Way's
-Reproducible Research guide and its Community Handbook / Guide for
-Collaboration, the handbook's chapters most directly about how code is
-written, tested, shared, and collaborated on. It replaces earlier draft
-categories (such as "performance" and "grammar") that were not grounded in a
-specific Turing Way chapter. Seven categories score code-facing practices;
-the eighth, added to reflect that The Turing Way is a handbook to
+Reproducible Research guide, its Project Design guide, and its Community
+Handbook / Guide for Collaboration, the handbook's chapters most directly
+about how code is written, tested, shared, and collaborated on. It replaces
+earlier draft categories (such as "performance" and "grammar") that were not
+grounded in a specific Turing Way chapter. Seven categories score code-facing
+practices; the eighth, added to reflect that The Turing Way is a handbook to
 "reproducible, ethical, and collaborative" data science, scores whether the
-project's community and collaboration practices (Code of Conduct,
-contributing guidance, inclusive collaboration norms) are in place. The
-seven code-facing categories are weighted at 90% of their original point
+project identifies and manages its stakeholders and community — not merely
+whether a Code of Conduct file exists — drawing on the Project Design guide's
+Stakeholders (Personas and Pathways) chapter and the Community Handbook's
+guidance on communication channels, onboarding, and inclusive collaboration.
+The seven code-facing categories are weighted at 90% of their original point
 values so the eight categories still sum to 100 points.
 
 Select exactly one maturity level per category from observable repository
@@ -22,6 +24,25 @@ total to the nearest whole number.
 For a requested-change review, apply each description only to the requested
 change. Use surrounding code as context and list pre-existing concerns without
 deducting them from the change score.
+
+## Turing Way Project Design checklist
+
+Before scoring, check the repository against this checklist from The Turing
+Way's Project Design guide (Overview chapter). It is not a scored category by
+itself; it is supporting evidence that informs several categories below —
+mainly Version control and collaborative review, Licensing and open code, and
+Community and stakeholder management. Note which items are present or absent
+in the evidence you cite for those categories.
+
+- **Before starting:** team and roles, funding and resources, the research
+  question and scope, methodology, required approvals (for example ethics or
+  data-access sign-off), and the license under which the work will be shared.
+- **During the project:** version control practice and ongoing documentation
+  of decisions and changes.
+- **After completion:** archiving the project's outputs and code, and
+  publishing or otherwise sharing the work with its intended audience.
+
+Source: [Project Design Overview](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/project-design/pd-overview.md).
 
 ## Version control and collaborative review (13.5 points)
 
@@ -93,15 +114,23 @@ deducting them from the change score.
 | Strong | 6.75 | A clear, standard license file, recognizable by hosting platforms such as GitHub or GitLab, is present, and it is reasonably clear what license applies to which part of the project. |
 | Exemplary | 9 | Licensing is explicit and unambiguous for every part of the project, including bundled third-party material, and the code is otherwise made openly accessible with enough documentation and metadata for others to discover, understand, and reuse it. |
 
-## Community and collaboration health (10 points)
+## Community and stakeholder management (10 points)
+
+This category is not a Code of Conduct check. A Code of Conduct or
+`CONTRIBUTING` file is one signal among several; the category mainly asks
+whether the project has identified who its stakeholders are (maintainers,
+contributors, users, funders, affected communities) and how they engage with
+and communicate with the project, per the Project Design guide's Stakeholders
+(Personas and Pathways) chapter and the Community Handbook's guidance on
+communication channels and onboarding.
 
 | Level | Points | Observable description |
 |---|---:|---|
-| Missing | 0 | No Code of Conduct or contributing guidance exists anywhere in the project, and there is no documented way for a newcomer to propose or make a change. |
-| Initial | 2.5 | A Code of Conduct or contributing note is mentioned informally (for example a line in the README), but there is no dedicated `CODE_OF_CONDUCT` or `CONTRIBUTING` file, and expectations for participants are unclear. |
-| Developing | 5 | A `CODE_OF_CONDUCT` file and a `CONTRIBUTING` file are both present in the project root, but they are generic or thin, giving little concrete guidance on how to propose changes, ask questions, or what respectful participation looks like in this project. |
-| Strong | 7.5 | The Code of Conduct and contributing guide are specific to the project (covering how to raise issues, propose changes, and get help) and together set out clear, inclusive expectations for how contributors of different backgrounds and experience levels should be treated. |
-| Exemplary | 10 | Community and collaboration practices are explicit, discoverable, and actively upheld — a specific Code of Conduct, a welcoming and detailed contributing guide, and visible norms for inclusive, considerate collaboration (such as reviewing newcomers' contributions kindly and defining clear roles or expectations), matching the guide's view that "there is more to collaboration than we see." |
+| Missing | 0 | Nothing identifies who the project's stakeholders are (maintainers, contributors, users, or affected parties), there is no documented communication channel, and there is no documented way for a newcomer to propose or make a change. |
+| Initial | 2.5 | Stakeholders or contributors are named informally (for example in a README credits section), but there is no stakeholder analysis, no defined communication channel (issue tracker use, mailing list, chat), and no `CONTRIBUTING` file or Code of Conduct. |
+| Developing | 5 | Roles or stakeholder groups are documented (for example a `CONTRIBUTING` file describing maintainers vs. contributors, or a named communication channel such as issues or discussions), and a `CODE_OF_CONDUCT` file is present, but there is no explicit persona/pathway analysis or onboarding guidance for newcomers. |
+| Strong | 7.5 | Distinct stakeholder groups and their engagement pathways are documented (for example, separate guidance for users vs. contributors vs. maintainers, or a described decision-making/governance process), multiple communication channels are named and accessible, and the Code of Conduct and contributing guide are specific to the project. |
+| Exemplary | 10 | Stakeholder and community management is explicit and actively maintained — documented personas or pathways for how different groups engage with the project, clearly signposted communication channels, onboarding (and, where relevant, offboarding) guidance, plus a specific Code of Conduct and contributing guide — matching the guide's view that "there is more to collaboration than we see" and that project design "is about people first." |
 
 ## The Turing Way source map
 
@@ -112,7 +141,7 @@ deducting them from the change score.
 - **Code quality: style and static analysis:** [Code Quality](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/code-quality.md).
 - **Code documentation:** [Code Documentation](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/code-documentation.md) and [Code Reuse](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/code-reuse.md).
 - **Licensing and open code:** [Licensing](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/licensing.md) and [Open Research](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/open.md).
-- **Community and collaboration health:** [Code of Conduct](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/community-handbook/coc.md), [Contributing to The Turing Way](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/community-handbook/contributing.md), and [Guide for Collaboration](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/collaboration/collaboration.md).
+- **Community and stakeholder management:** [Project Design Overview](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/project-design/pd-overview.md), [Stakeholders: Personas and Pathways](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/project-design/stakeholders/persona.md), [Code of Conduct](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/community-handbook/coc.md), [Contributing to The Turing Way](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/community-handbook/contributing.md), and [Guide for Collaboration](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/collaboration/collaboration.md).
 
 These pages are public guidance from [The Turing Way](https://github.com/the-turing-way/the-turing-way),
 a handbook to reproducible, ethical, and collaborative data science. The score
