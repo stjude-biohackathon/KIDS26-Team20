@@ -192,6 +192,17 @@ before adding external data or media.
 Source repository, commit, and licensing metadata are recorded in the manifests
 under [`corpus/`](corpus/).
 
+## Contributors and Team Members
+
+- Ty Michael
+- Saikat Nandy
+- Chris House
+- Arif Usta
+- Jaimin Patel
+- Chen Li
+- Shovito Barua Soumma
+- Aliyah Cole
+
 ## Licence
 
 MIT. See [LICENSE.md](LICENSE.md).
