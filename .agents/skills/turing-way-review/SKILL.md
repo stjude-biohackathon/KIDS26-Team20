@@ -82,13 +82,17 @@ request.
    covers every claimed path at the checked commit. Use the exact commit SHA,
    never a mutable branch or tag. Before relying on a recursive API listing,
    confirm that its response has `"truncated": false`; a truncated listing does
-   not establish absence. A single commit page proves only that commit's
+   not establish absence. A GitHub `/tree/COMMIT` page is not recursive-tree
+   API evidence and must not be used for an absence claim. A single commit page proves only that commit's
    content; use a commit-pinned history page
    (`https://github.com/OWNER/REPOSITORY/commits/COMMIT`) for a claim about
    the history reachable from that commit. Do not infer the absence of
    branches or tags from either URL. Use only the returned packet's
    citation and matching relevance score;
    the three area-level queries cannot substitute for this step.
+   An absence in an existing file's content (for example, a README omitting a
+   dataset URL) is not a tree absence: cite that file's commit-pinned
+   `/blob/COMMIT/PATH` URL instead.
 8. Do not invent expected benefits or explanatory prose for recommendations.
    The claim, observed repository fact, resolved Turing Way citation, and
    MyGPT relevance score are the complete recommendation evidence.

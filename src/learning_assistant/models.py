@@ -174,9 +174,10 @@ class RepositoryFact(BaseModel):
     @field_validator("statement")
     @classmethod
     def validate_statement(cls, value: str) -> str:
-        if not value.strip():
+        statement = value.strip()
+        if not statement:
             raise ValueError("repository fact statement must not be empty")
-        return value.strip()
+        return statement
 
     @field_validator("url")
     @classmethod
@@ -226,9 +227,10 @@ class TuringWayEvidenceRequest(BaseModel):
     @field_validator("claim")
     @classmethod
     def validate_claim(cls, value: str) -> str:
-        if not value.strip():
+        claim = value.strip()
+        if not claim:
             raise ValueError("evidence claim must not be empty")
-        return value.strip()
+        return claim
 
 
 class ResolvedTuringWayCitation(BaseModel):
@@ -251,6 +253,12 @@ class TuringWayEvidencePacket(BaseModel):
     retrieval: MyGPTContext
     repository_fact: RepositoryFact | None = None
 
+    @field_validator("claim")
+    @classmethod
+    def validate_claim(cls, value: str) -> str:
+        claim = value.strip()
+        return claim
+
 
 class TuringWayReviewScoreRow(BaseModel):
     """One scored review area with one directly observed repository fact."""
@@ -263,6 +271,7 @@ class TuringWayReviewScoreRow(BaseModel):
     @field_validator("area")
     @classmethod
     def validate_area(cls, value: str) -> str:
+        value = value.strip().lower()
         allowed = {
             "project design",
             "reproducibility",
@@ -275,9 +284,10 @@ class TuringWayReviewScoreRow(BaseModel):
     @field_validator("claim")
     @classmethod
     def validate_claim(cls, value: str) -> str:
-        if not value.strip():
+        claim = value.strip()
+        if not claim:
             raise ValueError("score claim must not be empty")
-        return value.strip()
+        return claim
 
 
 class TuringWayReviewValidation(BaseModel):

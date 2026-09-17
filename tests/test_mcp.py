@@ -4,7 +4,10 @@ from pathlib import Path
 import httpx
 from mcp import Client
 
-from learning_assistant.models import RepositoryFact
+from learning_assistant.models import (
+    RepositoryFact,
+    TuringWayReviewScoreRow,
+)
 from learning_assistant.mygpt import MyGPTClient, MyGPTSettings
 from learning_assistant.server import create_server
 from learning_assistant.sources import SourceRegistry
@@ -19,6 +22,19 @@ def test_repository_fact_accepts_commit_pinned_history_url() -> None:
     )
 
     assert fact.url == "https://github.com/example/repository/commits/1234567"
+
+
+def test_review_inputs_normalize_area_names() -> None:
+    row = TuringWayReviewScoreRow(
+        area="Project design",
+        score=1,
+        claim="The README documents the project purpose and citation.",
+        repository_fact={
+            "statement": "readme.md is present.",
+            "url": "https://github.com/example/repository/blob/1234567/readme.md",
+        },
+    )
+    assert row.area == "project design"
 
 
 async def test_mcp_contract_in_memory() -> None:
