@@ -132,7 +132,8 @@ public guidance and an authorized certification program. The skill scores the
 full ten-criterion rubric out of 100 and writes both
 `TURING_WAY_CERTIFICATION.md` and `TURING_WAY_CERTIFICATION.pdf` (or reports
 why PDF generation was unavailable). Markdown tables, including the score
-table, must be preserved as readable tables in the PDF.
+table, must be preserved as readable tables in the PDF, and the rendered PDF
+must be checked for the score table before the review is reported.
 
 ## Repository Map
 
