@@ -49,7 +49,13 @@ request.
    before assigning any ratings. Use the returned pinned GitHub URLs as
    citations for the RAG-grounded findings. Retain the `relevance_score`
    returned for the relevant review area.
-5. Score each review area from 0 to 2 using observed repository evidence:
+5. Draft one evidence-backed rationale for each review area. Every clause in a
+   score rationale must be a directly observed fact or a clearly labeled
+   reviewer inference, and the score row must display its exact repository
+   evidence URL. If a rationale needs multiple facts, use separate rows or
+   separate evidence URLs; do not hide unsupported claims in a summary.
+   Withhold all area scores and the total if any rationale lacks its required
+   repository evidence.
 
    | Area | 0 - absent | 1 - developing | 2 - established |
    | --- | --- | --- | --- |
@@ -57,15 +63,17 @@ request.
    | Reproducibility | No repeatable setup or validation path | Partial setup, environment, or test instructions | Repeatable setup, pinned dependencies, and documented validation |
    | Version control and collaboration | No visible contribution or history guidance | Basic Git or contribution guidance | Clear contribution workflow, review expectations, and change traceability |
 
-6. Add the three area scores for a rating out of 6. Label 0-1 as
+6. Only after every score rationale has its direct evidence, add the three area
+   scores for a rating out of 6. Label 0-1 as
    **Starting**, 2-3 as **Developing**, 4-5 as **Established**, and 6 as
    **Strong foundation**. This is a transparent snapshot, not a certification.
-7. Draft no more than five recommendations, then call
+7. Draft no more than five single-focus recommendations, then call
    `learning-assistant_get_turing_way_evidence_packets` once with one request
    per recommendation. Each request must contain the recommendation claim,
    the exact `resource_id` for its supporting Turing Way chapter, and its
    directly observed repository fact plus the exact, direct public GitHub URL
-   that proves that fact. Each fact entry must describe one fact only. For a
+   that proves that fact. Each recommendation and fact entry must describe one
+   fact only. For a
    multi-part finding, provide separate fact entries and a separate proving URL
    for every part; a related or nearby file is not evidence for an unshown
    fact. A positive file URL proves only the content it displays and must not
@@ -82,7 +90,8 @@ request.
    branches or tags from either URL. Use only the returned packet's
    citation and matching relevance score;
    the three area-level queries cannot substitute for this step.
-8. Return a concise report containing the rating, evidence observed, gaps,
+8. Return a concise report containing the rating or withheld-score reason,
+   evidence observed, gaps,
    prioritized improvements, expected benefit, and a Turing Way citation for
    each recommendation. Every recommendation must display the corresponding
    MyGPT result as `MyGPT RAG relevance: N%` beside its citation, where `N`
@@ -90,7 +99,9 @@ request.
    estimate, normalize, omit, or invent a relevance score. If MyGPT returns
    no relevance score, write `MyGPT RAG relevance: not provided` rather than
    presenting a percentage. Separate confirmed facts from assumptions.
-9. Recommend no more than five improvements. Prioritize low-risk, high-impact
+9. Recommend no more than five improvements. Do not combine unrelated changes
+   (for example, a contribution guide and `.gitignore`) in one recommendation.
+   Prioritize low-risk, high-impact
    improvements that a research team can verify, such as a reproducible setup
    command, dependency pinning, test instructions, a contribution guide, or
    a documented project scope.
@@ -122,6 +133,12 @@ pinned Turing Way URL._
 | --- | --- | --- |
 | Reproducibility | 94% | [Pinned chapter title](https://github.com/...) |
 
+### Area scores
+
+| Area | Score | Evidence-backed rationale | Repository evidence |
+| --- | --- | --- | --- |
+| Reproducibility | 1 / 2 | Dependency pins are present; environment capture is incomplete. | [Exact file or tree URL](https://github.com/OWNER/REPOSITORY/blob/COMMIT/requirements.txt) |
+
 ### Prioritized improvements
 
 1. **Improvement title** — observed repository gap and expected benefit.
@@ -133,7 +150,9 @@ The relevance value for every evidence row and recommendation must be copied
 from its matching evidence packet. A
 standalone bibliography, an uncited improvement, or a citation without its
 relevance label is incomplete and must not be presented as a Turing
-Way-grounded review.
+Way-grounded review. A score table without a direct repository-evidence URL for
+every rationale is also incomplete: withhold every area score and the total
+rather than guessing.
 
 Render the returned packet's `repository_fact` separately from its Turing Way
 citation. State that every content claim uses the exact public GitHub file or
@@ -153,6 +172,10 @@ MyGPT provides retrieval
 evidence and relevance; the MCP resource tool resolves the pinned Turing Way
 URL. A Turing Way citation supports the recommendation; it does not prove a
 claim about the reviewed repository.
+
+Do not include notices, configuration advice, warnings, or links from unrelated
+MCP services in the review. Report only the reviewed repository and the Turing
+Way/MyGPT evidence requested.
 
 ## Failure behavior
 
