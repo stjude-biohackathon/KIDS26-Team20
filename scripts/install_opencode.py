@@ -17,6 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CANONICAL_SKILLS = (
     "install-kids-learning-assistant",
     "mygpt-library",
+    "teacher-skill",
     "turing-way-pathfinder",
     "turing-way-guidance",
     "turing-way-review",
@@ -187,7 +188,8 @@ def ollama_model_is_ready(model: str) -> bool:
     )
     if result.returncode != 0:
         return False
-    return any(line.split() and line.split()[0] == model for line in result.stdout.splitlines())
+    installed_names = {line.split()[0] for line in result.stdout.splitlines() if line.split()}
+    return model in installed_names or f"{model}:latest" in installed_names
 
 
 def pull_ollama_model(model: str) -> None:

@@ -143,11 +143,19 @@ def test_installer_detects_required_host_ollama_model(monkeypatch: pytest.Monkey
         lambda *_args, **_kwargs: type(
             "Result",
             (),
-            {"returncode": 0, "stdout": "NAME ID SIZE MODIFIED\nqwen2.5:3b abc 1.9GB today\n"},
+            {
+                "returncode": 0,
+                "stdout": (
+                    "NAME ID SIZE MODIFIED\n"
+                    "qwen2.5:3b abc 1.9GB today\n"
+                    "nomic-embed-text:latest def 274MB today\n"
+                ),
+            },
         )(),
     )
 
     assert install_opencode.ollama_model_is_ready("qwen2.5:3b") is True
+    assert install_opencode.ollama_model_is_ready("nomic-embed-text") is True
     assert install_opencode.ollama_model_is_ready("gemma3:27b") is False
 
 
