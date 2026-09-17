@@ -24,8 +24,8 @@ def test_certified_skill_frontmatter_and_tools_are_valid() -> None:
     frontmatter, body = parse_skill(SKILL_PATH)
 
     assert frontmatter["name"] == "turing-way-certified"
-    assert "public GitHub repository" in frontmatter["description"]
-    assert "public commit-pinned GitHub evidence URLs" in frontmatter["compatibility"]
+    assert "attached local repository" in frontmatter["description"]
+    assert "authorized attached local checkout" in frontmatter["compatibility"]
     assert frontmatter["metadata"] == {
         "audience": "research-software-teams-and-maintainers",
         "status": "draft",
@@ -56,23 +56,33 @@ def test_certified_skill_has_exactly_ten_scored_criteria_and_100_point_total() -
     assert "report it as `N/100` and\n  `N%`" in body
 
 
-def test_certified_skill_requires_public_commit_pinned_repository_evidence() -> None:
-    frontmatter, body = parse_skill(SKILL_PATH)
+def test_certified_skill_supports_public_commit_pinned_repository_evidence() -> None:
+    _, body = parse_skill(SKILL_PATH)
+    normalized_body = " ".join(body.split())
 
-    assert "authorized local checkout" not in frontmatter["compatibility"]
-    assert "Do not review a\n   private or local-only repository." in body
+    assert "For public GitHub input, cite an exact commit-pinned GitHub URL." in normalized_body
     assert (
-        "A local checkout may be used for inspection only\n"
-        "   when it corresponds to that public repository"
-    ) in body
-    assert (
-        "every cited fact can be\n   proven with a public, commit-pinned GitHub evidence URL"
-        in body
+        "For public absence claims, use a commit-pinned tree or API listing and confirm "
+        "recursive API listings are not truncated."
+    ) in normalized_body
+
+
+def test_certified_skill_has_local_evidence_fallback() -> None:
+    _, body = parse_skill(SKILL_PATH)
+    normalized_body = " ".join(body.split())
+
+    required_phrases = (
+        "attached local input, cite only a repository-relative path and line range",
+        "never put an absolute local path or private remote URL in the report",
+        "`RepositoryFact` contract rejects local paths and private URLs",
+        'Label recommendations "locally evidenced; not evidence-packet validated."',
+        "In attached local mode, do not call the renderer because it requires public "
+        "`RepositoryFact` URLs",
+        "switch to the documented local-evidence mode",
+        "do not pass local paths or private URLs to the evidence-packet or renderer tools",
     )
-    assert (
-        "If the repository is private or local-only, explain that the evidence-packet\n"
-        "contract requires public, commit-pinned GitHub URLs and do not score it."
-    ) in body
+    for phrase in required_phrases:
+        assert phrase in normalized_body
 
 
 def test_certified_skill_defines_pdf_and_auditable_source_contract() -> None:
@@ -84,7 +94,7 @@ def test_certified_skill_defines_pdf_and_auditable_source_contract() -> None:
         "TURING_WAY_CERTIFIED_REPORT.md",
         "or `.html` so the PDF is auditable",
         "contains all ten criteria and the total score",
-        "preserves source repository, path, ref, and URL for every citation",
+        "For local mode, preserve repository-relative path, line range",
         "do not claim that a PDF was generated",
     )
     for phrase in required_phrases:
@@ -93,26 +103,29 @@ def test_certified_skill_defines_pdf_and_auditable_source_contract() -> None:
 
 def test_certified_skill_handles_renderer_scope_without_inventing_a_rating() -> None:
     _, body = parse_skill(SKILL_PATH)
+    normalized_body = " ".join(body.split())
 
-    assert "when its contract applies" in body
+    assert "when its contract applies" in normalized_body
     assert (
-        "If that renderer cannot represent all ten criteria, preserve its validated\n   evidence"
-    ) in body
-    assert "without\n   fabricating a canonical rating" in body
-    assert "Do not\n   manually present a competing Turing Way rating" in body
+        "If that renderer cannot represent all ten criteria, preserve its validated evidence"
+        in normalized_body
+    )
+    assert "without fabricating a canonical rating" in normalized_body
+    assert "Do not manually present a competing Turing Way rating" in normalized_body
 
 
 def test_certified_skill_defines_failure_and_non_certification_boundaries() -> None:
     _, body = parse_skill(SKILL_PATH)
+    normalized_body = " ".join(body.split())
 
     required_phrases = (
         "not official certification",
         "do not score it",
-        "do not invent\ncitations",
-        "If public evidence is incomplete",
+        "do not invent citations",
+        "If evidence is incomplete",
         "lower confidence",
         "Never silently replace a missing source",
-        "scientific validity, security, legal\n  compliance, or institutional endorsement",
+        "scientific validity, security, legal compliance, or institutional endorsement",
     )
     for phrase in required_phrases:
-        assert phrase in body
+        assert phrase in normalized_body
