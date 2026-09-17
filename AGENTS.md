@@ -21,13 +21,16 @@ for individual AI clients.
 
 ## Turing Way workflows
 
-When a scientist asks for guidance on reproducibility, research software, data
-practice, project design, version control, or collaboration, invoke the
-`turing-way-guidance` skill. When they ask to assess a locally checked-out
-research repository against those practices, invoke `turing-way-review`.
-When they ask where to begin, want a role-appropriate learning path, or need
-an initial checklist for their current research goal, invoke the
-`turing-way-pathfinder` skill.
+When a scientist asks where to begin, wants a role-appropriate learning path,
+or needs an initial checklist for their current research goal, invoke
+`turing-way-pathfinder` first. This includes a self-identified student who
+wants to learn reproducibility. Do not combine PathFinder with
+`teacher-skill` or `turing-way-guidance` in that first response: PathFinder
+selects the learning path without a broad intake. Use `teacher-skill` after
+the learner selects a pathway topic and asks to be taught it. Use
+`turing-way-guidance` for focused guidance when the requester is not asking
+for a pathway. When they ask to assess a locally checked-out research
+repository against those practices, invoke `turing-way-review`.
 
 Before giving recommendations or a rating, use the learning-assistant MCP
 tools to retrieve relevant Turing Way resources and cite their returned URLs.
