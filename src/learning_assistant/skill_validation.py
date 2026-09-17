@@ -18,6 +18,7 @@ KNOWN_TOOLS = {
     "learning-assistant_get_rag_status",
     "learning-assistant_get_turing_way_evidence_packets",
     "learning-assistant_get_turing_way_review_evidence",
+    "learning-assistant_render_validated_turing_way_review",
     "learning-assistant_validate_turing_way_review",
 }
 SECRET_PATTERNS = (

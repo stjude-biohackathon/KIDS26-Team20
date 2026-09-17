@@ -289,6 +289,17 @@ class TuringWayReviewValidation(BaseModel):
     label: str | None = None
 
 
+class TuringWayReviewRender(BaseModel):
+    """Canonical report sections emitted only from a validated review."""
+
+    status: str
+    errors: list[str] = []
+    total: int | None = None
+    label: str | None = None
+    score_section: str
+    recommendation_evidence_block: str | None = None
+
+
 class SourcesFile(BaseModel):
     sources: list[SourceConfig]
 

@@ -21,10 +21,11 @@ def test_turing_way_review_skill_uses_the_citation_preserving_mcp_tools() -> Non
     assert "`learning-assistant_get_resource`" in text
     assert "`learning-assistant_get_turing_way_evidence_packets`" in text
     assert "`learning-assistant_get_turing_way_review_evidence`" in text
+    assert "`learning-assistant_render_validated_turing_way_review`" in text
     assert "`learning-assistant_validate_turing_way_review`" in text
     assert "required MyGPT RAG evidence" in text
-    assert "MyGPT RAG relevance: N%" in text
-    assert "Do not\n   estimate, normalize, omit, or invent" in text
+    assert "**MyGPT RAG relevance:** 94%" in text
+    assert "Do not estimate, normalize, omit, or invent a relevance score." in text
     assert "## Required report format" in text
     assert "exact, direct public GitHub URL\n   that proves that fact" in text
     assert "Each recommendation and fact entry must describe one fact only" in text
@@ -74,10 +75,14 @@ def test_turing_way_review_skill_uses_the_citation_preserving_mcp_tools() -> Non
     assert "### Area scores" in text
     assert "A score table without a direct repository-evidence URL for\nevery rationale" in text
     assert "Before rendering, perform this mandatory self-check" in text
-    assert "If any check fails, call `learning-assistant_validate_turing_way_review`" in text
-    assert "omit every numeric score and rating label" in text
-    assert "Do not calculate a\n   score or label yourself" in text
-    assert "status` is `approved`, copying its `total` and `label` exactly" in text
+    assert "This tool subsumes\n   `learning-assistant_validate_turing_way_review`" in text
+    assert "copy its `score_section` and\n   `recommendation_evidence_block` verbatim" in text
+    assert "Never manually calculate, rewrite, or reformat a score" in text
+    assert "Do not invent expected benefits or explanatory prose" in text
+    assert "Area | Score | Evidence-backed rationale | Repository evidence" in text
+    assert (
+        "If any check fails, call\n`learning-assistant_render_validated_turing_way_review`" in text
+    )
     assert (
         "Do not include notices, configuration advice, warnings, or links from unrelated\n"
         "MCP services" in text

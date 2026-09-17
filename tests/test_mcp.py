@@ -37,6 +37,7 @@ async def test_mcp_contract_in_memory() -> None:
             "get_rag_status",
             "get_turing_way_evidence_packets",
             "get_turing_way_review_evidence",
+            "render_validated_turing_way_review",
             "validate_turing_way_review",
         }
 
@@ -185,46 +186,78 @@ async def test_mygpt_library_tools_return_typed_api_data() -> None:
             "statement": "The repository has no environment file.",
             "url": "https://github.com/example/repository/tree/1234567",
         }
+        score_rows = [
+            {
+                "area": "project design",
+                "score": 1,
+                "claim": "The project scope is documented.",
+                "repository_fact": {
+                    "statement": "The README documents the project scope.",
+                    "url": "https://github.com/example/repository/blob/1234567/README.md",
+                },
+            },
+            {
+                "area": "reproducibility",
+                "score": 1,
+                "claim": "The repository has a dependency file.",
+                "repository_fact": {
+                    "statement": "requirements.txt is present.",
+                    "url": "https://github.com/example/repository/blob/1234567/requirements.txt",
+                },
+            },
+            {
+                "area": "version control and collaboration",
+                "score": 0,
+                "claim": "The reviewed history has a single commit.",
+                "repository_fact": {
+                    "statement": "The history has one commit.",
+                    "url": "https://github.com/example/repository/commits/1234567",
+                },
+            },
+        ]
         review_validation = await client.call_tool(
             "validate_turing_way_review",
-            {
-                "score_rows": [
-                    {
-                        "area": "project design",
-                        "score": 1,
-                        "claim": "The project scope is documented.",
-                        "repository_fact": {
-                            "statement": "The README documents the project scope.",
-                            "url": "https://github.com/example/repository/blob/1234567/README.md",
-                        },
-                    },
-                    {
-                        "area": "reproducibility",
-                        "score": 1,
-                        "claim": "The repository has a dependency file.",
-                        "repository_fact": {
-                            "statement": "requirements.txt is present.",
-                            "url": "https://github.com/example/repository/blob/1234567/requirements.txt",
-                        },
-                    },
-                    {
-                        "area": "version control and collaboration",
-                        "score": 0,
-                        "claim": "The reviewed history has a single commit.",
-                        "repository_fact": {
-                            "statement": "The history has one commit.",
-                            "url": "https://github.com/example/repository/commits/1234567",
-                        },
-                    },
-                ],
-                "recommendations": [packet],
-            },
+            {"score_rows": score_rows, "recommendations": [packet]},
         )
         assert review_validation.structured_content == {
             "status": "approved",
             "errors": [],
             "total": 2,
             "label": "Developing",
+        }
+        rendered_review = await client.call_tool(
+            "render_validated_turing_way_review",
+            {"score_rows": score_rows, "recommendations": [packet]},
+        )
+        assert rendered_review.structured_content == {
+            "status": "approved",
+            "errors": [],
+            "total": 2,
+            "label": "Developing",
+            "score_section": (
+                "### Area scores\n\n"
+                "**Rating:** Developing (2 / 6)\n\n"
+                "| Area | Score | Evidence-backed rationale | Repository evidence |\n"
+                "| --- | --- | --- | --- |\n"
+                "| Project Design | 1 / 2 | The project scope is documented. | "
+                "[Repository evidence](https://github.com/example/repository/blob/"
+                "1234567/README.md) |\n"
+                "| Reproducibility | 1 / 2 | The repository has a dependency file. | "
+                "[Repository evidence](https://github.com/example/repository/blob/"
+                "1234567/requirements.txt) |\n"
+                "| Version Control And Collaboration | 0 / 2 | "
+                "The reviewed history has a single commit. | "
+                "[Repository evidence](https://github.com/example/repository/commits/1234567) |"
+            ),
+            "recommendation_evidence_block": (
+                "### Prioritized improvements\n\n"
+                "1. **Use a reproducible environment for analysis.**\n"
+                "   - **Repository fact:** The repository has no environment file. "
+                "([Repository evidence](https://github.com/example/repository/tree/1234567))\n"
+                "   - **Turing Way citation:** [Project Design]("
+                f"{packet['citation']['url']})\n"
+                "   - **MyGPT RAG relevance:** 61%"
+            ),
         }
         invalid_fact = await client.call_tool(
             "get_turing_way_evidence_packets",
@@ -273,6 +306,28 @@ async def test_mygpt_library_tools_return_typed_api_data() -> None:
             ],
             "total": None,
             "label": None,
+        }
+        withheld_review = await client.call_tool(
+            "render_validated_turing_way_review",
+            {
+                "score_rows": [],
+                "recommendations": [{**packet, "repository_fact": None}],
+            },
+        )
+        assert withheld_review.structured_content == {
+            "status": "withheld",
+            "errors": [
+                "provide exactly one score row for each required review area",
+                "recommendation 1 has no repository fact",
+            ],
+            "total": None,
+            "label": None,
+            "score_section": (
+                "### Score withheld\n\n"
+                "- provide exactly one score row for each required review area\n"
+                "- recommendation 1 has no repository fact"
+            ),
+            "recommendation_evidence_block": None,
         }
         unknown_resource = await client.call_tool(
             "get_turing_way_evidence_packets",

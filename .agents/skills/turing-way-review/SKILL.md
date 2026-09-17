@@ -29,6 +29,7 @@ request.
 - `learning-assistant_get_resource`
 - `learning-assistant_get_turing_way_evidence_packets`
 - `learning-assistant_get_turing_way_review_evidence`
+- `learning-assistant_render_validated_turing_way_review`
 
 ## Review workflow
 
@@ -62,10 +63,9 @@ request.
    | Reproducibility | No repeatable setup or validation path | Partial setup, environment, or test instructions | Repeatable setup, pinned dependencies, and documented validation |
    | Version control and collaboration | No visible contribution or history guidance | Basic Git or contribution guidance | Clear contribution workflow, review expectations, and change traceability |
 
-6. Only after every score rationale has its direct evidence, add the three area
-   scores for a rating out of 6. Label 0-1 as
-   **Starting**, 2-3 as **Developing**, 4-5 as **Established**, and 6 as
-   **Strong foundation**. This is a transparent snapshot, not a certification.
+6. Only after every score rationale has its direct evidence, assign its area
+   score. Do not calculate a total or rating label, and do not render a score
+   table yourself. The canonical renderer calculates and renders those values.
 7. Draft no more than five single-focus recommendations, then call
    `learning-assistant_get_turing_way_evidence_packets` once with one request
    per recommendation. Each request must contain the recommendation claim,
@@ -89,23 +89,21 @@ request.
    branches or tags from either URL. Use only the returned packet's
    citation and matching relevance score;
    the three area-level queries cannot substitute for this step.
-8. Return a concise report containing the rating or withheld-score reason,
-   evidence observed, gaps,
-   prioritized improvements, expected benefit, and a Turing Way citation for
-   each recommendation. Every recommendation must display the corresponding
-   MyGPT result as `MyGPT RAG relevance: N%` beside its citation, where `N`
-   is the returned `relevance_score` formatted as a percentage. Do not
-   estimate, normalize, omit, or invent a relevance score. If MyGPT returns
-   no relevance score, write `MyGPT RAG relevance: not provided` rather than
-   presenting a percentage. Separate confirmed facts from assumptions.
-9. Before rendering any score, call
-   `learning-assistant_validate_turing_way_review` with exactly three score
-   rows and the complete packets returned by
-   `learning-assistant_get_turing_way_evidence_packets`. Do not calculate a
-   score or label yourself. Render a numeric score only when the returned
-   `status` is `approved`, copying its `total` and `label` exactly. If the
-   status is `withheld`, render `### Score withheld` and its returned errors;
-   omit every numeric score and rating label.
+8. Do not invent expected benefits or explanatory prose for recommendations.
+   The claim, observed repository fact, resolved Turing Way citation, and
+   MyGPT relevance score are the complete recommendation evidence.
+   Do not estimate, normalize, omit, or invent a relevance score.
+9. Call `learning-assistant_render_validated_turing_way_review` with exactly
+   three score rows and the complete packets returned by
+   `learning-assistant_get_turing_way_evidence_packets`. This tool subsumes
+   `learning-assistant_validate_turing_way_review`: it validates the inputs,
+   calculates the total and label, and renders the canonical sections. If
+   `status` is `approved`, copy its `score_section` and
+   `recommendation_evidence_block` verbatim. If it is `withheld`, copy only
+   its `score_section` verbatim; it contains `### Score withheld` and the
+   returned errors. Never manually calculate, rewrite, or reformat a score,
+   rationale, repository fact, citation, relevance score, or recommendation.
+   A rendered rating is a transparent snapshot, not a certification.
 10. Recommend no more than five improvements. Do not combine unrelated changes
    (for example, a contribution guide and `.gitignore`) in one recommendation.
    Prioritize low-risk, high-impact
@@ -142,24 +140,29 @@ pinned Turing Way URL._
 
 ### Area scores
 
+**Rating:** Developing (2 / 6)
+
 | Area | Score | Evidence-backed rationale | Repository evidence |
 | --- | --- | --- | --- |
-| Reproducibility | 1 / 2 | Dependency pins are present; environment capture is incomplete. | [Exact file or tree URL](https://github.com/OWNER/REPOSITORY/blob/COMMIT/requirements.txt) |
+| Reproducibility | 1 / 2 | The repository has a dependency file. | [Repository evidence](https://github.com/OWNER/REPOSITORY/blob/COMMIT/requirements.txt) |
 
 ### Prioritized improvements
 
-1. **Improvement title** — observed repository gap and expected benefit.
-   Citation: [Pinned Turing Way chapter](https://github.com/...) —
-   `MyGPT RAG relevance: 94%`
+1. **Use a reproducible environment for analysis.**
+   - **Repository fact:** The repository has no environment file. ([Repository evidence](https://github.com/OWNER/REPOSITORY/tree/COMMIT))
+   - **Turing Way citation:** [Pinned chapter title](https://github.com/...)
+   - **MyGPT RAG relevance:** 94%
 ```
 
-The relevance value for every evidence row and recommendation must be copied
-from its matching evidence packet. A
+The final score and recommendation sections must be the exact strings returned
+by `learning-assistant_render_validated_turing_way_review`; the example above
+only illustrates their shape. Do not manually add a score table, score
+narrative, recommendation benefit, or alternate evidence formatting. A
 standalone bibliography, an uncited improvement, or a citation without its
 relevance label is incomplete and must not be presented as a Turing
 Way-grounded review. A score table without a direct repository-evidence URL for
-every rationale is also incomplete: withhold every area score and the total
-rather than guessing.
+every rationale cannot be presented; use the renderer's withheld result
+instead. Its approved score section renders the rating out of 6.
 
 Before rendering, perform this mandatory self-check:
 
@@ -171,10 +174,10 @@ Before rendering, perform this mandatory self-check:
 3. Every score label follows this mapping exactly: 0-1 **Starting**, 2-3
    **Developing**, 4-5 **Established**, 6 **Strong foundation**.
 
-If any check fails, call `learning-assistant_validate_turing_way_review` and
-render `### Score withheld` with its returned errors. Do not render any numeric
-area score, total, or rating label. Do not state a score elsewhere in the
-report.
+If any check fails, call
+`learning-assistant_render_validated_turing_way_review` and copy its returned
+`score_section`. Do not render any numeric area score, total, or rating label.
+Do not state a score elsewhere in the report.
 
 Render the returned packet's `repository_fact` separately from its Turing Way
 citation. State that every content claim uses the exact public GitHub file or

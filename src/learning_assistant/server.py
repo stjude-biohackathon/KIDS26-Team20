@@ -23,6 +23,7 @@ from learning_assistant.models import (
     TuringWayEvidencePacket,
     TuringWayEvidenceRequest,
     TuringWayReviewEvidence,
+    TuringWayReviewRender,
     TuringWayReviewScoreRow,
     TuringWayReviewValidation,
 )
@@ -31,6 +32,120 @@ from learning_assistant.sources import SourceRegistry
 
 DEFAULT_LIMIT = 25
 MAX_LIMIT = 200
+
+
+def validate_turing_way_review_inputs(
+    score_rows: list[TuringWayReviewScoreRow],
+    recommendations: list[TuringWayEvidencePacket],
+) -> TuringWayReviewValidation:
+    """Calculate a score only when the complete review report contract is met."""
+    expected_areas = {
+        "project design",
+        "reproducibility",
+        "version control and collaboration",
+    }
+    errors: list[str] = []
+    areas = [row.area for row in score_rows]
+    if len(score_rows) != 3 or set(areas) != expected_areas or len(set(areas)) != len(areas):
+        errors.append("provide exactly one score row for each required review area")
+    if not 1 <= len(recommendations) <= 5:
+        errors.append("provide between one and five recommendation evidence packets")
+    for index, packet in enumerate(recommendations, start=1):
+        if packet.repository_fact is None:
+            errors.append(f"recommendation {index} has no repository fact")
+        if packet.retrieval.relevance_score is None:
+            errors.append(f"recommendation {index} has no MyGPT relevance score")
+
+    if errors:
+        return TuringWayReviewValidation(status="withheld", errors=errors)
+
+    total = sum(row.score for row in score_rows)
+    label = (
+        "Starting"
+        if total <= 1
+        else "Developing"
+        if total <= 3
+        else "Established"
+        if total <= 5
+        else "Strong foundation"
+    )
+    return TuringWayReviewValidation(status="approved", total=total, label=label)
+
+
+def markdown_table_cell(value: str) -> str:
+    """Render a single line Markdown table cell from observed text."""
+    return " ".join(value.split()).replace("|", r"\|")
+
+
+def format_relevance_score(relevance_score: float) -> str:
+    """Format the MyGPT-provided relevance value as a percentage."""
+    return f"{relevance_score:g}%"
+
+
+def render_validated_turing_way_review_sections(
+    score_rows: list[TuringWayReviewScoreRow],
+    recommendations: list[TuringWayEvidencePacket],
+    validation: TuringWayReviewValidation,
+) -> TuringWayReviewRender:
+    """Build canonical report sections from validated review inputs."""
+    if validation.status != "approved":
+        errors = "\n".join(f"- {error}" for error in validation.errors)
+        return TuringWayReviewRender(
+            status=validation.status,
+            errors=validation.errors,
+            score_section=f"### Score withheld\n\n{errors}",
+        )
+
+    score_rows_by_area = {row.area: row for row in score_rows}
+    area_order = (
+        "project design",
+        "reproducibility",
+        "version control and collaboration",
+    )
+    score_lines = [
+        "### Area scores",
+        "",
+        f"**Rating:** {validation.label} ({validation.total} / 6)",
+        "",
+        "| Area | Score | Evidence-backed rationale | Repository evidence |",
+        "| --- | --- | --- | --- |",
+    ]
+    for area in area_order:
+        row = score_rows_by_area[area]
+        score_lines.append(
+            f"| {row.area.title()} | {row.score} / 2 | {markdown_table_cell(row.claim)} | "
+            f"[Repository evidence]({row.repository_fact.url}) |"
+        )
+
+    recommendation_lines = ["### Prioritized improvements", ""]
+    for index, packet in enumerate(recommendations, start=1):
+        repository_fact = packet.repository_fact
+        assert repository_fact is not None
+        relevance_score = packet.retrieval.relevance_score
+        assert relevance_score is not None
+        recommendation_lines.extend(
+            [
+                f"{index}. **{markdown_table_cell(packet.claim)}**",
+                (
+                    f"   - **Repository fact:** {markdown_table_cell(repository_fact.statement)} "
+                    f"([Repository evidence]({repository_fact.url}))"
+                ),
+                (
+                    f"   - **Turing Way citation:** "
+                    f"[{markdown_table_cell(packet.citation.title)}]({packet.citation.url})"
+                ),
+                (f"   - **MyGPT RAG relevance:** {format_relevance_score(relevance_score)}"),
+            ]
+        )
+
+    return TuringWayReviewRender(
+        status=validation.status,
+        errors=validation.errors,
+        total=validation.total,
+        label=validation.label,
+        score_section="\n".join(score_lines),
+        recommendation_evidence_block="\n".join(recommendation_lines),
+    )
 
 
 def create_server(
@@ -139,37 +254,16 @@ def create_server(
         recommendations: list[TuringWayEvidencePacket],
     ) -> TuringWayReviewValidation:
         """Calculate a review score only when supplied evidence packets meet the report contract."""
-        expected_areas = {
-            "project design",
-            "reproducibility",
-            "version control and collaboration",
-        }
-        errors: list[str] = []
-        areas = [row.area for row in score_rows]
-        if len(score_rows) != 3 or set(areas) != expected_areas or len(set(areas)) != len(areas):
-            errors.append("provide exactly one score row for each required review area")
-        if not 1 <= len(recommendations) <= 5:
-            errors.append("provide between one and five recommendation evidence packets")
-        for index, packet in enumerate(recommendations, start=1):
-            if packet.repository_fact is None:
-                errors.append(f"recommendation {index} has no repository fact")
-            if packet.retrieval.relevance_score is None:
-                errors.append(f"recommendation {index} has no MyGPT relevance score")
+        return validate_turing_way_review_inputs(score_rows, recommendations)
 
-        if errors:
-            return TuringWayReviewValidation(status="withheld", errors=errors)
-
-        total = sum(row.score for row in score_rows)
-        label = (
-            "Starting"
-            if total <= 1
-            else "Developing"
-            if total <= 3
-            else "Established"
-            if total <= 5
-            else "Strong foundation"
-        )
-        return TuringWayReviewValidation(status="approved", total=total, label=label)
+    @server.tool()
+    async def render_validated_turing_way_review(
+        score_rows: list[TuringWayReviewScoreRow],
+        recommendations: list[TuringWayEvidencePacket],
+    ) -> TuringWayReviewRender:
+        """Validate and render a review without rewriting evidence."""
+        validation = validate_turing_way_review_inputs(score_rows, recommendations)
+        return render_validated_turing_way_review_sections(score_rows, recommendations, validation)
 
     return server
 
