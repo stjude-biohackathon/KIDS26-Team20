@@ -1,0 +1,44 @@
+{% comment %} {% load staticfiles %} {% endcomment %}
+<html lang="en">
+
+    <head>
+		<meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="This is Django template backend app with REST api support.">
+		<title>MyGPT Backend</title>
+    </head>
+
+    <body>
+		<header>
+		</header>
+		<div style="text-align: center; display: block;">
+			<h1> MyGPT Backend App </h1>
+			<h3> The App is running!</h3>
+			<div style="width: 200px; margin:auto;">
+				The app contains {{ datasets.count }} libraries.
+				{% if datasets %}
+					<ul>
+						{% for dataset in datasets %}
+							<li>{{ dataset.dataset_name }}</li>
+						{% endfor %}
+					</ul>
+				{% endif %}
+			</div>
+
+			<h3> For Developers: API Endpoints </h3>
+
+			<h4> go to <a href="http://localhost:8000/api/">http://localhost:8000/api/</a> 
+				to access all available API endpoints.</h4>
+		</div>
+		<div style="text-align:center; padding-top: 10px; width:200px; margin:auto;">
+			{% if success %}
+				<p style="color:green;">{{ success }}</p>
+			{% endif %}
+			{% comment %} if error message show it in red {% endcomment %}
+			{% if error %}
+				<p style="color:red;">{{ error }}</p>
+			{% endif %}
+		</div>
+	</body>
+</html> 

@@ -1,0 +1,6 @@
+﻿model_name,model_size,model_source,best_distance_q,worst_distance_q,best_distance_ac,worst_distance_ac
+nomic-embed-text:latest,0.27,ollama,41.65,501.324,20.132,469.74
+nomic-embed-text-v2-moe:latest,0.96,ollama,13.43,214.38,23.69,206.29
+bge-m3:latest,1.16,ollama,81.44,820.82,164.86,736.67
+multi-qa-MiniLM-L6-cos-v1,-,sentence-transformer,0.074,0.96,0.074,0.61
+qwen3-embedding:latest,4.68,ollama,0.086,1.647,0.133,1.165

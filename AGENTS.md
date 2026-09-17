@@ -18,3 +18,24 @@ BioHackathon. It does not contain PHI and must not be used to introduce PHI.
 
 Canonical skills live under `.agents/skills`. Do not maintain divergent copies
 for individual AI clients.
+
+## Turing Way workflows
+
+When a scientist asks for guidance on reproducibility, research software, data
+practice, project design, version control, or collaboration, invoke the
+`turing-way-guidance` skill. When they ask to assess a locally checked-out
+research repository against those practices, invoke `turing-way-review`.
+When they ask where to begin, want a role-appropriate learning path, or need
+an initial checklist for their current research goal, invoke the
+`turing-way-pathfinder` skill.
+
+Before giving recommendations or a rating, use the learning-assistant MCP
+tools to retrieve relevant Turing Way resources and cite their returned URLs.
+For final Turing Way recommendations, use
+`learning-assistant_get_turing_way_evidence_packets`; never construct a
+chapter title, URL, or relevance score from memory or a MyGPT source label.
+For repository reviews, also use the required aggregate evidence tool and
+include separately sourced repository facts in the evidence-packet requests.
+Treat the result as public best-practice guidance, not institutional policy,
+security certification, or clinical advice. Use `mygpt-library` only for
+approved MyGPT dataset discovery or retrieval.

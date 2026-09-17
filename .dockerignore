@@ -1,0 +1,17 @@
+.git
+.github
+.agents
+.venv
+.pytest_cache
+.ruff_cache
+.DS_Store
+config/workbench.env
+config/mygpt.env
+tools/node_modules
+tests
+docs
+project-management
+demo
+Write-Test
+*.pyc
+__pycache__

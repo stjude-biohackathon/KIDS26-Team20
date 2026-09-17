@@ -1,0 +1,28 @@
+# Reproducible MyGPT dataset settings. Model weights and generated Chroma
+# indexes are runtime artifacts and must not be committed.
+dataset:
+  name: turing-way
+  title: The Turing Way
+  source_manifest: corpus/sources.yaml
+  chat_model: qwen2.5:3b
+  embedding_model: nomic-embed-text
+  embedding_source: ollama
+  distance_function: l2
+  chunking_method: fixed_chunk_size
+  chunk_size: 1000
+  use_overlap: true
+  use_bm25: true
+  documents_language: english
+
+# This mirrors the immutable source selected from corpus/sources.yaml.  Keep it
+# explicit so an existing dataset is never mistaken for a corpus from another
+# revision. MyGPT exposes the generated chunk count as dataset_size, but the
+# PDF conversion is backend-version-dependent; require a non-empty index rather
+# than pinning a brittle count.
+provenance:
+  source:
+    repository: the-turing-way/the-turing-way
+    ref: bb3f7abb56a40cd92a654fb51e4ec91f429cca2a
+    content_root: book/website
+  expected_document_count: 487
+  minimum_chunk_count: 1

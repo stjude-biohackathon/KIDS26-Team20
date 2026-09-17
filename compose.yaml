@@ -1,0 +1,89 @@
+services:
+  db:
+    image: postgres:14
+    env_file:
+      - config/mygpt.env
+    volumes:
+      - mygpt-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    security_opt:
+      - no-new-privileges:true
+
+  mygpt-backend:
+    build:
+      context: https://github.com/stjude/MyGPT.git#dde3bd762e03a394157a59fe146a4b07c119ecde:backend
+    entrypoint:
+      - /bin/sh
+      - -c
+    command:
+      - python3 manage.py migrate --fake sessions zero && python3 manage.py migrate --fake-initial && python3 manage.py collectstatic --no-input && python3 manage.py runserver 0.0.0.0:8000
+    env_file:
+      - config/mygpt.env
+    environment:
+      OLLAMA_SERVER: ${MYGPT_OLLAMA_URL:-http://host.docker.internal:11434}
+    ports:
+      - "127.0.0.1:${MYGPT_BACKEND_HOST_PORT:-8001}:8000"
+    volumes:
+      - mygpt-data:/code/data
+      - mygpt-chroma-data:/code/chroma_storage
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8000"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    security_opt:
+      - no-new-privileges:true
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+  mygpt-bootstrap:
+    image: kids26-team20-mygpt-backend
+    entrypoint:
+      - python3
+      - /workspace/scripts/bootstrap_mygpt_dataset.py
+    environment:
+      MYGPT_URL: http://mygpt-backend:8000
+    volumes:
+      - ./:/workspace:ro
+    depends_on:
+      mygpt-backend:
+        condition: service_healthy
+    profiles:
+      - bootstrap
+
+  learning-assistant:
+    build:
+      context: .
+    environment:
+      LEARNING_ASSISTANT_OFFLINE: "false"
+      LEARNING_ASSISTANT_SOURCES: corpus/sources.yaml
+      MYGPT_BASE_URL: http://mygpt-backend:8000
+      MYGPT_MODEL_ID: ${MYGPT_MODEL_ID:-qwen2.5:3b}
+    ports:
+      - "127.0.0.1:${LEARNING_ASSISTANT_HOST_PORT:-8000}:8000"
+    read_only: true
+    tmpfs:
+      - /tmp
+    init: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    depends_on:
+      mygpt-backend:
+        condition: service_healthy
+
+volumes:
+  mygpt-db-data:
+  mygpt-data:
+  mygpt-chroma-data:
