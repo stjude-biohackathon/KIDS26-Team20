@@ -25,6 +25,8 @@ services:
       - config/mygpt.env
     environment:
       OLLAMA_SERVER: ${MYGPT_OLLAMA_URL:-http://host.docker.internal:11434}
+    ports:
+      - "127.0.0.1:${MYGPT_BACKEND_HOST_PORT:-8001}:8000"
     volumes:
       - mygpt-data:/code/data
       - mygpt-chroma-data:/code/chroma_storage

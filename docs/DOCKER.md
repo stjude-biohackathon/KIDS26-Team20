@@ -44,6 +44,15 @@ starting Compose:
 LEARNING_ASSISTANT_HOST_PORT=8080 docker compose up --build
 ```
 
+MyGPT's library API is also available only on the same computer at
+`http://127.0.0.1:8001`. Use this direct endpoint for local MyGPT API requests.
+To select a different unused host port, set `MYGPT_BACKEND_HOST_PORT` before
+starting Compose:
+
+```bash
+MYGPT_BACKEND_HOST_PORT=8002 docker compose up --build
+```
+
 ## Connect an MCP client
 
 Configure a client that supports Streamable HTTP MCP with this URL:
@@ -58,7 +67,8 @@ store chat history, or accept model-provider credentials.
 ## MyGPT and skills
 
 Compose builds MyGPT's backend Dockerfile from the pinned upstream commit,
-starts PostgreSQL, and connects the MCP server to
+starts PostgreSQL, exposes MyGPT's API only on the Docker host loopback at
+`http://127.0.0.1:8001`, and connects the MCP server to
 `http://mygpt-backend:8000` over its private Docker network. The optional
 `mygpt-library` skill calls the documented read-only MyGPT API to list the
 caller's datasets and document titles, and to retrieve cited context from a

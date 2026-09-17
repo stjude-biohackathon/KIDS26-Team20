@@ -41,6 +41,7 @@ def test_compose_builds_mygpt_from_a_pinned_upstream_revision() -> None:
         == "https://github.com/stjude/MyGPT.git#dde3bd762e03a394157a59fe146a4b07c119ecde:backend"
     )
     assert backend["env_file"] == ["config/mygpt.env"]
+    assert backend["ports"] == ["127.0.0.1:${MYGPT_BACKEND_HOST_PORT:-8001}:8000"]
     assert (ROOT / "config/mygpt.env.example").is_file()
 
 
@@ -58,6 +59,7 @@ def test_docker_documentation_explains_local_mcp_and_mygpt_boundary() -> None:
 
     assert "docker compose up --build" in text
     assert "http://127.0.0.1:8000/mcp" in text
+    assert "http://127.0.0.1:8001" in text
     assert "does not call a model" in text
     assert "MyGPT" in text
 

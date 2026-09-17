@@ -83,7 +83,8 @@ The installer registers `turing-way-mygpt` in global OpenCode configuration and
 links the canonical skills from this repository into OpenCode's global skill
 directory without copying them. The Compose command starts the local stack,
 retrieves the full pinned Turing Way corpus, and exposes Streamable HTTP MCP at
-`http://127.0.0.1:8000/mcp`. It automatically falls back to the committed
+`http://127.0.0.1:8000/mcp` and MyGPT's library API at
+`http://127.0.0.1:8001`. It automatically falls back to the committed
 snapshot if GitHub is unavailable. See [the Docker guide](docs/DOCKER.md).
 
 To have OpenCode perform the initial installation from this repository, use
