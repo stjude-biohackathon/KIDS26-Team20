@@ -203,6 +203,8 @@ under [`corpus/`](corpus/).
 - Shovito Barua Soumma
 - Aliyah Cole
 
+**Contact:** ty.michael@stjude.org, malvika.sharan@stjude.org
+
 ## Licence
 
 MIT. See [LICENSE.md](LICENSE.md).
