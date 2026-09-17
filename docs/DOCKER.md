@@ -9,15 +9,16 @@ require administrator approval and a user license/sign-in decision.
 For a first install or repair, run the idempotent bootstrap command:
 
 ```bash
-python3 scripts/install_opencode.py --bootstrap-rag
+python3 scripts/install_opencode.py --bootstrap-rag --pull-ollama-model
 ```
 
 It reconciles the managed OpenCode configuration and skill symlinks, reuses
 existing MyGPT secrets and Docker volumes, starts the stack, waits for its
 services to become healthy, and initializes the corpus only when the dataset
-passes its compatibility checks. It does not delete Docker volumes or overwrite
-a non-symlink skill directory. To configure OpenCode without starting the
-stack, run `python3 scripts/install_opencode.py`.
+passes its compatibility checks. The explicit `--pull-ollama-model` flag
+downloads `qwen2.5:3b` only if absent. It does not delete Docker volumes or
+overwrite a non-symlink skill directory. To configure OpenCode without
+starting the stack, run `python3 scripts/install_opencode.py`.
 
 The server is available only on the same computer at
 `http://127.0.0.1:8000/mcp`. It retrieves the full Turing Way corpus from its

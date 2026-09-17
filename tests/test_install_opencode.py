@@ -8,6 +8,7 @@ from scripts.install_opencode import (
     CANONICAL_SKILLS,
     create_mygpt_environment,
     install_skill_links,
+    pull_ollama_model,
     remove_opencode_config,
     remove_skill_links,
     update_opencode_config,
@@ -148,3 +149,26 @@ def test_installer_detects_required_host_ollama_model(monkeypatch: pytest.Monkey
 
     assert install_opencode.ollama_model_is_ready() is True
     assert install_opencode.ollama_model_is_ready("gemma3:27b") is False
+
+
+def test_installer_pulls_an_explicitly_requested_ollama_model(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    commands: list[list[str]] = []
+    monkeypatch.setattr(install_opencode.shutil, "which", lambda _command: "ollama")
+    monkeypatch.setattr(
+        install_opencode.subprocess,
+        "run",
+        lambda command, **_kwargs: (
+            commands.append(command)
+            or type(
+                "Result",
+                (),
+                {"returncode": 0, "stdout": "qwen2.5:3b abc 1.9GB today\n"},
+            )()
+        ),
+    )
+
+    pull_ollama_model()
+
+    assert commands == [["ollama", "pull", "qwen2.5:3b"], ["ollama", "list"]]

@@ -31,13 +31,15 @@ configure institutional credentials, or run containers against patient data.
    from the KIDS repository root:
 
    ```bash
-   python3 scripts/install_opencode.py --bootstrap-rag
+   python3 scripts/install_opencode.py --bootstrap-rag --pull-ollama-model
    ```
 
    It reconciles the OpenCode MCP entry and canonical skill links, reuses an
    existing MyGPT secret file and Docker volumes, waits for the Compose services
    to become healthy, and imports the RAG corpus only when needed. It does not
-   delete Docker volumes or replace a non-symlink skill directory.
+   delete Docker volumes or replace a non-symlink skill directory. The explicit
+   `--pull-ollama-model` flag authorizes downloading the required 1.9 GB model
+   only when it is missing; it is a no-op when the model already exists.
 
 3. To register the skills and MCP configuration without starting Docker or
    importing the corpus, run:

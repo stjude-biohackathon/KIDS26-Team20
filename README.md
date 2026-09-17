@@ -55,16 +55,18 @@ installed automatically. For a first install or repair, run this idempotent
 bootstrap command:
 
 ```bash
-python3 scripts/install_opencode.py --bootstrap-rag
+python3 scripts/install_opencode.py --bootstrap-rag --pull-ollama-model
 ```
 
 The installer checks Docker Desktop and the required host Ollama model
 (`qwen2.5:3b`) before changing any configuration. It reconciles the managed
 OpenCode MCP entry and canonical skill symlinks, reuses existing MyGPT settings
 and Docker volumes, then waits for the local services to become healthy before
-initializing the full Turing Way RAG corpus. It never deletes Docker volumes or
-replaces a non-symlink skill directory. To register OpenCode configuration
-without starting Docker or initializing RAG, use:
+initializing the full Turing Way RAG corpus. The explicit
+`--pull-ollama-model` flag authorizes downloading `qwen2.5:3b` only when it is
+absent; it is a no-op when the model is already installed. The installer never
+deletes Docker volumes or replaces a non-symlink skill directory. To register
+OpenCode configuration without starting Docker or initializing RAG, use:
 
 ```bash
 python3 scripts/install_opencode.py
@@ -90,10 +92,10 @@ this exact prompt:
 ```text
 Use the install-kids-learning-assistant skill. From this KIDS repository root,
 install or reconcile the local KIDS Learning Assistant for OpenCode by running
-python3 scripts/install_opencode.py --bootstrap-rag. Preserve unrelated
-OpenCode settings; do not replace a non-symlink skill directory or delete
-Docker volumes. When it finishes, report the MCP and RAG readiness and tell me
-to restart OpenCode.
+python3 scripts/install_opencode.py --bootstrap-rag --pull-ollama-model.
+Preserve unrelated OpenCode settings; do not replace a non-symlink skill
+directory or delete Docker volumes. When it finishes, report the MCP and RAG
+readiness and tell me to restart OpenCode.
 ```
 
 After restarting OpenCode, use `opencode mcp list` and

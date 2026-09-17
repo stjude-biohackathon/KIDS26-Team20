@@ -190,6 +190,15 @@ def ollama_model_is_ready(model: str = REQUIRED_OLLAMA_MODEL) -> bool:
     return any(line.split() and line.split()[0] == model for line in result.stdout.splitlines())
 
 
+def pull_ollama_model(model: str = REQUIRED_OLLAMA_MODEL) -> None:
+    """Download an explicitly requested host Ollama model and verify it is available."""
+    if shutil.which("ollama") is None:
+        raise RuntimeError("Ollama must be installed before its model can be downloaded")
+    subprocess.run(["ollama", "pull", model], check=True)
+    if not ollama_model_is_ready(model):
+        raise RuntimeError(f"Ollama did not make the required model {model!r} available")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
@@ -204,9 +213,14 @@ def main() -> int:
         action="store_true",
         help="Remove only this project's managed OpenCode MCP entry, instruction, and skill links.",
     )
+    parser.add_argument(
+        "--pull-ollama-model",
+        action="store_true",
+        help=f"Explicitly download {REQUIRED_OLLAMA_MODEL!r} if it is not installed.",
+    )
     args = parser.parse_args()
-    if args.bootstrap_rag and args.uninstall:
-        parser.error("--bootstrap-rag and --uninstall cannot be used together")
+    if args.uninstall and (args.bootstrap_rag or args.pull_ollama_model):
+        parser.error("--uninstall cannot be used with bootstrap or model-pull options")
 
     if args.uninstall:
         config_removed = remove_opencode_config(args.config, ROOT)
@@ -224,9 +238,23 @@ def main() -> int:
         )
         return 2
     if not ollama_model_is_ready():
+        if args.pull_ollama_model:
+            try:
+                pull_ollama_model()
+            except RuntimeError as error:
+                print(str(error), file=sys.stderr)
+                return 2
+        else:
+            print(
+                f"The host Ollama model {REQUIRED_OLLAMA_MODEL!r} is required. "
+                f"Install it with: ollama pull {REQUIRED_OLLAMA_MODEL}, or rerun with "
+                "--pull-ollama-model to explicitly authorize the download.",
+                file=sys.stderr,
+            )
+            return 2
+    if not ollama_model_is_ready():
         print(
-            f"The host Ollama model {REQUIRED_OLLAMA_MODEL!r} is required. "
-            f"Install it with: ollama pull {REQUIRED_OLLAMA_MODEL}",
+            f"The host Ollama model {REQUIRED_OLLAMA_MODEL!r} is unavailable after download.",
             file=sys.stderr,
         )
         return 2
@@ -251,7 +279,10 @@ def main() -> int:
         print("RAG bootstrap complete.")
     else:
         print("Start the services with: docker compose up --detach --build")
-        print("Initialize RAG with: python3 scripts/install_opencode.py --bootstrap-rag")
+        print(
+            "Initialize RAG with: "
+            "python3 scripts/install_opencode.py --bootstrap-rag --pull-ollama-model"
+        )
     return 0
 
 
