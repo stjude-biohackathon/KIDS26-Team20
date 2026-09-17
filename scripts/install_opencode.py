@@ -33,6 +33,11 @@ def _mapping(value: object, name: str) -> MutableMapping[str, object]:
     return value
 
 
+def _deduplicate(values: list[str]) -> list[str]:
+    """Return values in their original order, keeping the first occurrence."""
+    return list(dict.fromkeys(values))
+
+
 def update_opencode_config(config_path: Path, repository_root: Path) -> None:
     """Add KIDS configuration without overwriting unrelated OpenCode settings."""
     if config_path.exists():
@@ -47,8 +52,7 @@ def update_opencode_config(config_path: Path, repository_root: Path) -> None:
     ):
         raise ValueError("instructions must be a JSON array of paths")
     agent_instructions = str(repository_root / "AGENTS.md")
-    if agent_instructions not in instructions:
-        instructions.append(agent_instructions)
+    instructions[:] = _deduplicate([*instructions, agent_instructions])
 
     permissions = _mapping(config.setdefault("permission", {}), "permission")
     skill_permissions = _mapping(permissions.setdefault("skill", {}), "permission.skill")
@@ -174,7 +178,7 @@ def main() -> int:
     print(f"Created or reused local MyGPT settings: {environment_path}")
     if args.bootstrap_rag:
         subprocess.run(
-            ["docker", "compose", "up", "--detach", "--build"],
+            ["docker", "compose", "up", "--detach", "--build", "--wait"],
             cwd=ROOT,
             check=True,
         )

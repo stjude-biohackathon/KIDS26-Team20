@@ -27,17 +27,23 @@ configure institutional credentials, or run containers against patient data.
    absent or stopped, direct the user to
    `https://docs.docker.com/get-docker/`; do not silently install system
    software, download a large model, or request credentials.
-2. From the KIDS repository root, run:
-
-   ```bash
-   python3 scripts/install_opencode.py
-   docker compose up --detach --build
-   ```
-
-3. For a complete local Turing Way RAG setup, run:
+2. For a first installation or a repair, run this idempotent bootstrap command
+   from the KIDS repository root:
 
    ```bash
    python3 scripts/install_opencode.py --bootstrap-rag
+   ```
+
+   It reconciles the OpenCode MCP entry and canonical skill links, reuses an
+   existing MyGPT secret file and Docker volumes, waits for the Compose services
+   to become healthy, and imports the RAG corpus only when needed. It does not
+   delete Docker volumes or replace a non-symlink skill directory.
+
+3. To register the skills and MCP configuration without starting Docker or
+   importing the corpus, run:
+
+   ```bash
+   python3 scripts/install_opencode.py
    ```
 
 4. Restart OpenCode so it discovers the linked global skills and the
@@ -52,9 +58,10 @@ configure institutional credentials, or run containers against patient data.
 
 If Docker is unavailable, say that Docker Desktop must be started. If OpenCode
 is unavailable, explain that the MCP and skills will be registered when it is
-installed. Do not overwrite a non-symlink skill directory, expose local
-configuration values, or claim that MyGPT retrieval works before its dataset is
-initialized.
+installed. Re-run the bootstrap command to repair a stale managed symlink or
+MCP entry. Do not overwrite a non-symlink skill directory, delete Docker
+volumes, expose local configuration values, or claim that MyGPT retrieval works
+before its dataset is initialized.
 
 ## Evaluation cases
 

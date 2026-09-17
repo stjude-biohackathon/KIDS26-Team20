@@ -16,15 +16,27 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_installer_preserves_existing_config_and_registers_mcp(tmp_path: Path) -> None:
     config_path = tmp_path / "opencode.json"
-    config_path.write_text(json.dumps({"model": "test/model"}), encoding="utf-8")
+    agent_instructions = str(ROOT / "AGENTS.md")
+    config_path.write_text(
+        json.dumps(
+            {
+                "model": "test/model",
+                "instructions": [agent_instructions, "shared.md", agent_instructions],
+            }
+        ),
+        encoding="utf-8",
+    )
 
+    update_opencode_config(config_path, ROOT)
+    first_install = config_path.read_text(encoding="utf-8")
     update_opencode_config(config_path, ROOT)
 
     config = json.loads(config_path.read_text(encoding="utf-8"))
     assert config["model"] == "test/model"
     assert config["mcp"]["turing-way-mygpt"]["url"] == "http://127.0.0.1:8000/mcp"
-    assert str(ROOT / "AGENTS.md") in config["instructions"]
+    assert config["instructions"] == [agent_instructions, "shared.md"]
     assert config["permission"]["skill"]["turing-way-*"] == "allow"
+    assert config_path.read_text(encoding="utf-8") == first_install
 
 
 def test_installer_links_global_skills_to_canonical_repository_files(tmp_path: Path) -> None:
@@ -36,6 +48,20 @@ def test_installer_links_global_skills_to_canonical_repository_files(tmp_path: P
         target = skills_root / name
         assert target.is_symlink()
         assert target.resolve() == ROOT / ".agents/skills" / name
+
+
+def test_installer_replaces_a_stale_managed_skill_symlink(tmp_path: Path) -> None:
+    skills_root = tmp_path / "skills"
+    skills_root.mkdir()
+    stale_target = tmp_path / "stale-skill"
+    stale_target.mkdir()
+    (skills_root / "turing-way-review").symlink_to(stale_target, target_is_directory=True)
+
+    install_skill_links(skills_root, ROOT)
+
+    assert (skills_root / "turing-way-review").resolve() == (
+        ROOT / ".agents/skills" / "turing-way-review"
+    )
 
 
 def test_installer_does_not_replace_a_non_symlink_skill_directory(tmp_path: Path) -> None:

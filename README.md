@@ -51,19 +51,23 @@ validation all work offline.
 For the easiest scientist-facing setup, install and start
 [Docker Desktop](https://docs.docker.com/get-docker/) for your operating
 system. Docker Desktop is a user-approved system installation and is not
-installed automatically. Then run:
-
-```bash
-python3 scripts/install_opencode.py
-docker compose up --detach --build
-```
-
-The installer checks Docker Desktop and the required host Ollama model
-(`qwen2.5:3b`) before changing any configuration. To start containers and
-initialize the full Turing Way RAG corpus in one explicit command, use:
+installed automatically. For a first install or repair, run this idempotent
+bootstrap command:
 
 ```bash
 python3 scripts/install_opencode.py --bootstrap-rag
+```
+
+The installer checks Docker Desktop and the required host Ollama model
+(`qwen2.5:3b`) before changing any configuration. It reconciles the managed
+OpenCode MCP entry and canonical skill symlinks, reuses existing MyGPT settings
+and Docker volumes, then waits for the local services to become healthy before
+initializing the full Turing Way RAG corpus. It never deletes Docker volumes or
+replaces a non-symlink skill directory. To register OpenCode configuration
+without starting Docker or initializing RAG, use:
+
+```bash
+python3 scripts/install_opencode.py
 ```
 
 The installer registers `turing-way-mygpt` in global OpenCode configuration and
@@ -72,6 +76,22 @@ directory without copying them. The Compose command starts the local stack,
 retrieves the full pinned Turing Way corpus, and exposes Streamable HTTP MCP at
 `http://127.0.0.1:8000/mcp`. It automatically falls back to the committed
 snapshot if GitHub is unavailable. See [the Docker guide](docs/DOCKER.md).
+
+To have OpenCode perform the initial installation from this repository, use
+this exact prompt:
+
+```text
+Use the install-kids-learning-assistant skill. From this KIDS repository root,
+install or reconcile the local KIDS Learning Assistant for OpenCode by running
+python3 scripts/install_opencode.py --bootstrap-rag. Preserve unrelated
+OpenCode settings; do not replace a non-symlink skill directory or delete
+Docker volumes. When it finishes, report the MCP and RAG readiness and tell me
+to restart OpenCode.
+```
+
+After restarting OpenCode, use `opencode mcp list` and
+`turing-way-mygpt_get_rag_status` to confirm the new session sees the MCP and
+the indexed corpus.
 
 MyGPT's repeatable Turing Way dataset settings live in
 [`config/mygpt-bootstrap.yaml`](config/mygpt-bootstrap.yaml). It specifies the

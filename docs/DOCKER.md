@@ -6,12 +6,18 @@ for macOS, Windows, or Linux first. Docker Desktop is intentionally not
 installed by this project because it is operating-system software that may
 require administrator approval and a user license/sign-in decision.
 
-Run the installer once, then start the complete local stack:
+For a first install or repair, run the idempotent bootstrap command:
 
 ```bash
-python3 scripts/install_opencode.py
-docker compose up --detach --build
+python3 scripts/install_opencode.py --bootstrap-rag
 ```
+
+It reconciles the managed OpenCode configuration and skill symlinks, reuses
+existing MyGPT secrets and Docker volumes, starts the stack, waits for its
+services to become healthy, and initializes the corpus only when the dataset
+passes its compatibility checks. It does not delete Docker volumes or overwrite
+a non-symlink skill directory. To configure OpenCode without starting the
+stack, run `python3 scripts/install_opencode.py`.
 
 The server is available only on the same computer at
 `http://127.0.0.1:8000/mcp`. It retrieves the full Turing Way corpus from its
@@ -25,9 +31,10 @@ healthy at `http://127.0.0.1:8000/health`. Stop it with `docker compose down`.
 database and Django secrets when it does not exist, creates global OpenCode
 skill links that point back to this repository's canonical `.agents/skills`
 definitions, adds the local MCP endpoint to `~/.config/opencode/opencode.json`,
-and preserves unrelated OpenCode settings. It first checks that Docker Desktop
-is installed and its daemon is running, then reports the Docker installation
-link if it is not. Restart OpenCode after running it.
+deduplicates its managed instruction path, and preserves unrelated OpenCode
+settings. It first checks that Docker Desktop is installed and its daemon is
+running, then reports the Docker installation link if it is not. Restart
+OpenCode after running it.
 
 To use a different unused local port, set `LEARNING_ASSISTANT_HOST_PORT` before
 starting Compose:
