@@ -5,8 +5,8 @@ dataset:
   title: The Turing Way
   source_manifest: corpus/sources.yaml
   chat_model: qwen2.5:3b
-  embedding_model: multi-qa-MiniLM-L6-cos-v1
-  embedding_source: sentence-transformer
+  embedding_model: nomic-embed-text
+  embedding_source: ollama
   distance_function: l2
   chunking_method: fixed_chunk_size
   chunk_size: 1000

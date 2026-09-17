@@ -16,7 +16,7 @@ It reconciles the managed OpenCode configuration and skill symlinks, reuses
 existing MyGPT secrets and Docker volumes, starts the stack, waits for its
 services to become healthy, and initializes the corpus only when the dataset
 passes its compatibility checks. The explicit `--pull-ollama-model` flag
-downloads `qwen2.5:3b` only if absent. It does not delete Docker volumes or
+downloads `qwen2.5:3b` and `nomic-embed-text` only if absent. It does not delete Docker volumes or
 overwrite a non-symlink skill directory. To configure OpenCode without
 starting the stack, run `python3 scripts/install_opencode.py`.
 
@@ -78,16 +78,23 @@ endpoint and preserves its source records in the typed MCP response.
 [`config/mygpt-bootstrap.yaml`](../config/mygpt-bootstrap.yaml) is the tracked
 source of truth for the MyGPT Turing Way dataset. It records the dataset name
 (`turing-way`), pinned source revision and expected document count, chat model
-(`qwen2.5:3b`), embedding model (`multi-qa-MiniLM-L6-cos-v1`), chunking, and
+(`qwen2.5:3b`), embedding model (`nomic-embed-text` from Ollama), chunking, and
 retrieval settings. It does not contain model weights, a generated vector
 index, credentials, or scientific data.
 
 Before question retrieval can return Turing Way evidence, initialize MyGPT
 using those settings, import the full pinned corpus, and build its embeddings.
 By default, MyGPT calls the Ollama server already running on the Docker host at
-`http://host.docker.internal:11434` and uses `qwen2.5:3b`. Set
-`MYGPT_OLLAMA_URL` or `MYGPT_MODEL_ID` when using a different host service or
-installed model.
+`http://host.docker.internal:11434`, using `qwen2.5:3b` for chat and
+`nomic-embed-text` for embeddings. Install both Ollama models before bootstrap:
+
+```bash
+ollama pull qwen2.5:3b
+ollama pull nomic-embed-text
+```
+
+Set `MYGPT_OLLAMA_URL` or `MYGPT_MODEL_ID` when using a different host service
+or chat model.
 
 MyGPT's dataset upload and indexing process is responsible for creating that
 dataset. The MCP container does not upload documents or expose another user's

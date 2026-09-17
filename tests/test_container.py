@@ -72,8 +72,8 @@ def test_mygpt_bootstrap_settings_pin_a_safe_turing_way_embedding_configuration(
     assert dataset["name"] == "turing-way"
     assert dataset["source_manifest"] == "corpus/sources.yaml"
     assert dataset["chat_model"] == "qwen2.5:3b"
-    assert dataset["embedding_model"] == "multi-qa-MiniLM-L6-cos-v1"
-    assert dataset["embedding_source"] == "sentence-transformer"
+    assert dataset["embedding_model"] == "nomic-embed-text"
+    assert dataset["embedding_source"] == "ollama"
     assert dataset["use_bm25"] is True
     assert provenance["source"] == {
         "repository": "the-turing-way/the-turing-way",
@@ -91,7 +91,7 @@ def test_mygpt_bootstrap_skips_only_a_compatible_live_dataset(
     dataset = {
         "name": "turing-way",
         "chat_model": "qwen2.5:3b",
-        "embedding_model": "multi-qa-MiniLM-L6-cos-v1",
+        "embedding_model": "nomic-embed-text",
         "chunk_size": 1000,
         "chunking_method": "fixed_chunk_size",
         "use_overlap": True,
@@ -109,7 +109,7 @@ def test_mygpt_bootstrap_skips_only_a_compatible_live_dataset(
             return [{"dataset_name": "turing-way", "dataset_size": 12}]
         if url.endswith("/api/get_dataset_details/"):
             return {
-                "embedding_model": "multi-qa-MiniLM-L6-cos-v1",
+                "embedding_model": "nomic-embed-text",
                 "chunksize": 1000,
                 "chunking_method": "fixed_chunk_size",
                 "overlap": True,
@@ -143,7 +143,7 @@ def test_mygpt_bootstrap_refuses_an_existing_incompatible_dataset(
     dataset = {
         "name": "turing-way",
         "chat_model": "qwen2.5:3b",
-        "embedding_model": "multi-qa-MiniLM-L6-cos-v1",
+        "embedding_model": "nomic-embed-text",
         "chunk_size": 1000,
         "chunking_method": "fixed_chunk_size",
         "use_overlap": True,

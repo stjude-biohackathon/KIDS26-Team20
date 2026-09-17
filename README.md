@@ -58,13 +58,13 @@ bootstrap command:
 python3 scripts/install_opencode.py --bootstrap-rag --pull-ollama-model
 ```
 
-The installer checks Docker Desktop and the required host Ollama model
-(`qwen2.5:3b`) before changing any configuration. It reconciles the managed
+The installer checks Docker Desktop and the required host Ollama models
+(`qwen2.5:3b` and `nomic-embed-text`) before changing any configuration. It reconciles the managed
 OpenCode MCP entry and canonical skill symlinks, reuses existing MyGPT settings
 and Docker volumes, then waits for the local services to become healthy before
 initializing the full Turing Way RAG corpus. The explicit
-`--pull-ollama-model` flag authorizes downloading `qwen2.5:3b` only when it is
-absent; it is a no-op when the model is already installed. The installer never
+`--pull-ollama-model` flag authorizes downloading either required model only
+when absent; it is a no-op when both models are already installed. The installer never
 deletes Docker volumes or replaces a non-symlink skill directory. To register
 OpenCode configuration without starting Docker or initializing RAG, use:
 

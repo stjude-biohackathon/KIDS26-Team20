@@ -147,7 +147,7 @@ def test_installer_detects_required_host_ollama_model(monkeypatch: pytest.Monkey
         )(),
     )
 
-    assert install_opencode.ollama_model_is_ready() is True
+    assert install_opencode.ollama_model_is_ready("qwen2.5:3b") is True
     assert install_opencode.ollama_model_is_ready("gemma3:27b") is False
 
 
@@ -169,6 +169,6 @@ def test_installer_pulls_an_explicitly_requested_ollama_model(
         ),
     )
 
-    pull_ollama_model()
+    pull_ollama_model("qwen2.5:3b")
 
     assert commands == [["ollama", "pull", "qwen2.5:3b"], ["ollama", "list"]]

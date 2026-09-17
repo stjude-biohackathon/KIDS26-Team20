@@ -24,7 +24,7 @@ CANONICAL_SKILLS = (
 DEFAULT_CONFIG = Path.home() / ".config/opencode/opencode.json"
 DEFAULT_SKILLS_ROOT = Path.home() / ".config/opencode/skills"
 DOCKER_DESKTOP_URL = "https://docs.docker.com/get-docker/"
-REQUIRED_OLLAMA_MODEL = "qwen2.5:3b"
+REQUIRED_OLLAMA_MODELS = ("qwen2.5:3b", "nomic-embed-text")
 
 
 def _mapping(value: object, name: str) -> MutableMapping[str, object]:
@@ -175,7 +175,7 @@ def docker_is_ready() -> bool:
     return result.returncode == 0
 
 
-def ollama_model_is_ready(model: str = REQUIRED_OLLAMA_MODEL) -> bool:
+def ollama_model_is_ready(model: str) -> bool:
     """Return whether the host Ollama server has the required model installed."""
     if shutil.which("ollama") is None:
         return False
@@ -190,7 +190,7 @@ def ollama_model_is_ready(model: str = REQUIRED_OLLAMA_MODEL) -> bool:
     return any(line.split() and line.split()[0] == model for line in result.stdout.splitlines())
 
 
-def pull_ollama_model(model: str = REQUIRED_OLLAMA_MODEL) -> None:
+def pull_ollama_model(model: str) -> None:
     """Download an explicitly requested host Ollama model and verify it is available."""
     if shutil.which("ollama") is None:
         raise RuntimeError("Ollama must be installed before its model can be downloaded")
@@ -216,7 +216,7 @@ def main() -> int:
     parser.add_argument(
         "--pull-ollama-model",
         action="store_true",
-        help=f"Explicitly download {REQUIRED_OLLAMA_MODEL!r} if it is not installed.",
+        help="Explicitly download missing required Ollama chat and embedding models.",
     )
     args = parser.parse_args()
     if args.uninstall and (args.bootstrap_rag or args.pull_ollama_model):
@@ -237,24 +237,31 @@ def main() -> int:
             file=sys.stderr,
         )
         return 2
-    if not ollama_model_is_ready():
+    missing_models = [model for model in REQUIRED_OLLAMA_MODELS if not ollama_model_is_ready(model)]
+    if missing_models:
         if args.pull_ollama_model:
             try:
-                pull_ollama_model()
+                for model in missing_models:
+                    pull_ollama_model(model)
             except RuntimeError as error:
                 print(str(error), file=sys.stderr)
                 return 2
         else:
             print(
-                f"The host Ollama model {REQUIRED_OLLAMA_MODEL!r} is required. "
-                f"Install it with: ollama pull {REQUIRED_OLLAMA_MODEL}, or rerun with "
+                "The host Ollama models "
+                f"{', '.join(repr(model) for model in missing_models)} are required. "
+                "Install them with `ollama pull <model>`, or rerun with "
                 "--pull-ollama-model to explicitly authorize the download.",
                 file=sys.stderr,
             )
             return 2
-    if not ollama_model_is_ready():
+    unavailable_models = [
+        model for model in REQUIRED_OLLAMA_MODELS if not ollama_model_is_ready(model)
+    ]
+    if unavailable_models:
         print(
-            f"The host Ollama model {REQUIRED_OLLAMA_MODEL!r} is unavailable after download.",
+            f"The host Ollama models {', '.join(repr(model) for model in unavailable_models)} "
+            "are unavailable after download.",
             file=sys.stderr,
         )
         return 2
