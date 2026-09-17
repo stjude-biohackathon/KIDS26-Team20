@@ -1,8 +1,8 @@
 ---
 name: turing-way-certified
-description: Rate an accessible GitHub repository against ten evidence-based Turing Way alignment criteria and generate a citation-backed PDF report with scores, findings, limitations, and prioritized improvements. Use when a user asks for a Turing Way score, certification-style assessment, reproducibility rating, or PDF review of a GitHub project.
+description: Rate a public GitHub repository against ten evidence-based Turing Way alignment criteria and generate a citation-backed PDF report with scores, findings, limitations, and prioritized improvements. Use when a user asks for a Turing Way score, certification-style assessment, reproducibility rating, or PDF review of a public GitHub project.
 license: MIT
-compatibility: Requires access to the repository's public GitHub contents or an authorized local checkout, Git, file inspection, and a PDF-capable local reporting path.
+compatibility: Requires a public GitHub repository, Git, file inspection, public commit-pinned GitHub evidence URLs, and a PDF-capable local reporting path.
 metadata:
   audience: research-software-teams-and-maintainers
   status: draft
@@ -13,7 +13,7 @@ metadata:
 ## Use this skill when
 
 Use this skill when a user asks to assess, rate, score, or produce a PDF report
-about how closely a public or authorized GitHub repository follows
+about how closely a public GitHub repository follows
 reproducible, open, ethical, and collaborative research-software practices
 described by The Turing Way. This skill produces an alignment assessment, not
 an official certification, accreditation, compliance determination, or
@@ -23,10 +23,12 @@ institutional approval.
 
 Do not use this skill for penetration testing, a security audit, clinical or
 HIPAA validation, legal or licensing advice, institutional-policy approval,
-accessing a private repository without authorization, or changing the reviewed
-repository. Do not expose credentials, private URLs, PHI, patient identifiers,
-or other restricted content in the report. Use a normal implementation workflow
-when the user wants code changes rather than an assessment.
+reviewing a private or local-only repository, or changing the reviewed
+repository. The evidence-packet tools require public, commit-pinned GitHub
+URLs, so private and local-only evidence cannot support this assessment. Do not
+expose credentials, private URLs, PHI, patient identifiers, or other restricted
+content in the report. Use a normal implementation workflow when the user wants
+code changes rather than an assessment.
 
 ## Required tools
 
@@ -84,11 +86,13 @@ recommendations.
 
 ## Workflow
 
-1. Confirm the exact public GitHub URL (`OWNER/REPOSITORY`) or authorized local
-   checkout, the commit or ref to assess, and whether the user wants the
-   default whole-repository review. If the ref is not specified, use the
-   repository's default branch and record the resolved commit SHA. Do not
-   inspect private content unless the user has authorized access.
+1. Confirm the exact public GitHub URL (`OWNER/REPOSITORY`), the commit or ref
+   to assess, and whether the user wants the default whole-repository review.
+   If the ref is not specified, use the repository's default branch and record
+   the resolved commit SHA. A local checkout may be used for inspection only
+   when it corresponds to that public repository and every cited fact can be
+   proven with a public, commit-pinned GitHub evidence URL. Do not review a
+   private or local-only repository.
 2. Explain that the result is a 100-point Turing Way alignment assessment, not
    official certification. State the review date, repository/ref/commit, and
    accessible scope before collecting evidence.
@@ -96,7 +100,8 @@ recommendations.
    `learning-assistant_list_resources` and
    `learning-assistant_get_resource` for the relevant returned resources.
    Use only returned context and pinned source records for Turing Way claims.
-4. Inspect repository instructions, README and documentation, Git history,
+4. Inspect the public repository, or a matching local checkout of the same
+   public commit, including repository instructions, README and documentation, Git history,
    manifests and lockfiles, source and workflow configuration, tests, issue and
    contribution guidance, license and citation files, data/workflow metadata,
    and accessibility or ethics documentation. Exclude caches, vendored code,
@@ -144,13 +149,13 @@ recommendations.
 - Calculate `total = sum(score_1 ... score_10)` and report it as `N/100` and
   `N%`; do not call it a certification level.
 - Report an overall confidence of high, medium, or low with a reason based on
-  repository access, evidence coverage, and checks that actually ran.
+  public evidence coverage and checks that actually ran.
 - Distinguish observed facts, reviewer inferences, recommendations, and
   Turing Way guidance.
 - Cite the exact repository commit, path, ref, and URL. Prefer line-specific
   blob URLs for file evidence and commit-pinned API/tree URLs for absence.
-- Never include secrets, tokens, private URLs, PHI, patient identifiers, or
-  unnecessary private repository content.
+- Never inspect or include private repository content, secrets, tokens, private
+  URLs, PHI, or patient identifiers.
 - If a criterion is not applicable, score it 0 only if the lack of
   applicability is itself justified; otherwise mark it "insufficient evidence"
   and lower confidence rather than silently excluding it.
@@ -159,12 +164,14 @@ recommendations.
 
 ## Failure behavior
 
-If the repository cannot be accessed or the ref cannot be resolved, do not
+If the repository is private or local-only, explain that the evidence-packet
+contract requires public, commit-pinned GitHub URLs and do not score it. If the
+public repository cannot be accessed or the ref cannot be resolved, do not
 score it. If Turing Way retrieval or resource resolution fails, do not invent
-citations or present the result as evidence-backed; report the failure and
-stop before assigning a rating. If a check, PDF converter, or output write
-fails, record the exact failure, preserve the source report when possible, and
-do not claim that a PDF was generated. If evidence is incomplete, continue
+citations or present the result as evidence-backed; report the failure and stop
+before assigning a rating. If a check, PDF converter, or output write fails,
+record the exact failure, preserve the source report when possible, and do not
+claim that a PDF was generated. If public evidence is incomplete, continue
 independent inspection, lower confidence, and label the affected criteria
 provisional. Never silently replace a missing source with a remembered URL or
 an unverified standard.
@@ -180,4 +187,6 @@ an unverified standard.
   clearly distinguish it from official certification."
 - Negative: "Penetration-test this repository and certify it as secure."
 - Negative: "Approve this repository for HIPAA or institutional compliance."
+- Negative: "Rate this private or local-only repository without publishing its
+  evidence."
 - Negative: "Fix the repository's failing tests and update its workflows."
