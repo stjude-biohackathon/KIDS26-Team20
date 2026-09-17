@@ -98,7 +98,15 @@ request.
    estimate, normalize, omit, or invent a relevance score. If MyGPT returns
    no relevance score, write `MyGPT RAG relevance: not provided` rather than
    presenting a percentage. Separate confirmed facts from assumptions.
-9. Recommend no more than five improvements. Do not combine unrelated changes
+9. Before rendering any score, call
+   `learning-assistant_validate_turing_way_review` with exactly three score
+   rows and the complete packets returned by
+   `learning-assistant_get_turing_way_evidence_packets`. Do not calculate a
+   score or label yourself. Render a numeric score only when the returned
+   `status` is `approved`, copying its `total` and `label` exactly. If the
+   status is `withheld`, render `### Score withheld` and its returned errors;
+   omit every numeric score and rating label.
+10. Recommend no more than five improvements. Do not combine unrelated changes
    (for example, a contribution guide and `.gitignore`) in one recommendation.
    Prioritize low-risk, high-impact
    improvements that a research team can verify, such as a reproducible setup
@@ -163,9 +171,10 @@ Before rendering, perform this mandatory self-check:
 3. Every score label follows this mapping exactly: 0-1 **Starting**, 2-3
    **Developing**, 4-5 **Established**, 6 **Strong foundation**.
 
-If any check fails, render `### Score withheld` with the specific missing or
-compound evidence and do not render any numeric area score, total, or rating
-label. Do not state a score elsewhere in the report.
+If any check fails, call `learning-assistant_validate_turing_way_review` and
+render `### Score withheld` with its returned errors. Do not render any numeric
+area score, total, or rating label. Do not state a score elsewhere in the
+report.
 
 Render the returned packet's `repository_fact` separately from its Turing Way
 citation. State that every content claim uses the exact public GitHub file or

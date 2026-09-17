@@ -23,6 +23,8 @@ from learning_assistant.models import (
     TuringWayEvidencePacket,
     TuringWayEvidenceRequest,
     TuringWayReviewEvidence,
+    TuringWayReviewScoreRow,
+    TuringWayReviewValidation,
 )
 from learning_assistant.mygpt import MyGPTClient
 from learning_assistant.sources import SourceRegistry
@@ -130,6 +132,44 @@ def create_server(
             )
             for request, document, evidence in zip(requests, documents, retrievals, strict=True)
         ]
+
+    @server.tool()
+    async def validate_turing_way_review(
+        score_rows: list[TuringWayReviewScoreRow],
+        recommendations: list[TuringWayEvidencePacket],
+    ) -> TuringWayReviewValidation:
+        """Calculate a review score only when supplied evidence packets meet the report contract."""
+        expected_areas = {
+            "project design",
+            "reproducibility",
+            "version control and collaboration",
+        }
+        errors: list[str] = []
+        areas = [row.area for row in score_rows]
+        if len(score_rows) != 3 or set(areas) != expected_areas or len(set(areas)) != len(areas):
+            errors.append("provide exactly one score row for each required review area")
+        if not 1 <= len(recommendations) <= 5:
+            errors.append("provide between one and five recommendation evidence packets")
+        for index, packet in enumerate(recommendations, start=1):
+            if packet.repository_fact is None:
+                errors.append(f"recommendation {index} has no repository fact")
+            if packet.retrieval.relevance_score is None:
+                errors.append(f"recommendation {index} has no MyGPT relevance score")
+
+        if errors:
+            return TuringWayReviewValidation(status="withheld", errors=errors)
+
+        total = sum(row.score for row in score_rows)
+        label = (
+            "Starting"
+            if total <= 1
+            else "Developing"
+            if total <= 3
+            else "Established"
+            if total <= 5
+            else "Strong foundation"
+        )
+        return TuringWayReviewValidation(status="approved", total=total, label=label)
 
     return server
 

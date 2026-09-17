@@ -37,6 +37,7 @@ async def test_mcp_contract_in_memory() -> None:
             "get_rag_status",
             "get_turing_way_evidence_packets",
             "get_turing_way_review_evidence",
+            "validate_turing_way_review",
         }
 
         listed = await client.call_tool("list_resources", {})
@@ -184,6 +185,47 @@ async def test_mygpt_library_tools_return_typed_api_data() -> None:
             "statement": "The repository has no environment file.",
             "url": "https://github.com/example/repository/tree/1234567",
         }
+        review_validation = await client.call_tool(
+            "validate_turing_way_review",
+            {
+                "score_rows": [
+                    {
+                        "area": "project design",
+                        "score": 1,
+                        "claim": "The project scope is documented.",
+                        "repository_fact": {
+                            "statement": "The README documents the project scope.",
+                            "url": "https://github.com/example/repository/blob/1234567/README.md",
+                        },
+                    },
+                    {
+                        "area": "reproducibility",
+                        "score": 1,
+                        "claim": "The repository has a dependency file.",
+                        "repository_fact": {
+                            "statement": "requirements.txt is present.",
+                            "url": "https://github.com/example/repository/blob/1234567/requirements.txt",
+                        },
+                    },
+                    {
+                        "area": "version control and collaboration",
+                        "score": 0,
+                        "claim": "The reviewed history has a single commit.",
+                        "repository_fact": {
+                            "statement": "The history has one commit.",
+                            "url": "https://github.com/example/repository/commits/1234567",
+                        },
+                    },
+                ],
+                "recommendations": [packet],
+            },
+        )
+        assert review_validation.structured_content == {
+            "status": "approved",
+            "errors": [],
+            "total": 2,
+            "label": "Developing",
+        }
         invalid_fact = await client.call_tool(
             "get_turing_way_evidence_packets",
             {
@@ -216,6 +258,22 @@ async def test_mygpt_library_tools_return_typed_api_data() -> None:
             },
         )
         assert unscoped_fact.is_error
+        withheld_validation = await client.call_tool(
+            "validate_turing_way_review",
+            {
+                "score_rows": [],
+                "recommendations": [{**packet, "repository_fact": None}],
+            },
+        )
+        assert withheld_validation.structured_content == {
+            "status": "withheld",
+            "errors": [
+                "provide exactly one score row for each required review area",
+                "recommendation 1 has no repository fact",
+            ],
+            "total": None,
+            "label": None,
+        }
         unknown_resource = await client.call_tool(
             "get_turing_way_evidence_packets",
             {

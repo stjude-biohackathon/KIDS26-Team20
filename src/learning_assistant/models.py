@@ -6,7 +6,7 @@ import re
 from pathlib import Path
 from urllib.parse import urlsplit
 
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, Field, field_validator
 
 GITHUB_REPOSITORY_PATTERN = re.compile(
     r"[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?/[A-Za-z0-9._-]{1,100}"
@@ -250,6 +250,43 @@ class TuringWayEvidencePacket(BaseModel):
     citation: ResolvedTuringWayCitation
     retrieval: MyGPTContext
     repository_fact: RepositoryFact | None = None
+
+
+class TuringWayReviewScoreRow(BaseModel):
+    """One scored review area with one directly observed repository fact."""
+
+    area: str
+    score: int = Field(ge=0, le=2)
+    claim: str
+    repository_fact: RepositoryFact
+
+    @field_validator("area")
+    @classmethod
+    def validate_area(cls, value: str) -> str:
+        allowed = {
+            "project design",
+            "reproducibility",
+            "version control and collaboration",
+        }
+        if value not in allowed:
+            raise ValueError(f"area must be one of: {', '.join(sorted(allowed))}")
+        return value
+
+    @field_validator("claim")
+    @classmethod
+    def validate_claim(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("score claim must not be empty")
+        return value.strip()
+
+
+class TuringWayReviewValidation(BaseModel):
+    """Server-calculated result that permits or withholds a review score."""
+
+    status: str
+    errors: list[str] = []
+    total: int | None = None
+    label: str | None = None
 
 
 class SourcesFile(BaseModel):

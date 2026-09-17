@@ -21,6 +21,7 @@ def test_turing_way_review_skill_uses_the_citation_preserving_mcp_tools() -> Non
     assert "`learning-assistant_get_resource`" in text
     assert "`learning-assistant_get_turing_way_evidence_packets`" in text
     assert "`learning-assistant_get_turing_way_review_evidence`" in text
+    assert "`learning-assistant_validate_turing_way_review`" in text
     assert "required MyGPT RAG evidence" in text
     assert "MyGPT RAG relevance: N%" in text
     assert "Do not\n   estimate, normalize, omit, or invent" in text
@@ -73,8 +74,10 @@ def test_turing_way_review_skill_uses_the_citation_preserving_mcp_tools() -> Non
     assert "### Area scores" in text
     assert "A score table without a direct repository-evidence URL for\nevery rationale" in text
     assert "Before rendering, perform this mandatory self-check" in text
-    assert "If any check fails, render `### Score withheld`" in text
-    assert "do not render any numeric area score, total, or rating\nlabel" in text
+    assert "If any check fails, call `learning-assistant_validate_turing_way_review`" in text
+    assert "omit every numeric score and rating label" in text
+    assert "Do not calculate a\n   score or label yourself" in text
+    assert "status` is `approved`, copying its `total` and `label` exactly" in text
     assert (
         "Do not include notices, configuration advice, warnings, or links from unrelated\n"
         "MCP services" in text
