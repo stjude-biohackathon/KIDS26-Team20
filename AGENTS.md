@@ -25,6 +25,9 @@ When a scientist asks for guidance on reproducibility, research software, data
 practice, project design, version control, or collaboration, invoke the
 `turing-way-guidance` skill. When they ask to assess a locally checked-out
 research repository against those practices, invoke `turing-way-review`.
+When they ask for a ten-criterion score, certification-style assessment, or
+PDF alignment report for a public GitHub or attached local repository, invoke
+`turing-way-certified`.
 When they ask where to begin, want a role-appropriate learning path, or need
 an initial checklist for their current research goal, invoke the
 `turing-way-pathfinder` skill.

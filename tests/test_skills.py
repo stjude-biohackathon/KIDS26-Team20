@@ -80,6 +80,7 @@ def test_agent_guidance_routes_scientist_requests_to_turing_way_skills() -> None
 
     assert "`turing-way-guidance` skill" in text
     assert "`turing-way-review`" in text
+    assert "`turing-way-certified`" in text
     assert "`turing-way-pathfinder` skill" in text
     assert "learning-assistant MCP" in text
     assert "learning-assistant_get_turing_way_evidence_packets" in text
