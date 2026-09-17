@@ -82,6 +82,8 @@ def test_agent_guidance_routes_scientist_requests_to_turing_way_skills() -> None
     assert "`turing-way-review`" in text
     assert "invoke\n`turing-way-pathfinder` first" in text
     assert "Do not combine PathFinder with\n`teacher-skill` or `turing-way-guidance`" in text
+    assert "`turing-way-certified`" in text
+
     assert "learning-assistant MCP" in text
     assert "learning-assistant_get_turing_way_evidence_packets" in text
 

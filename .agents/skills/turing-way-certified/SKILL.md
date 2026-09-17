@@ -31,6 +31,47 @@ that does not involve a certification claim.
 - Local file search, reading, and non-destructive command tools
 - A PDF-capable local renderer such as Pandoc, LibreOffice, or a Python PDF
   library
+  
+## Ten-criterion rubric
+
+Score every criterion from 0 to 10 using observable evidence. The total is out
+of 100. Do not award points for claims that cannot be verified in the reviewed
+repository. A score of 0 means no reliable evidence was found, 5 means the
+practice is partially or inconsistently documented, and 10 means the practice
+is clear, repeatable, and maintained. Use intermediate scores only when the
+evidence supports them, and explain the reason.
+
+1. **Project purpose and scope:** clear research question or project purpose,
+   scope, intended users, and known limitations.
+2. **Version control and provenance:** meaningful Git history, traceable
+   changes, tagged or pinned releases where appropriate, and preserved
+   provenance.
+3. **Open collaboration:** contribution guidance, issue or discussion paths,
+   review expectations, code of conduct, and maintainership information.
+4. **Reproducible environments:** setup instructions, declared and
+   appropriately pinned dependencies, supported versions, and environment
+   capture.
+5. **Data and workflow provenance:** documented inputs and outputs, data
+   sources, schemas or metadata, workflow steps, and handling of generated
+   artifacts.
+6. **Testing and validation:** automated or documented tests, validation
+   criteria, representative fixtures, and clear instructions for reproducing
+   checks.
+7. **Automation and continuous integration:** useful CI or equivalent
+   automation for tests, quality checks, packaging, or reproducibility, with
+   failures visible to contributors.
+8. **Documentation and usability:** accurate README and user/developer
+   documentation, examples, onboarding path, and documentation of limitations.
+9. **Licensing, attribution, and responsible reuse:** an identifiable license,
+   third-party attribution, citation guidance, and appropriate reuse terms.
+10. **Ethics, accessibility, and sustainability:** relevant ethical or privacy
+    considerations, accessible project practices, resource or sustainability
+    considerations, and a plan for maintenance or archival.
+
+Use the Turing Way evidence tools before assigning scores. Treat the Turing Way
+as public best-practice guidance, not as a certification authority or
+institutional policy. Keep repository observations separate from
+recommendations.
 
 ## Workflow
 
