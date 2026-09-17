@@ -234,6 +234,28 @@ async def test_mygpt_library_tools_return_typed_api_data() -> None:
             "errors": [],
             "total": 2,
             "label": "Developing",
+            "report": (
+                "### Area scores\n\n"
+                "**Rating:** Developing (2 / 6)\n\n"
+                "| Area | Score | Evidence-backed rationale | Repository evidence |\n"
+                "| --- | --- | --- | --- |\n"
+                "| Project Design | 1 / 2 | The project scope is documented. | "
+                "[Repository evidence](https://github.com/example/repository/blob/"
+                "1234567/README.md) |\n"
+                "| Reproducibility | 1 / 2 | The repository has a dependency file. | "
+                "[Repository evidence](https://github.com/example/repository/blob/"
+                "1234567/requirements.txt) |\n"
+                "| Version Control And Collaboration | 0 / 2 | "
+                "The reviewed history has a single commit. | "
+                "[Repository evidence](https://github.com/example/repository/commits/1234567) |\n\n"
+                "### Prioritized improvements\n\n"
+                "1. **Use a reproducible environment for analysis.**\n"
+                "   - **Repository fact:** The repository has no environment file. "
+                "([Repository evidence](https://github.com/example/repository/tree/1234567))\n"
+                "   - **Turing Way citation:** [Project Design]("
+                f"{packet['citation']['url']})\n"
+                "   - **MyGPT RAG relevance:** 61%"
+            ),
             "score_section": (
                 "### Area scores\n\n"
                 "**Rating:** Developing (2 / 6)\n\n"
@@ -322,6 +344,11 @@ async def test_mygpt_library_tools_return_typed_api_data() -> None:
             ],
             "total": None,
             "label": None,
+            "report": (
+                "### Score withheld\n\n"
+                "- provide exactly one score row for each required review area\n"
+                "- recommendation 1 has no repository fact"
+            ),
             "score_section": (
                 "### Score withheld\n\n"
                 "- provide exactly one score row for each required review area\n"

@@ -97,13 +97,14 @@ request.
    three score rows and the complete packets returned by
    `learning-assistant_get_turing_way_evidence_packets`. This tool subsumes
    `learning-assistant_validate_turing_way_review`: it validates the inputs,
-   calculates the total and label, and renders the canonical sections. If
-   `status` is `approved`, copy its `score_section` and
-   `recommendation_evidence_block` verbatim. If it is `withheld`, copy only
-   its `score_section` verbatim; it contains `### Score withheld` and the
-   returned errors. Never manually calculate, rewrite, or reformat a score,
-   rationale, repository fact, citation, relevance score, or recommendation.
-   A rendered rating is a transparent snapshot, not a certification.
+   calculates the total and label, and renders the canonical report. The final
+   response must contain exactly its returned `report` field, verbatim. Do not
+   render `score_section` or `recommendation_evidence_block` separately. Do
+   not add an agent-written introduction, repository narrative, RAG table,
+   summary, conclusion, notice, or trailing text. Never manually calculate,
+   rewrite, or reformat a score, rationale, repository fact, citation,
+   relevance score, or recommendation. A rendered rating is a transparent
+   snapshot, not a certification.
 10. Recommend no more than five improvements. Do not combine unrelated changes
    (for example, a contribution guide and `.gitignore`) in one recommendation.
    Prioritize low-risk, high-impact
@@ -111,96 +112,11 @@ request.
    command, dependency pinning, test instructions, a contribution guide, or
    a documented project scope.
 
-## Required report format
+## Final response
 
-Use this format for every completed review:
-
-```markdown
-### Repository evidence
-
-_Sourced only from direct, commit-pinned repository inspection (GitHub
-file/tree/API URLs), never from MyGPT retrieval._
-
-- **Fact:** Tests are documented in the contributor guide.
-  **Evidence:** [Exact file proving the content claim](https://github.com/OWNER/REPOSITORY/blob/COMMIT/CONTRIBUTING.md)
-- **Gap:** No issue template is present.
-  **Evidence:** [Exact repository tree or complete, non-truncated API listing covering the checked commit](https://github.com/OWNER/REPOSITORY/tree/COMMIT/.github)
-- **Fact:** The reviewed commit's reachable history contains one commit.
-  **Evidence:** [Commit-pinned history listing](https://github.com/OWNER/REPOSITORY/commits/COMMIT)
-
-### RAG evidence
-
-_MyGPT relevance scores support the Turing Way citation choice only; they are
-not evidence about the reviewed repository. The MCP resource tool resolves the
-pinned Turing Way URL._
-
-| Review area | MyGPT RAG relevance | Turing Way source |
-| --- | --- | --- |
-| Reproducibility | 94% | [Pinned chapter title](https://github.com/...) |
-
-### Area scores
-
-**Rating:** Developing (2 / 6)
-
-| Area | Score | Evidence-backed rationale | Repository evidence |
-| --- | --- | --- | --- |
-| Reproducibility | 1 / 2 | The repository has a dependency file. | [Repository evidence](https://github.com/OWNER/REPOSITORY/blob/COMMIT/requirements.txt) |
-
-### Prioritized improvements
-
-1. **Use a reproducible environment for analysis.**
-   - **Repository fact:** The repository has no environment file. ([Repository evidence](https://github.com/OWNER/REPOSITORY/tree/COMMIT))
-   - **Turing Way citation:** [Pinned chapter title](https://github.com/...)
-   - **MyGPT RAG relevance:** 94%
-```
-
-The final score and recommendation sections must be the exact strings returned
-by `learning-assistant_render_validated_turing_way_review`; the example above
-only illustrates their shape. Do not manually add a score table, score
-narrative, recommendation benefit, or alternate evidence formatting. A
-standalone bibliography, an uncited improvement, or a citation without its
-relevance label is incomplete and must not be presented as a Turing
-Way-grounded review. A score table without a direct repository-evidence URL for
-every rationale cannot be presented; use the renderer's withheld result
-instead. Its approved score section renders the rating out of 6.
-
-Before rendering, perform this mandatory self-check:
-
-1. Every recommendation has exactly one repository fact, one direct
-   commit-pinned repository URL, one MCP-resolved pinned Turing Way URL, and
-   one returned MyGPT relevance percentage.
-2. Every score row has exactly one factual claim or labeled inference and its
-   direct repository-evidence URL.
-3. Every score label follows this mapping exactly: 0-1 **Starting**, 2-3
-   **Developing**, 4-5 **Established**, 6 **Strong foundation**.
-
-If any check fails, call
-`learning-assistant_render_validated_turing_way_review` and copy its returned
-`score_section`. Do not render any numeric area score, total, or rating label.
-Do not state a score elsewhere in the report.
-
-Render the returned packet's `repository_fact` separately from its Turing Way
-citation. State that every content claim uses the exact public GitHub file or
-commit URL that shows its content, and every absence claim uses the exact
-public GitHub repository tree or API listing URL that covers the searched
-scope and ref. A positive file URL must not be used as absence evidence for an
-unrelated path. Use distinct repository-fact entries and URLs for separately
-asserted absences, unless one exact GitHub recursive-tree or API listing
-demonstrably covers all claimed paths at the checked commit. Never cite a
-mutable branch or tag: use the exact commit SHA. A recursive API listing is
-adequate only when its response confirms `"truncated": false`. Label deductions
-as reviewer inferences rather than source facts. A single commit URL proves
-only that commit, not a repository-wide commit count, branch absence, or tag
-absence. Use a commit-pinned `/commits/COMMIT` history URL for a claim about
-the history reachable from that commit; do not infer absent branches or tags.
-MyGPT provides retrieval
-evidence and relevance; the MCP resource tool resolves the pinned Turing Way
-URL. A Turing Way citation supports the recommendation; it does not prove a
-claim about the reviewed repository.
-
-Do not include notices, configuration advice, warnings, or links from unrelated
-MCP services in the review. Report only the reviewed repository and the Turing
-Way/MyGPT evidence requested.
+The renderer's `report` is the complete and only final response. It
+intentionally covers only the validated score and recommendation-evidence
+sections; do not add repository narrative or any other report section.
 
 ## Failure behavior
 

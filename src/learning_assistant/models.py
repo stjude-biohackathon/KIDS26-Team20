@@ -296,6 +296,7 @@ class TuringWayReviewRender(BaseModel):
     errors: list[str] = []
     total: int | None = None
     label: str | None = None
+    report: str
     score_section: str
     recommendation_evidence_block: str | None = None
 

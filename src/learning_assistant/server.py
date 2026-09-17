@@ -90,10 +90,12 @@ def render_validated_turing_way_review_sections(
     """Build canonical report sections from validated review inputs."""
     if validation.status != "approved":
         errors = "\n".join(f"- {error}" for error in validation.errors)
+        score_section = f"### Score withheld\n\n{errors}"
         return TuringWayReviewRender(
             status=validation.status,
             errors=validation.errors,
-            score_section=f"### Score withheld\n\n{errors}",
+            report=score_section,
+            score_section=score_section,
         )
 
     score_rows_by_area = {row.area: row for row in score_rows}
@@ -138,13 +140,16 @@ def render_validated_turing_way_review_sections(
             ]
         )
 
+    score_section = "\n".join(score_lines)
+    recommendation_evidence_block = "\n".join(recommendation_lines)
     return TuringWayReviewRender(
         status=validation.status,
         errors=validation.errors,
         total=validation.total,
         label=validation.label,
-        score_section="\n".join(score_lines),
-        recommendation_evidence_block="\n".join(recommendation_lines),
+        report=f"{score_section}\n\n{recommendation_evidence_block}",
+        score_section=score_section,
+        recommendation_evidence_block=recommendation_evidence_block,
     )
 
 

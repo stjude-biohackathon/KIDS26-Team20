@@ -24,9 +24,7 @@ def test_turing_way_review_skill_uses_the_citation_preserving_mcp_tools() -> Non
     assert "`learning-assistant_render_validated_turing_way_review`" in text
     assert "`learning-assistant_validate_turing_way_review`" in text
     assert "required MyGPT RAG evidence" in text
-    assert "**MyGPT RAG relevance:** 94%" in text
     assert "Do not estimate, normalize, omit, or invent a relevance score." in text
-    assert "## Required report format" in text
     assert "exact, direct public GitHub URL\n   that proves that fact" in text
     assert "Each recommendation and fact entry must describe one fact only" in text
     assert "separate fact entries and a separate proving URL\n   for every part" in text
@@ -44,20 +42,6 @@ def test_turing_way_review_skill_uses_the_citation_preserving_mcp_tools() -> Non
         "one exact GitHub recursive-tree or API listing demonstrably\n"
         "   covers every claimed path at the checked commit" in text
     )
-    assert "every content claim uses the exact public GitHub file or\ncommit URL" in text
-    assert (
-        "every absence claim uses the exact\npublic GitHub repository tree or API listing URL"
-        in text
-    )
-    assert (
-        "A positive file URL must not be used as absence evidence for an\nunrelated path"
-    ) in text
-    assert "distinct repository-fact entries and URLs for separately\nasserted absences" in text
-    assert (
-        "MyGPT provides retrieval\n"
-        "evidence and relevance; the MCP resource tool resolves the pinned Turing Way\n"
-        "URL"
-    ) in text
     assert "Use the exact commit SHA,\n   never a mutable branch or tag" in text
     assert 'confirm that its response has `"truncated": false`' in text
     assert "A single commit page proves only that commit's\n   content" in text
@@ -72,26 +56,22 @@ def test_turing_way_review_skill_uses_the_citation_preserving_mcp_tools() -> Non
     assert "single-focus recommendations" in text
     assert "Pass exactly one `repository_fact` in each request" in text
     assert "Do not combine unrelated changes" in text
-    assert "### Area scores" in text
-    assert "A score table without a direct repository-evidence URL for\nevery rationale" in text
-    assert "Before rendering, perform this mandatory self-check" in text
     assert "This tool subsumes\n   `learning-assistant_validate_turing_way_review`" in text
-    assert "copy its `score_section` and\n   `recommendation_evidence_block` verbatim" in text
-    assert "Never manually calculate, rewrite, or reformat a score" in text
+    assert (
+        "The final\n   response must contain exactly its returned `report` field, verbatim." in text
+    )
+    assert (
+        "Do not\n   render `score_section` or `recommendation_evidence_block` separately." in text
+    )
+    final_response_prohibitions = (
+        "agent-written introduction, repository narrative, RAG table,\n"
+        "   summary, conclusion, notice, or trailing text"
+    )
+    assert final_response_prohibitions in text
+    assert "## Final response" in text
+    assert "The renderer's `report` is the complete and only final response." in text
+    assert "Never manually calculate,\n   rewrite, or reformat a score" in text
     assert "Do not invent expected benefits or explanatory prose" in text
-    assert "Area | Score | Evidence-backed rationale | Repository evidence" in text
-    assert (
-        "If any check fails, call\n`learning-assistant_render_validated_turing_way_review`" in text
-    )
-    assert (
-        "Do not include notices, configuration advice, warnings, or links from unrelated\n"
-        "MCP services" in text
-    )
-    assert "_Sourced only from direct, commit-pinned repository inspection" in text
-    assert "_MyGPT relevance scores support the Turing Way citation choice only" in text
-    assert "A\nstandalone bibliography, an uncited improvement" in text
-    assert "do\nnot assign a rating" in text
-    assert "rating out of 6" in text
     assert "not a certification" in text
 
 
