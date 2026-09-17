@@ -89,7 +89,7 @@ ollama pull nomic-embed-text
 	We will run following script to build docker images:
 
 	```
-	cd MyGPT
+	cd KIDS26-Team20
 	bash MyGPT_backend/installation/macOS/build_docker.sh
 	```
 

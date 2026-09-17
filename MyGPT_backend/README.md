@@ -1,121 +1,121 @@
-# Django Backend
+# MyGPT Backend Setup Guide
 
-### Built With
+This guide will walk you through the steps to set up the MyGPT backend on your local machine.
+Following instructions are for MacOS only, other OS users may need to adapt the steps accordingly.
 
-* [Docker](https://www.docker.com/)
-* [Django](https://www.djangoproject.com/)
+## Requirements
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+To Run the MyGPT pipeline, we will need the following minimum specifications for your system:
 
-<!-- GETTING STARTED -->
-## Getting Started
+*   8 CPUs
+*   8 GB Memory (16 GB or more for better response time)
+*   10 GB hard-drive storage
 
-To get a local copy up and running follow these simple example steps:
+We will also need several tools to run the pipeline:
 
-### Prerequisites
+*   Brew
+*   Git
+*   Docker
+*   Ollama
 
-* Docker Installation - Download apporpirate Docker installtion file for your OS: https://docs.docker.com/get-docker/
+## Requirements installation
 
-### Installation and setup
+We will install these required tools in the following steps:
 
-1. Once docker is installed, clone the repo on you local folder:
+1. **Brew installation**
 
-   ```sh
-   git clone https://github.com/stjude-biohackathon/KIDS23-Team11.git
-   ```
-2. Copy LLM model into `backend/models/` folder. The folder structure can be similar to the following:
+	Check if you have `brew` installed on your system by running following command.
 
-   ```sh
-   backend/models/biogpt_finetuned/
-   	config.json
-   	merges.txt
-   	pytorch_model.bin
-   	special_tokens_map.json
-   	tokenizer_config.json
-   	training_args.bin
-   	vocab.json
-   ```
-2. Go to the repo root and run this docker commands to build image (will take few minute for first time, should be faster on sunsequent run): 
+	```
+	brew --version
+	```
 
-   ```sh
-   docker compose build
-   ```
+	If you get error that `brew not found`, you can install brew by folliwng command from the new terminal window (similar to Jupyter installation but open new tab for terminal without closing existing window that's running Jupyter). For more details about brew check this [page](https://brew.sh/)
 
-3. Start database container first using following command:
+	```
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	```
 
-   ```sh
-   docker compose up db
-   ```
-   Once you see following LOG in terminal, go to next step:
+2.  **Brew packages installation**
 
-   ```sh
-	pubgpt-db-1  | LOG:  database system is ready to accept connections
-   ```
-4. Open new terminal tab and start Django app container using following command:
+	We will install Brew packages by running following commands:
 
-   ```sh 
-   docker compose up backend
-   ```
-   It should take sometime to load the app as it's downloading LLM models and preparing the apps.
-   Once you see following LOG in terminal, the app is ready!
-   ```sh
-   pubgpt-backend-1  | Starting development server at http://0.0.0.0:8000/
-   pubgpt-backend-1  | Quit the server with CONTROL-C.
-   ```
+	```
+	brew install git
+	```
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+3. **Docker installation**
+
+	To run MyGPT with CPUs-only, the entire pipeline will run as a single unit from Docker.
+	Check if you have `docker` installed on your system by running following command.
+
+	```
+	docker --version
+	```
+
+	If you get an error that `docker not found`, go to the official Docker installation page for Mac and install the appropriate Docker on your system: https://docs.docker.com/desktop/install/mac-install/
+
+	You can change Docker setting to match requirements for MyGPT:
+	<img src="./installation/images/docker_resources.png?raw=true" width="700px">
 
 
-<!-- USAGE EXAMPLES -->
-## Usage
+4. **Ollama installation**
 
-To test the app, go to the homepage: http://localhost:8000/
-When app is launched for the first time, it will load sample database from GPCRdb Protein family query and sample CSV file from `/raw_data/` folder.
-Explore REST api queires at following page: http://localhost:8000/api/
+	Finally, download and install Ollama by following instructions from this offical [Ollama site](https://ollama.ai/)
 
-To query the LLM models, use the following API endpoint:
-http://localhost:8000/api/biogpt_finetuned/ OR
-http://localhost:8000/api/biogpt_original/
+	You can check if Ollama is running by visiting http://localhost:11434/ in your default browser.
 
-The API endpoint accepts data as POST query, and the content of payload should be like this:
-```json
-{
-	"text": "What is the function of BRAF gene?",
-}
+> [!CAUTION]
+> After installing Ollama, close any open Terminal/Command Prompt before you pull the nomic embedding model, which is best performing embedding model for MyGPT pipeline, by running following command:
 
-``` 
-
-To post new data, go to database use the following API endpoint:
-http://localhost:8000/api/post_question_answer/
-
-The JSON object for post must following this format:
-```json
-{
-	"text": "What is the meaning of life?",
-	"type": "general",
-	"answers": [
-		{
-			"type": "ChatGPT",
-			"text": "Menaing of life is to be happy.",
-			"score": "positive"
-		},
-		{
-			"type": "BioGPT",
-			"text": "Meaning of life is to achieve your goals.",
-			"score": "neutral"
-		},
-		{
-			"type": "AI21",
-			"text": "Meaning of life is to not die.",
-			"score": "negative"
-		},
-		{
-			"type": "OpenAssistant",
-			"text": "Meaning of life is to be always learning.",
-			"score": "positive"
-		}
-	]
-}
+```
+ollama pull nomic-embed-text
 ```
 
-<p align="right">(<a href="#top">back to top</a>)</p>
+## MyGPT backend installation
+
+### Build docker images from source code
+
+1. **Get copy of source code for this repository**
+
+	If you don not have the source code for this GitHub repository, we will first get the source code by running following command. It will create `KIDS26-Team20` folder on your Desktop.
+
+	```
+	git clone https://github.com/stjude-biohackathon/KIDS26-Team20.git
+	```
+
+2. **Build docker images**
+
+	We will run following script to build docker images:
+
+	```
+	cd ..
+	bash MyGPT_backend/installation/macOS/build_docker.sh
+	```
+
+	Before starting containers, replace all placeholders in `.env_backend` if you have different configuration requirements.
+
+3. **Run docker containers**
+
+	We will run following script to run docker containers:
+
+	```
+	bash MyGPT_backend/installation/macOS/run_docker.sh
+	```
+
+	This script should take around 5-10 minutes to run.
+	While above script is running, it will open several pages in your default browser. 
+	You can see status of different components of MyGPT pipeline on these pages.
+	* backend: http://localhost:8000/
+
+		<img src="./installation/images/backend_server.png?raw=true" width="500px">
+
+## Test the running MyGPT backend
+
+After the containers are running and the backend is available at
+http://localhost:8000/, open a new terminal in the repository root and run the
+live context endpoint test:
+
+```bash
+python ../scripts/test_mygpt_backend.py
+```
