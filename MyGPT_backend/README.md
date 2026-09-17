@@ -117,5 +117,5 @@ http://localhost:8000/, open a new terminal in the repository root and run the
 live context endpoint test:
 
 ```bash
-python ../scripts/test_mygpt_backend.py
+python scripts/test_mygpt_backend.py
 ```
