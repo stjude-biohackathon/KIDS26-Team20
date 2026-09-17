@@ -129,9 +129,10 @@ If someone asks whether a project is "Turing Way certified," use the
 `turing-way-certified` skill. It explains that an evidence-based readiness
 review is not official certification and preserves the distinction between
 public guidance and an authorized certification program. The skill scores the
-full eight-category rubric out of 100 and writes both
+full ten-criterion rubric out of 100 and writes both
 `TURING_WAY_CERTIFICATION.md` and `TURING_WAY_CERTIFICATION.pdf` (or reports
-why PDF generation was unavailable).
+why PDF generation was unavailable). Markdown tables, including the score
+table, must be preserved as readable tables in the PDF.
 
 ## Repository Map
 

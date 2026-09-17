@@ -135,10 +135,11 @@ def test_turing_way_certified_requires_full_score_and_pdf_artifacts() -> None:
     text = skill.read_text(encoding="utf-8")
 
     assert "100-point readiness review" in text
-    assert "complete eight-category rubric" in text
+    assert "ten-criterion rubric" in text
     assert "integer score out of 100" in text
     assert "TURING_WAY_CERTIFICATION.md" in text
     assert "TURING_WAY_CERTIFICATION.pdf" in text
-    assert "Verify that the file exists and is non-empty" in text
-    assert "do not claim that a PDF was generated" in text
-    assert "do not substitute the three-area, six-point" in text
+    assert "Preserve every Markdown table in the PDF as a readable PDF table" in text
+    assert "contains the report's score table" in text
+    assert "do not claim that a valid PDF was generated" in text
+    assert "substitute the three-area, six-point" in text
