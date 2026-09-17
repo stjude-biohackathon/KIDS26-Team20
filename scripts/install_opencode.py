@@ -17,7 +17,11 @@ ROOT = Path(__file__).resolve().parents[1]
 CANONICAL_SKILLS = (
     "install-kids-learning-assistant",
     "mygpt-library",
+    "skill-formatter",
+    "skill-maintainer",
+    "skill-template",
     "teacher-skill",
+    "turing-healthcheck-prototype",
     "turing-way-pathfinder",
     "turing-way-guidance",
     "turing-way-review",
