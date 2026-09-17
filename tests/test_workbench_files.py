@@ -52,7 +52,7 @@ def test_workbench_env_loader_allowlists_keys_and_never_executes_the_file() -> N
     assert "source" not in text
 
 
-def test_opencode_uses_pinned_superpowers_and_safe_defaults() -> None:
+def test_opencode_uses_pinned_superpowers_without_auto_starting_the_mcp() -> None:
     config = json.loads((ROOT / "opencode.json").read_text(encoding="utf-8"))
     assert config["autoupdate"] is False
     assert config["share"] == "disabled"
@@ -60,7 +60,7 @@ def test_opencode_uses_pinned_superpowers_and_safe_defaults() -> None:
         "superpowers@git+https://github.com/obra/superpowers.git#"
         "d884ae04edebef577e82ff7c4e143debd0bbec99"
     ]
-    assert config["mcp"]["learning-assistant"]["type"] == "local"
+    assert "mcp" not in config
 
 
 def test_project_runner_exposes_workbench_commands() -> None:
@@ -72,13 +72,11 @@ def test_project_runner_exposes_workbench_commands() -> None:
     assert 'task == "workbench-check"' in text
 
 
-def test_opencode_launches_the_mcp_server_and_skills_without_extra_setup() -> None:
+def test_opencode_discovers_project_skills_without_auto_starting_the_mcp() -> None:
     config = json.loads((ROOT / "opencode.json").read_text(encoding="utf-8"))
-    server = config["mcp"]["learning-assistant"]
-    assert server["enabled"] is True
-    assert server["command"] == ["uv", "run", "learning-assistant", "stdio"]
+    assert "mcp" not in config
     # OpenCode discovers .agents/skills at the project level on its own, so the
-    # offline corpus must be committed for those tools to return citations.
+    # installation skill remains available before the Docker MCP is installed.
     assert (ROOT / ".agents/skills/skill-template/SKILL.md").exists()
     assert list((ROOT / "corpus/fixtures/turing-way").glob("*.md"))
 

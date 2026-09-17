@@ -132,18 +132,17 @@ def check_opencode_config() -> Result:
     if not config_path.exists():
         return _fail("opencode.json is missing", "restore it from version control")
     config = json.loads(config_path.read_text(encoding="utf-8"))
-    server = config.get("mcp", {}).get("learning-assistant")
-    if not server or server.get("enabled") is not True:
+    if config.get("mcp", {}).get("learning-assistant"):
         return _fail(
-            "opencode.json does not enable the learning-assistant MCP server",
-            "restore the mcp.learning-assistant block",
+            "opencode.json has a legacy automatic learning-assistant MCP entry",
+            "remove it; use scripts/install_opencode.py to register the Docker MCP",
         )
     if not any("superpowers" in entry for entry in config.get("plugin", [])):
         return _warn(
             "opencode.json does not list the Superpowers plugin",
             "add the pinned superpowers entry to the plugin array",
         )
-    return _ok("opencode.json starts the MCP server and loads Superpowers on launch")
+    return _ok("opencode.json has no automatic MCP entry and loads Superpowers on launch")
 
 
 def check_project_skills() -> Result:
