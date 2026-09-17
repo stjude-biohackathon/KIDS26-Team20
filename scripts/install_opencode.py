@@ -25,6 +25,7 @@ CANONICAL_SKILLS = (
     "turing-way-pathfinder",
     "turing-way-guidance",
     "turing-way-review",
+    "turing-way-certified",
 )
 DEFAULT_CONFIG = Path.home() / ".config/opencode/opencode.json"
 DEFAULT_SKILLS_ROOT = Path.home() / ".config/opencode/skills"
