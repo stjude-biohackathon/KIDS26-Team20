@@ -75,7 +75,11 @@ request.
    covers every claimed path at the checked commit. Use the exact commit SHA,
    never a mutable branch or tag. Before relying on a recursive API listing,
    confirm that its response has `"truncated": false`; a truncated listing does
-   not establish absence. Use only the returned packet's
+   not establish absence. A single commit page proves only that commit's
+   content; use a commit-pinned history page
+   (`https://github.com/OWNER/REPOSITORY/commits/COMMIT`) for a claim about
+   the history reachable from that commit. Do not infer the absence of
+   branches or tags from either URL. Use only the returned packet's
    citation and matching relevance score;
    the three area-level queries cannot substitute for this step.
 8. Return a concise report containing the rating, evidence observed, gaps,
@@ -105,6 +109,8 @@ file/tree/API URLs), never from MyGPT retrieval._
   **Evidence:** [Exact file proving the content claim](https://github.com/OWNER/REPOSITORY/blob/COMMIT/CONTRIBUTING.md)
 - **Gap:** No issue template is present.
   **Evidence:** [Exact repository tree or complete, non-truncated API listing covering the checked commit](https://github.com/OWNER/REPOSITORY/tree/COMMIT/.github)
+- **Fact:** The reviewed commit's reachable history contains one commit.
+  **Evidence:** [Commit-pinned history listing](https://github.com/OWNER/REPOSITORY/commits/COMMIT)
 
 ### RAG evidence
 
@@ -139,7 +145,11 @@ asserted absences, unless one exact GitHub recursive-tree or API listing
 demonstrably covers all claimed paths at the checked commit. Never cite a
 mutable branch or tag: use the exact commit SHA. A recursive API listing is
 adequate only when its response confirms `"truncated": false`. Label deductions
-as reviewer inferences rather than source facts. MyGPT provides retrieval
+as reviewer inferences rather than source facts. A single commit URL proves
+only that commit, not a repository-wide commit count, branch absence, or tag
+absence. Use a commit-pinned `/commits/COMMIT` history URL for a claim about
+the history reachable from that commit; do not infer absent branches or tags.
+MyGPT provides retrieval
 evidence and relevance; the MCP resource tool resolves the pinned Turing Way
 URL. A Turing Way citation supports the recommendation; it does not prove a
 claim about the reviewed repository.

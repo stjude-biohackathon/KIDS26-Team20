@@ -189,14 +189,14 @@ class RepositoryFact(BaseModel):
         if parsed.hostname == "github.com":
             if parsed.query or len(path_parts) < 4:
                 raise ValueError(
-                    "repository fact URL must point to a commit-pinned GitHub file, tree, or commit"
+                    "repository fact URL must point to a commit-pinned GitHub evidence location"
                 )
             evidence_kind, commit = path_parts[2], path_parts[3]
-            if evidence_kind not in {"blob", "tree", "commit"} or not GIT_COMMIT_PATTERN.fullmatch(
-                commit
+            if evidence_kind not in {"blob", "tree", "commit", "commits"} or not (
+                GIT_COMMIT_PATTERN.fullmatch(commit)
             ):
                 raise ValueError(
-                    "repository fact URL must point to a commit-pinned GitHub file, tree, or commit"
+                    "repository fact URL must point to a commit-pinned GitHub evidence location"
                 )
             return value
 

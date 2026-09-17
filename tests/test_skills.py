@@ -58,6 +58,9 @@ def test_turing_way_review_skill_uses_the_citation_preserving_mcp_tools() -> Non
     ) in text
     assert "Use the exact commit SHA,\n   never a mutable branch or tag" in text
     assert 'confirm that its response has `"truncated": false`' in text
+    assert "A single commit page proves only that commit's\n   content" in text
+    assert "/commits/COMMIT" in text
+    assert "Do not infer the absence of\n   branches or tags from either URL" in text
     assert "_Sourced only from direct, commit-pinned repository inspection" in text
     assert "_MyGPT relevance scores support the Turing Way citation choice only" in text
     assert "A\nstandalone bibliography, an uncited improvement" in text

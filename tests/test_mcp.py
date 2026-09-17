@@ -4,11 +4,21 @@ from pathlib import Path
 import httpx
 from mcp import Client
 
+from learning_assistant.models import RepositoryFact
 from learning_assistant.mygpt import MyGPTClient, MyGPTSettings
 from learning_assistant.server import create_server
 from learning_assistant.sources import SourceRegistry
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_repository_fact_accepts_commit_pinned_history_url() -> None:
+    fact = RepositoryFact(
+        statement="The reviewed commit's reachable history contains one commit.",
+        url="https://github.com/example/repository/commits/1234567",
+    )
+
+    assert fact.url == "https://github.com/example/repository/commits/1234567"
 
 
 async def test_mcp_contract_in_memory() -> None:
