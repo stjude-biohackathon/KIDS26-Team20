@@ -18,6 +18,7 @@ CANONICAL_SKILLS = (
     "install-kids-learning-assistant",
     "mygpt-library",
     "skill-formatter",
+    "skill-maintainer",
     "skill-template",
     "teacher-skill",
     "turing-healthcheck-prototype",
