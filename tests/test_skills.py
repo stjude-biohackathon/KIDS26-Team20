@@ -26,7 +26,7 @@ def test_turing_way_review_skill_uses_the_citation_preserving_mcp_tools() -> Non
     assert "Do not\n   estimate, normalize, omit, or invent" in text
     assert "## Required report format" in text
     assert "exact, direct public GitHub URL\n   that proves that fact" in text
-    assert "Each recommendation and fact entry must describe one\n   fact only" in text
+    assert "Each recommendation and fact entry must describe one fact only" in text
     assert "separate fact entries and a separate proving URL\n   for every part" in text
     assert "related or nearby file is not evidence for an unshown\n   fact" in text
     assert (
@@ -61,16 +61,20 @@ def test_turing_way_review_skill_uses_the_citation_preserving_mcp_tools() -> Non
     assert "A single commit page proves only that commit's\n   content" in text
     assert "/commits/COMMIT" in text
     assert "Do not infer the absence of\n   branches or tags from either URL" in text
-    assert "Every clause in a\n   score rationale must be a directly observed fact" in text
-    assert "score row must display its exact repository\n   evidence URL" in text
+    assert "Each row must contain\n   exactly one directly observed claim" in text
+    assert "its exact repository evidence URL" in text
     assert (
         "Withhold all area scores and the total if any rationale lacks its required\n"
         "   repository evidence" in text
     )
     assert "single-focus recommendations" in text
+    assert "Pass exactly one `repository_fact` in each request" in text
     assert "Do not combine unrelated changes" in text
     assert "### Area scores" in text
     assert "A score table without a direct repository-evidence URL for\nevery rationale" in text
+    assert "Before rendering, perform this mandatory self-check" in text
+    assert "If any check fails, render `### Score withheld`" in text
+    assert "do not render any numeric area score, total, or rating\nlabel" in text
     assert (
         "Do not include notices, configuration advice, warnings, or links from unrelated\n"
         "MCP services" in text

@@ -49,11 +49,10 @@ request.
    before assigning any ratings. Use the returned pinned GitHub URLs as
    citations for the RAG-grounded findings. Retain the `relevance_score`
    returned for the relevant review area.
-5. Draft one evidence-backed rationale for each review area. Every clause in a
-   score rationale must be a directly observed fact or a clearly labeled
-   reviewer inference, and the score row must display its exact repository
-   evidence URL. If a rationale needs multiple facts, use separate rows or
-   separate evidence URLs; do not hide unsupported claims in a summary.
+5. Draft evidence-backed score rows for each review area. Each row must contain
+   exactly one directly observed claim or clearly labeled reviewer inference
+   and its exact repository evidence URL. If an area rationale needs multiple
+   facts, use separate rows; do not hide unsupported claims in a summary.
    Withhold all area scores and the total if any rationale lacks its required
    repository evidence.
 
@@ -72,8 +71,8 @@ request.
    per recommendation. Each request must contain the recommendation claim,
    the exact `resource_id` for its supporting Turing Way chapter, and its
    directly observed repository fact plus the exact, direct public GitHub URL
-   that proves that fact. Each recommendation and fact entry must describe one
-   fact only. For a
+   that proves that fact. Pass exactly one `repository_fact` in each request.
+   Each recommendation and fact entry must describe one fact only. For a
    multi-part finding, provide separate fact entries and a separate proving URL
    for every part; a related or nearby file is not evidence for an unshown
    fact. A positive file URL proves only the content it displays and must not
@@ -153,6 +152,20 @@ relevance label is incomplete and must not be presented as a Turing
 Way-grounded review. A score table without a direct repository-evidence URL for
 every rationale is also incomplete: withhold every area score and the total
 rather than guessing.
+
+Before rendering, perform this mandatory self-check:
+
+1. Every recommendation has exactly one repository fact, one direct
+   commit-pinned repository URL, one MCP-resolved pinned Turing Way URL, and
+   one returned MyGPT relevance percentage.
+2. Every score row has exactly one factual claim or labeled inference and its
+   direct repository-evidence URL.
+3. Every score label follows this mapping exactly: 0-1 **Starting**, 2-3
+   **Developing**, 4-5 **Established**, 6 **Strong foundation**.
+
+If any check fails, render `### Score withheld` with the specific missing or
+compound evidence and do not render any numeric area score, total, or rating
+label. Do not state a score elsewhere in the report.
 
 Render the returned packet's `repository_fact` separately from its Turing Way
 citation. State that every content claim uses the exact public GitHub file or
