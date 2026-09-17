@@ -30,11 +30,12 @@ sensitive information.
 
 ## Intake and pathway selection
 
-1. Extract the role and immediate goal when the requester already gave them.
-   Ask the missing question or questions only when that information is absent.
-   Then ask for the current project stage if it was not provided. This required
-   follow-up makes the selected checklist actionable. Do not ask about the
-   requester's private life, identity, employer, patients, or research data:
+1. Extract the role, immediate goal, and current project stage when the
+   requester already gave them. Ask only for missing intake information. When
+   all three are provided, you **MUST NOT** ask, confirm, or request any
+   additional intake. Proceed directly to pathway selection and the required
+   resource and evidence-packet retrieval. Do not ask about the requester's
+   private life, identity, employer, patients, or research data:
    - **Which role best matches your current work?** Early-career researcher,
      project leader, research software engineer, data steward,
      community/collaboration maintainer, or unsure.

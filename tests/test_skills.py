@@ -77,7 +77,10 @@ def test_turing_way_pathfinder_uses_curated_paths_and_targeted_rag() -> None:
     assert "Research Software Engineers" in text
     assert "Data Stewards" in text
     assert "MyGPT RAG relevance: N%" in text
-    assert "ask for the current project stage" in text
+    assert "Ask only for missing intake information." in text
+    assert "MUST NOT** ask, confirm, or request any\n   additional intake" in text
+    assert "Proceed directly to pathway selection" in text
+    assert "resource and evidence-packet retrieval" in text
     assert "Starting, analysis underway, or" in text
     assert "pathways/pathways-early-career-researchers" in text
     assert "reuse one URL for unrelated chapters" in text
