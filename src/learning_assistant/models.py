@@ -122,6 +122,115 @@ class ResourceDocument(BaseModel):
     content: str
 
 
+class MyGPTDataset(BaseModel):
+    """A dataset returned by the MyGPT library API."""
+
+    dataset_name: str
+    dataset_size: int | None = None
+
+
+class MyGPTDocument(BaseModel):
+    """A document title returned by the MyGPT library API."""
+
+    title: str
+
+
+class MyGPTContext(BaseModel):
+    """Retrieved evidence and scores returned by MyGPT for a question."""
+
+    context: str
+    relevance_score: float | None = None
+    semantic_score: float | None = None
+    keyword_score: float | None = None
+    rerank_score: float | None = None
+    sources: list[dict[str, object]] = []
+
+
+class TuringWayReviewEvidence(BaseModel):
+    """MyGPT RAG evidence required for one Turing Way review area."""
+
+    area: str
+    query: str
+    retrieval: MyGPTContext
+
+
+class RAGStatus(BaseModel):
+    """Result of a live retrieval probe for the local Turing Way RAG service."""
+
+    status: str
+    dataset: str
+    model_id: str
+    relevance_score: float | None = None
+    source_count: int
+
+
+class RepositoryFact(BaseModel):
+    """An observed repository fact with its public GitHub evidence URL."""
+
+    statement: str
+    url: str
+
+    @field_validator("statement")
+    @classmethod
+    def validate_statement(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("repository fact statement must not be empty")
+        return value.strip()
+
+    @field_validator("url")
+    @classmethod
+    def validate_url(cls, value: str) -> str:
+        parsed = urlsplit(value)
+        path_parts = [part for part in parsed.path.split("/") if part]
+        if (
+            parsed.scheme != "https"
+            or parsed.hostname != "github.com"
+            or parsed.username
+            or parsed.password
+            or parsed.query
+            or parsed.fragment
+            or len(path_parts) < 2
+        ):
+            raise ValueError("repository fact URL must be a public GitHub HTTPS URL")
+        return value
+
+
+class TuringWayEvidenceRequest(BaseModel):
+    """One claim that needs a resolved source and a targeted RAG retrieval."""
+
+    claim: str
+    resource_id: str
+    repository_fact: RepositoryFact | None = None
+
+    @field_validator("claim")
+    @classmethod
+    def validate_claim(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("evidence claim must not be empty")
+        return value.strip()
+
+
+class ResolvedTuringWayCitation(BaseModel):
+    """Pinned, server-resolved citation data safe for final answer rendering."""
+
+    resource_id: str
+    title: str
+    path: str
+    url: str
+    repository: str
+    ref: str
+    origin: str
+
+
+class TuringWayEvidencePacket(BaseModel):
+    """Citation-safe evidence for one final recommendation or checklist action."""
+
+    claim: str
+    citation: ResolvedTuringWayCitation
+    retrieval: MyGPTContext
+    repository_fact: RepositoryFact | None = None
+
+
 class SourcesFile(BaseModel):
     sources: list[SourceConfig]
 

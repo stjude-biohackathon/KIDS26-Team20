@@ -163,6 +163,7 @@ requirements.txt
 # named exactly .env, so this entry is what keeps the credential out of Git.
 # Never remove it.
 config/workbench.env
+config/mygpt.env
 
 # Pinned agent tools, installed from tools/package-lock.json
 tools/node_modules/

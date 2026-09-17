@@ -46,6 +46,55 @@ session, are in [docs/SETUP.md](docs/SETUP.md).
 You can contribute without an AI provider. The tests, the MCP server, and skill
 validation all work offline.
 
+### Run locally with Docker
+
+For the easiest scientist-facing setup, install and start
+[Docker Desktop](https://docs.docker.com/get-docker/) for your operating
+system. Docker Desktop is a user-approved system installation and is not
+installed automatically. Then run:
+
+```bash
+python3 scripts/install_opencode.py
+docker compose up --detach --build
+```
+
+The installer checks Docker Desktop and the required host Ollama model
+(`qwen2.5:3b`) before changing any configuration. To start containers and
+initialize the full Turing Way RAG corpus in one explicit command, use:
+
+```bash
+python3 scripts/install_opencode.py --bootstrap-rag
+```
+
+The installer registers `turing-way-mygpt` in global OpenCode configuration and
+links the canonical skills from this repository into OpenCode's global skill
+directory without copying them. The Compose command starts the local stack,
+retrieves the full pinned Turing Way corpus, and exposes Streamable HTTP MCP at
+`http://127.0.0.1:8000/mcp`. It automatically falls back to the committed
+snapshot if GitHub is unavailable. See [the Docker guide](docs/DOCKER.md).
+
+MyGPT's repeatable Turing Way dataset settings live in
+[`config/mygpt-bootstrap.yaml`](config/mygpt-bootstrap.yaml). It specifies the
+source manifest and embedding model, but intentionally excludes downloaded
+model weights and generated vector indexes. Use `get_rag_status` after
+bootstrap to confirm that the configured model can retrieve Turing Way sources.
+
+### Choose a Turing Way path
+
+Ask OpenCode to "help me choose my Turing Way path." The `turing-way-pathfinder`
+skill asks only for your current role and immediate goal, then chooses one of
+the Turing Way's curated pathways and returns a short, scored, cited checklist.
+It does not request research data or personal information.
+
+### Review a research repository
+
+Launch OpenCode from this repository and use the `turing-way-review` skill to
+assess a checked-out research software repository against cited Turing Way
+guidance. It assigns a transparent rating out of six across project design,
+reproducibility, and version-control collaboration, then prioritizes practical
+improvements. It is an evidence-based baseline review, not a compliance,
+security, or clinical assessment.
+
 ## Repository Map
 
 ```text
@@ -60,16 +109,26 @@ project-management/      Team plan, roles, and the team lead checklist
 
 ## What the MCP Server Does Today
 
-Deliberately very little. It provides two tools:
+The MCP server provides citation-preserving source retrieval plus local MyGPT
+RAG evidence:
 
 - `list_resources` — what Turing Way pages are available, each tagged with an
   `origin` of `github` or `snapshot`
 - `get_resource` — the full text of one page, by the identifier `list_resources`
   returned
+- `get_rag_status` — a live Turing Way retrieval probe for the configured local
+  MyGPT model and dataset
+- `get_turing_way_evidence_packets` — resolves an exact Turing Way resource ID
+  to its pinned citation and performs one matching MyGPT RAG query per final
+  recommendation or checklist action
+- `get_turing_way_review_evidence` — runs the required broad RAG queries for
+  project design, reproducibility, and version control/collaboration
 
-That is enough to prove on day one that the server is installed and that it can
-reach GitHub. Everything interesting — ranking, personas, learning paths,
-evaluation — is work for the event, not inherited code.
+For a repository review, each evidence packet can also carry a separately
+observed public GitHub URL for the repository fact. The Turing Way citation
+supports the recommendation; the repository URL supports the factual claim
+about the reviewed project. MyGPT relevance is a retrieval-match score, not a
+scientific-quality or compliance score.
 
 ## Roadmap and Milestones
 

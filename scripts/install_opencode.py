@@ -1,0 +1,194 @@
+"""Install the KIDS learning-assistant MCP server and skills into OpenCode."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import secrets
+import shutil
+import subprocess
+import sys
+import tempfile
+from collections.abc import MutableMapping
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+CANONICAL_SKILLS = (
+    "install-kids-learning-assistant",
+    "mygpt-library",
+    "turing-way-pathfinder",
+    "turing-way-guidance",
+    "turing-way-review",
+)
+DEFAULT_CONFIG = Path.home() / ".config/opencode/opencode.json"
+DEFAULT_SKILLS_ROOT = Path.home() / ".config/opencode/skills"
+DOCKER_DESKTOP_URL = "https://docs.docker.com/get-docker/"
+REQUIRED_OLLAMA_MODEL = "qwen2.5:3b"
+
+
+def _mapping(value: object, name: str) -> MutableMapping[str, object]:
+    if not isinstance(value, dict):
+        raise ValueError(f"{name} must be a JSON object")
+    return value
+
+
+def update_opencode_config(config_path: Path, repository_root: Path) -> None:
+    """Add KIDS configuration without overwriting unrelated OpenCode settings."""
+    if config_path.exists():
+        data = json.loads(config_path.read_text(encoding="utf-8"))
+        config = _mapping(data, str(config_path))
+    else:
+        config = {"$schema": "https://opencode.ai/config.json"}
+
+    instructions = config.setdefault("instructions", [])
+    if not isinstance(instructions, list) or not all(
+        isinstance(item, str) for item in instructions
+    ):
+        raise ValueError("instructions must be a JSON array of paths")
+    agent_instructions = str(repository_root / "AGENTS.md")
+    if agent_instructions not in instructions:
+        instructions.append(agent_instructions)
+
+    permissions = _mapping(config.setdefault("permission", {}), "permission")
+    skill_permissions = _mapping(permissions.setdefault("skill", {}), "permission.skill")
+    skill_permissions.update(
+        {
+            "mygpt-library": "allow",
+            "turing-way-*": "allow",
+        }
+    )
+
+    mcp_servers = _mapping(config.setdefault("mcp", {}), "mcp")
+    mcp_servers["turing-way-mygpt"] = {
+        "type": "remote",
+        "url": "http://127.0.0.1:8000/mcp",
+        "enabled": True,
+        "oauth": False,
+        "timeout": 30000,
+    }
+
+    config_path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(
+        "w",
+        encoding="utf-8",
+        dir=config_path.parent,
+        prefix=f".{config_path.name}.",
+        delete=False,
+    ) as temporary:
+        temporary.write(json.dumps(config, indent=2) + "\n")
+        temporary_path = Path(temporary.name)
+    os.chmod(temporary_path, 0o600)
+    temporary_path.replace(config_path)
+
+
+def install_skill_links(skills_root: Path, repository_root: Path) -> None:
+    """Link global OpenCode skills to the repository's canonical definitions."""
+    skills_root.mkdir(parents=True, exist_ok=True)
+    for name in CANONICAL_SKILLS:
+        source = repository_root / ".agents/skills" / name
+        target = skills_root / name
+        if not source.is_dir():
+            raise FileNotFoundError(f"canonical skill is missing: {source}")
+        if target.exists() and not target.is_symlink():
+            raise FileExistsError(f"refusing to replace existing skill directory: {target}")
+        target.unlink(missing_ok=True)
+        target.symlink_to(source, target_is_directory=True)
+
+
+def create_mygpt_environment(repository_root: Path) -> Path:
+    """Create local MyGPT database and Django secrets without overwriting them."""
+    environment_path = repository_root / "config/mygpt.env"
+    if environment_path.exists():
+        return environment_path
+    template_path = repository_root / "config/mygpt.env.example"
+    content = template_path.read_text(encoding="utf-8")
+    content = content.replace("SECRET_KEY=", f"SECRET_KEY={secrets.token_urlsafe(48)}")
+    content = content.replace(
+        "POSTGRES_PASSWORD=", f"POSTGRES_PASSWORD={secrets.token_urlsafe(32)}"
+    )
+    environment_path.write_text(content, encoding="utf-8")
+    os.chmod(environment_path, 0o600)
+    return environment_path
+
+
+def docker_is_ready() -> bool:
+    """Report whether Docker Desktop is installed and its daemon is reachable."""
+    if shutil.which("docker") is None:
+        return False
+    result = subprocess.run(
+        ["docker", "info"],
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+    return result.returncode == 0
+
+
+def ollama_model_is_ready(model: str = REQUIRED_OLLAMA_MODEL) -> bool:
+    """Return whether the host Ollama server has the required model installed."""
+    if shutil.which("ollama") is None:
+        return False
+    result = subprocess.run(
+        ["ollama", "list"],
+        capture_output=True,
+        check=False,
+        text=True,
+    )
+    if result.returncode != 0:
+        return False
+    return any(line.split() and line.split()[0] == model for line in result.stdout.splitlines())
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
+    parser.add_argument("--skills-root", type=Path, default=DEFAULT_SKILLS_ROOT)
+    parser.add_argument(
+        "--bootstrap-rag",
+        action="store_true",
+        help="Start containers and import the full pinned Turing Way corpus into MyGPT.",
+    )
+    args = parser.parse_args()
+
+    if not docker_is_ready():
+        print(
+            "Docker Desktop is required and must be running before installation. "
+            f"Install or start it: {DOCKER_DESKTOP_URL}",
+            file=sys.stderr,
+        )
+        return 2
+    if not ollama_model_is_ready():
+        print(
+            f"The host Ollama model {REQUIRED_OLLAMA_MODEL!r} is required. "
+            f"Install it with: ollama pull {REQUIRED_OLLAMA_MODEL}",
+            file=sys.stderr,
+        )
+        return 2
+
+    update_opencode_config(args.config, ROOT)
+    install_skill_links(args.skills_root, ROOT)
+    environment_path = create_mygpt_environment(ROOT)
+    print(f"Configured OpenCode: {args.config}")
+    print(f"Linked canonical skills: {args.skills_root}")
+    print(f"Created or reused local MyGPT settings: {environment_path}")
+    if args.bootstrap_rag:
+        subprocess.run(
+            ["docker", "compose", "up", "--detach", "--build"],
+            cwd=ROOT,
+            check=True,
+        )
+        subprocess.run(
+            ["docker", "compose", "--profile", "bootstrap", "run", "--rm", "mygpt-bootstrap"],
+            cwd=ROOT,
+            check=True,
+        )
+        print("RAG bootstrap complete.")
+    else:
+        print("Start the services with: docker compose up --detach --build")
+        print("Initialize RAG with: python3 scripts/install_opencode.py --bootstrap-rag")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

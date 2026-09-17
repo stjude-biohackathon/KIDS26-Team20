@@ -12,6 +12,12 @@ NAME_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 KNOWN_TOOLS = {
     "learning-assistant_get_resource",
     "learning-assistant_list_resources",
+    "learning-assistant_list_mygpt_datasets",
+    "learning-assistant_list_mygpt_documents",
+    "learning-assistant_query_mygpt_context",
+    "learning-assistant_get_rag_status",
+    "learning-assistant_get_turing_way_evidence_packets",
+    "learning-assistant_get_turing_way_review_evidence",
 }
 SECRET_PATTERNS = (
     re.compile(r"ghp_[A-Za-z0-9]{20,}"),
