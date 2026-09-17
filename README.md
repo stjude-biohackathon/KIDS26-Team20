@@ -3,8 +3,8 @@
 A role-aware learning assistant grounded in The Turing Way and approved St. Jude
 educational resources, built for KIDS Biohackathon 2026.
 
-> **Team leads:** Start with the [team lead checklist](project-management/CHECKLIST.md) before the event or during your first team meeting.
-
+Onboarding:
+> **Project leads:** Start with the [team lead checklist](project-management/CHECKLIST.md) before the event or during your first team meeting.
 > **Everyone else:** Start with [START_HERE.md](START_HERE.md). It takes a machine
 > with nothing installed to a working environment in about fifteen minutes.
 
@@ -21,8 +21,21 @@ educational resources, built for KIDS Biohackathon 2026.
 
 ## Vision and Mission
 
-- **Vision:** Someone at St. Jude with a practical question about reproducible or data-intensive research can get an answer pitched at their level, with citations they can check, drawn only from sources the institution has approved.
-- **Mission:** During the biohackathon, build and evaluate the retrieval layer, the MCP tool contract, and the skills that sit on top of them, and demonstrate the whole path end to end with honest limitations.
+- **Vision:** Create an helpful AI assistant that tailors response to a practical question about reproducible or data-intensive research at their levels (novice vs advances vs specific profile), with citations they can check, drawn only from sources the institution has approved.
+- **Mission:** Build and evaluate the retrieval layer, the MCP tool contract, and the skills that sit on top of them, and demonstrate the whole path end to end with honest limitations. Plan a future development scope to make these assistants to help with domain-specific questions.
+
+## Contributors and Team Members
+
+- Ty Michael
+- Saikat Nandy
+- Chris House
+- Arif Usta
+- Jaimin Patel
+- Chen Li
+- Shovito Barua Soumma
+- Aliyah Cole
+
+**For any questions, please contact:** ty.michael@stjude.org, jaimin.patel@stjude.org and malvika.sharan@stjude.org.
 
 ## About
 
@@ -192,19 +205,6 @@ before adding external data or media.
 Source repository, commit, and licensing metadata are recorded in the manifests
 under [`corpus/`](corpus/).
 
-## Contributors and Team Members
-
-- Ty Michael
-- Saikat Nandy
-- Chris House
-- Arif Usta
-- Jaimin Patel
-- Chen Li
-- Shovito Barua Soumma
-- Aliyah Cole
-
-**Contact:** ty.michael@stjude.org, malvika.sharan@stjude.org
-
 ## Licence
 
-MIT. See [LICENSE.md](LICENSE.md).
+MIT Liencense. See [LICENSE.md](LICENSE.md).
