@@ -85,3 +85,8 @@ def test_turing_way_pathfinder_uses_curated_paths_and_targeted_rag() -> None:
     assert "pathways/pathways-early-career-researchers" in text
     assert "reuse one URL for unrelated chapters" in text
     assert "private life, identity" in text
+    assert "Always call `learning-assistant_list_resources` before" in text
+    assert "Do not retrieve a known ID directly." in text
+    assert "its own observable completion checkpoint" in text
+    assert "Finish the response immediately after the last action's completion checkpoint." in text
+    assert "Do not add a shared final checkpoint" in text

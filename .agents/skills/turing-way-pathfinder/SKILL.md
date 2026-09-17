@@ -59,7 +59,9 @@ sensitive information.
    | Growing a contributor community | Community Management | Governance, contributor process, accessible collaboration |
    | Cross-institution or cross-discipline collaboration | Data Science Without Borders | Inclusive collaboration and communication |
 
-4. Call `learning-assistant_list_resources`, then
+4. Always call `learning-assistant_list_resources` before
+   `learning-assistant_get_resource`, including when the selected resource ID
+   is known. Do not retrieve a known ID directly. Then call
    `learning-assistant_get_resource` for the selected pathway's exact resource
    ID before drafting actions:
 
@@ -93,9 +95,8 @@ Return:
 2. **Why this path:** a two-sentence explanation, including any assumption.
 3. **Start here:** three to five ordered actions sized for the requester's
    current goal. Every action must include a pinned Turing Way citation and
-   its exact `MyGPT RAG relevance: N%` value returned for that action.
-4. **Next checkpoint:** one observable outcome that lets the requester know
-   they completed the first step.
+   its exact `MyGPT RAG relevance: N%` value returned for that action, plus
+   its own observable completion checkpoint.
 
 The returned relevance value indicates the match between the MyGPT retrieval
 query and Turing Way evidence; it is not a measure of the person's skill,
@@ -105,6 +106,10 @@ Every pathway label, chapter title, URL, and quoted statement must match the
 resource returned by `learning-assistant_get_resource`. Do not use a resource
 from a different Turing Way section, reuse one URL for unrelated chapters, or
 invent a chapter title from a MyGPT source-record label.
+
+Finish the response immediately after the last action's completion checkpoint.
+Do not add a shared final checkpoint, an offer of further help, a question,
+optional next steps, or a capability claim.
 
 ## Failure behavior
 
