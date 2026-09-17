@@ -46,12 +46,22 @@ configure institutional credentials, or run containers against patient data.
    python3 scripts/install_opencode.py
    ```
 
-4. Restart OpenCode so it discovers the linked global skills and the
+4. To remove only this project's global OpenCode MCP entry, managed instruction,
+   and canonical skill symlinks before a clean reinstall, run:
+
+   ```bash
+   python3 scripts/install_opencode.py --uninstall
+   ```
+
+   This preserves Docker containers, volumes, MyGPT settings, unrelated OpenCode
+   configuration, and non-symlink skill directories.
+
+5. Restart OpenCode so it discovers the linked global skills and the
    `turing-way-mygpt` MCP server.
-5. Run `opencode mcp list` and confirm `turing-way-mygpt` is connected.
-6. Test the Turing Way path with `turing-way-mygpt_list_resources` before
+6. Run `opencode mcp list` and confirm `turing-way-mygpt` is connected.
+7. Test the Turing Way path with `turing-way-mygpt_list_resources` before
    testing any MyGPT-backed query.
-7. Run `turing-way-mygpt_get_rag_status`. Treat the RAG pipeline as ready only
+8. Run `turing-way-mygpt_get_rag_status`. Treat the RAG pipeline as ready only
    when it returns `status: ready` with a nonzero `source_count`.
 
 ## Failure behavior

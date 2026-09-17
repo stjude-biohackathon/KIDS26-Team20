@@ -70,6 +70,13 @@ without starting Docker or initializing RAG, use:
 python3 scripts/install_opencode.py
 ```
 
+For a clean OpenCode-only reinstall, preserving Docker containers, volumes, and
+MyGPT settings, run:
+
+```bash
+python3 scripts/install_opencode.py --uninstall
+```
+
 The installer registers `turing-way-mygpt` in global OpenCode configuration and
 links the canonical skills from this repository into OpenCode's global skill
 directory without copying them. The Compose command starts the local stack,

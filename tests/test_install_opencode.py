@@ -8,6 +8,8 @@ from scripts.install_opencode import (
     CANONICAL_SKILLS,
     create_mygpt_environment,
     install_skill_links,
+    remove_opencode_config,
+    remove_skill_links,
     update_opencode_config,
 )
 
@@ -62,6 +64,33 @@ def test_installer_replaces_a_stale_managed_skill_symlink(tmp_path: Path) -> Non
     assert (skills_root / "turing-way-review").resolve() == (
         ROOT / ".agents/skills" / "turing-way-review"
     )
+
+
+def test_uninstaller_removes_only_managed_opencode_entries(tmp_path: Path) -> None:
+    config_path = tmp_path / "opencode.json"
+    config_path.write_text(
+        json.dumps(
+            {
+                "instructions": ["shared.md", str(ROOT / "AGENTS.md")],
+                "mcp": {"other-server": {"type": "local"}, "turing-way-mygpt": {"type": "remote"}},
+            }
+        ),
+        encoding="utf-8",
+    )
+    skills_root = tmp_path / "skills"
+    install_skill_links(skills_root, ROOT)
+    (skills_root / "unrelated").mkdir()
+
+    assert remove_opencode_config(config_path, ROOT) is True
+    assert remove_opencode_config(config_path, ROOT) is False
+    assert remove_skill_links(skills_root)
+    assert remove_skill_links(skills_root) == []
+
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    assert config["instructions"] == ["shared.md"]
+    assert config["mcp"] == {"other-server": {"type": "local"}}
+    assert (skills_root / "unrelated").is_dir()
+    assert all(not (skills_root / name).exists() for name in CANONICAL_SKILLS)
 
 
 def test_installer_does_not_replace_a_non_symlink_skill_directory(tmp_path: Path) -> None:

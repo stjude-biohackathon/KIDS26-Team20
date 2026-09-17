@@ -38,6 +38,22 @@ def _deduplicate(values: list[str]) -> list[str]:
     return list(dict.fromkeys(values))
 
 
+def _write_opencode_config(config_path: Path, config: MutableMapping[str, object]) -> None:
+    """Atomically write private OpenCode configuration."""
+    config_path.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(
+        "w",
+        encoding="utf-8",
+        dir=config_path.parent,
+        prefix=f".{config_path.name}.",
+        delete=False,
+    ) as temporary:
+        temporary.write(json.dumps(config, indent=2) + "\n")
+        temporary_path = Path(temporary.name)
+    os.chmod(temporary_path, 0o600)
+    temporary_path.replace(config_path)
+
+
 def update_opencode_config(config_path: Path, repository_root: Path) -> None:
     """Add KIDS configuration without overwriting unrelated OpenCode settings."""
     if config_path.exists():
@@ -72,18 +88,37 @@ def update_opencode_config(config_path: Path, repository_root: Path) -> None:
         "timeout": 30000,
     }
 
-    config_path.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.NamedTemporaryFile(
-        "w",
-        encoding="utf-8",
-        dir=config_path.parent,
-        prefix=f".{config_path.name}.",
-        delete=False,
-    ) as temporary:
-        temporary.write(json.dumps(config, indent=2) + "\n")
-        temporary_path = Path(temporary.name)
-    os.chmod(temporary_path, 0o600)
-    temporary_path.replace(config_path)
+    _write_opencode_config(config_path, config)
+
+
+def remove_opencode_config(config_path: Path, repository_root: Path) -> bool:
+    """Remove only this repository's managed OpenCode configuration entries."""
+    if not config_path.exists():
+        return False
+    config = _mapping(json.loads(config_path.read_text(encoding="utf-8")), str(config_path))
+    changed = False
+
+    instructions = config.get("instructions")
+    if instructions is not None:
+        if not isinstance(instructions, list) or not all(
+            isinstance(item, str) for item in instructions
+        ):
+            raise ValueError("instructions must be a JSON array of paths")
+        managed_instruction = str(repository_root / "AGENTS.md")
+        filtered_instructions = [item for item in instructions if item != managed_instruction]
+        if filtered_instructions != instructions:
+            config["instructions"] = filtered_instructions
+            changed = True
+
+    mcp_servers = config.get("mcp")
+    if mcp_servers is not None:
+        mcp_mapping = _mapping(mcp_servers, "mcp")
+        if mcp_mapping.pop("turing-way-mygpt", None) is not None:
+            changed = True
+
+    if changed:
+        _write_opencode_config(config_path, config)
+    return changed
 
 
 def install_skill_links(skills_root: Path, repository_root: Path) -> None:
@@ -98,6 +133,17 @@ def install_skill_links(skills_root: Path, repository_root: Path) -> None:
             raise FileExistsError(f"refusing to replace existing skill directory: {target}")
         target.unlink(missing_ok=True)
         target.symlink_to(source, target_is_directory=True)
+
+
+def remove_skill_links(skills_root: Path) -> list[Path]:
+    """Remove only managed canonical skill symlinks, leaving real directories intact."""
+    removed: list[Path] = []
+    for name in CANONICAL_SKILLS:
+        target = skills_root / name
+        if target.is_symlink():
+            target.unlink()
+            removed.append(target)
+    return removed
 
 
 def create_mygpt_environment(repository_root: Path) -> Path:
@@ -153,7 +199,22 @@ def main() -> int:
         action="store_true",
         help="Start containers and import the full pinned Turing Way corpus into MyGPT.",
     )
+    parser.add_argument(
+        "--uninstall",
+        action="store_true",
+        help="Remove only this project's managed OpenCode MCP entry, instruction, and skill links.",
+    )
     args = parser.parse_args()
+    if args.bootstrap_rag and args.uninstall:
+        parser.error("--bootstrap-rag and --uninstall cannot be used together")
+
+    if args.uninstall:
+        config_removed = remove_opencode_config(args.config, ROOT)
+        removed_links = remove_skill_links(args.skills_root)
+        print(f"Removed managed OpenCode configuration: {config_removed}")
+        print(f"Removed managed skill links: {len(removed_links)}")
+        print("Docker containers, volumes, and unrelated OpenCode settings were preserved.")
+        return 0
 
     if not docker_is_ready():
         print(
