@@ -14,18 +14,6 @@
       "*": "allow"
     }
   },
-  "mcp": {
-    "learning-assistant": {
-      "type": "local",
-      "command": ["uv", "run", "learning-assistant", "stdio"],
-      "environment": {
-        "LEARNING_ASSISTANT_OFFLINE": "false",
-        "LEARNING_ASSISTANT_SOURCES": "corpus/sources.yaml"
-      },
-      "enabled": true,
-      "timeout": 30000
-    }
-  },
   "watcher": {
     "ignore": [".venv/**", ".git/**", ".pytest_cache/**", ".ruff_cache/**"]
   }

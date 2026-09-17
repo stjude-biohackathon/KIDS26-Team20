@@ -1,0 +1,84 @@
+---
+name: install-kids-learning-assistant
+description: Install the KIDS learning assistant's local Docker MCP server and canonical OpenCode skills for a scientist or contributor
+license: MIT
+compatibility: opencode
+metadata:
+  audience: scientists-and-contributors
+  status: active
+---
+
+# Install KIDS Learning Assistant
+
+## Use this skill when
+
+A user asks to install, configure, repair, or verify the KIDS Turing Way and
+MyGPT learning assistant in their local OpenCode environment.
+
+## Do not use this skill when
+
+The user asks to deploy the service to a shared server, alter MyGPT data,
+configure institutional credentials, or run containers against patient data.
+
+## Workflow
+
+1. Confirm Docker Desktop, OpenCode, and the required host Ollama model
+   `qwen2.5:3b` are installed and running. If Docker is
+   absent or stopped, direct the user to
+   `https://docs.docker.com/get-docker/`; do not silently install system
+   software, download a large model, or request credentials.
+2. For a first installation or a repair, run this idempotent bootstrap command
+   from the KIDS repository root:
+
+   ```bash
+   python3 scripts/install_opencode.py --bootstrap-rag --pull-ollama-model
+   ```
+
+   It reconciles the OpenCode MCP entry and canonical skill links, reuses an
+   existing MyGPT secret file and Docker volumes, waits for the Compose services
+   to become healthy, and imports the RAG corpus only when needed. It does not
+   delete Docker volumes or replace a non-symlink skill directory. The explicit
+   `--pull-ollama-model` flag authorizes downloading the required 1.9 GB model
+   only when it is missing; it is a no-op when the model already exists.
+
+3. To register the skills and MCP configuration without starting Docker or
+   importing the corpus, run:
+
+   ```bash
+   python3 scripts/install_opencode.py
+   ```
+
+4. To remove only this project's global OpenCode MCP entry, managed instruction,
+   and canonical skill symlinks before a clean reinstall, run:
+
+   ```bash
+   python3 scripts/install_opencode.py --uninstall
+   ```
+
+   This preserves Docker containers, volumes, MyGPT settings, unrelated OpenCode
+   configuration, and non-symlink skill directories.
+
+5. Restart OpenCode so it discovers the linked global skills and the
+   `turing-way-mygpt` MCP server.
+6. Run `opencode mcp list` and confirm `turing-way-mygpt` is connected.
+7. Test the Turing Way path with `turing-way-mygpt_list_resources` before
+   testing any MyGPT-backed query.
+8. Run `turing-way-mygpt_get_rag_status`. Treat the RAG pipeline as ready only
+   when it returns `status: ready` with a nonzero `source_count`.
+
+## Failure behavior
+
+If Docker is unavailable, say that Docker Desktop must be started. If OpenCode
+is unavailable, explain that the MCP and skills will be registered when it is
+installed. Re-run the bootstrap command to repair a stale managed symlink or
+MCP entry. Do not overwrite a non-symlink skill directory, delete Docker
+volumes, expose local configuration values, or claim that MyGPT retrieval works
+before its dataset is initialized.
+
+## Evaluation cases
+
+- Positive: a scientist asks for a one-command-style local setup for the KIDS
+  Turing Way assistant.
+- Positive: a contributor asks why OpenCode cannot discover the review skill.
+- Negative: a user asks to deploy the stack to a shared production service.
+- Negative: a user asks to add institutional credentials to Compose.

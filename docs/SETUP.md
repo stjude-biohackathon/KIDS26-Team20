@@ -1,9 +1,8 @@
 # Contributor Setup
 
 Follow these steps in order on a machine that has nothing installed yet. At the
-end you will have OpenCode running with the Superpowers skills, the project
-skills, and the Turing Way MCP server, all started automatically when you launch
-OpenCode from this repository.
+end you will have OpenCode running with the Superpowers skills, project skills,
+and the local Docker Turing Way MCP server installed explicitly.
 
 Everything runs directly on your machine from pinned versions.
 
@@ -33,8 +32,7 @@ git clone <repository-url>
 cd ttw_biohackathon_repo
 ```
 
-Run every remaining command from this directory. The MCP server is launched by
-relative path, so the working directory matters.
+Run every remaining command from this directory.
 
 ## 3. Install uv
 
@@ -60,10 +58,9 @@ uv sync --extra dev --frozen
 uv run python scripts/project.py doctor
 ```
 
-The diagnostic prints one line per component. At this point the first four
-should read PASS, including the Turing Way MCP server listing live resources.
-The remaining lines will read WARN until you finish the steps below; WARN means
-optional, not broken.
+The diagnostic prints one line per component. The offline MCP server checks
+should pass; the Docker-backed Turing Way RAG service is installed separately
+below.
 
 Keep `--frozen`. It holds every contributor to the same reviewed dependency set.
 
@@ -133,46 +130,33 @@ A preflight pass means you received an authenticated model response over
 verified TLS. Failures are reported by category without printing the endpoint,
 the key, or the response body; see the failure guide below.
 
-## 7. Start OpenCode
+## 7. Install the local Docker MCP
 
-Start OpenCode from the repository root, in the same shell where you loaded the
-settings in step 6.
-
-Windows (PowerShell):
-
-```powershell
-$env:OPENCODE_CONFIG = "$HOME\.config\opencode\workbench-provider.json"
-tools\node_modules\.bin\opencode.cmd
-```
-
-macOS or Linux:
+Install and start Docker Desktop, then ensure Ollama is installed. From the
+repository root, use the idempotent bootstrap command:
 
 ```bash
-export OPENCODE_CONFIG="$HOME/.config/opencode/workbench-provider.json"
-./tools/node_modules/.bin/opencode
+python3 scripts/install_opencode.py --bootstrap-rag --pull-ollama-model
 ```
 
-The repository's `opencode.json` supplies everything else automatically:
+This is the only command that registers the Docker MCP with OpenCode. The
+repository-level `opencode.json` intentionally does not auto-start an MCP
+server.
 
-- the **Turing Way MCP server**, started as a local stdio server on launch;
-- the **Superpowers skills**, installed from a pinned commit through OpenCode's
-  plugin manager;
-- the **project skills** in `.agents/skills`, which OpenCode discovers on its own;
-- sharing disabled and automatic updates off.
+## 8. Start and verify OpenCode
 
-## 8. Verify inside OpenCode
+Restart OpenCode after the installer completes, then launch it from the
+repository root. The project skills are discovered locally and the installer
+has registered `turing-way-mygpt` globally.
 
-Run these three prompts in a new session. Do not trust the configuration file
-alone; confirm the tools answer.
+Run these prompts in a new session:
 
-1. "List the learning-assistant MCP tools." Expect two: `list_resources` and
-   `get_resource`.
-2. "List the available Turing Way resources, then read one of them." Expect a
-   list of pages followed by the content of the one you picked. Check the
-   `origin` field: `github` means the server reached GitHub, `snapshot` means it
-   fell back to the three pages committed here.
-3. "List your available skills." Expect the Superpowers skills alongside the
-  `skill-template` project skill.
+1. Run `opencode mcp list`; confirm `turing-way-mygpt` is connected.
+2. "List the available Turing Way resources, then run
+   turing-way-mygpt_get_rag_status." Expect a ready RAG status with a nonzero
+   source count.
+3. "List your available skills." Expect the project skills, including
+   `install-kids-learning-assistant`.
 
 If any of the three fails, run `uv run python scripts/project.py doctor` again
 and work through the FAIL lines in order.
