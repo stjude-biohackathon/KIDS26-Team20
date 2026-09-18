@@ -16,7 +16,7 @@ It reconciles the managed OpenCode configuration and skill symlinks, reuses
 existing MyGPT secrets and Docker volumes, starts the stack, waits for its
 services to become healthy, and initializes the corpus only when the dataset
 passes its compatibility checks. The explicit `--pull-ollama-model` flag
-downloads `qwen2.5:3b` and `nomic-embed-text` only if absent. It does not delete Docker volumes or
+downloads `nomic-embed-text` only if absent. It does not delete Docker volumes or
 overwrite a non-symlink skill directory. To configure OpenCode without
 starting the stack, run `python3 scripts/install_opencode.py`.
 
@@ -85,11 +85,11 @@ index, credentials, or scientific data.
 Before question retrieval can return Turing Way evidence, initialize MyGPT
 using those settings, import the full pinned corpus, and build its embeddings.
 By default, MyGPT calls the Ollama server already running on the Docker host at
-`http://host.docker.internal:11434`, using `qwen2.5:3b` for chat and
-`nomic-embed-text` for embeddings. Install both Ollama models before bootstrap:
+`http://host.docker.internal:11434`, using `nomic-embed-text` for embeddings.
+The retrieval API records `qwen2.5:3b` as its MyGPT model type but does not
+require its local Ollama weights. Install the embedding model before bootstrap:
 
 ```bash
-ollama pull qwen2.5:3b
 ollama pull nomic-embed-text
 ```
 

@@ -78,9 +78,12 @@ def test_turing_way_review_skill_uses_the_citation_preserving_mcp_tools() -> Non
 def test_agent_guidance_routes_scientist_requests_to_turing_way_skills() -> None:
     text = (ROOT / "AGENTS.md").read_text(encoding="utf-8")
 
-    assert "`turing-way-guidance` skill" in text
+    assert "Use\n`turing-way-guidance` for focused guidance" in text
     assert "`turing-way-review`" in text
-    assert "`turing-way-pathfinder` skill" in text
+    assert "invoke\n`turing-way-pathfinder` first" in text
+    assert "Do not combine PathFinder with\n`teacher-skill` or `turing-way-guidance`" in text
+    assert "`turing-way-certified`" in text
+
     assert "learning-assistant MCP" in text
     assert "learning-assistant_get_turing_way_evidence_packets" in text
 

@@ -17,6 +17,11 @@ ROOT = Path(__file__).resolve().parents[1]
 CANONICAL_SKILLS = (
     "install-kids-learning-assistant",
     "mygpt-library",
+    "skill-formatter",
+    "skill-maintainer",
+    "skill-template",
+    "teacher-skill",
+    "turing-healthcheck-prototype",
     "turing-way-pathfinder",
     "turing-way-guidance",
     "turing-way-review",
@@ -24,7 +29,7 @@ CANONICAL_SKILLS = (
 DEFAULT_CONFIG = Path.home() / ".config/opencode/opencode.json"
 DEFAULT_SKILLS_ROOT = Path.home() / ".config/opencode/skills"
 DOCKER_DESKTOP_URL = "https://docs.docker.com/get-docker/"
-REQUIRED_OLLAMA_MODELS = ("qwen2.5:3b", "nomic-embed-text")
+REQUIRED_OLLAMA_MODELS = ("nomic-embed-text",)
 
 
 def _mapping(value: object, name: str) -> MutableMapping[str, object]:
@@ -187,7 +192,8 @@ def ollama_model_is_ready(model: str) -> bool:
     )
     if result.returncode != 0:
         return False
-    return any(line.split() and line.split()[0] == model for line in result.stdout.splitlines())
+    installed_names = {line.split()[0] for line in result.stdout.splitlines() if line.split()}
+    return model in installed_names or f"{model}:latest" in installed_names
 
 
 def pull_ollama_model(model: str) -> None:

@@ -109,5 +109,10 @@ uv run python scripts/project.py doctor
 
 Then restart OpenCode, ask it to list its skills, and confirm yours appears.
 
+For a behavior change or a new project skill, use `skill-maintainer`. It
+handles the complete create-or-update workflow, including validation and the
+OpenCode installer link. Use `skill-formatter` only for specification-format
+repairs.
+
 See the contribution tracks in [CONTRIBUTING.md](../../CONTRIBUTING.md) and the
 setup steps in [docs/SETUP.md](../../docs/SETUP.md).
