@@ -1,137 +1,249 @@
-# Turing Healthcheck
+# Turing Way Repository Healthcheck
 
-Review date: 2026-09-17
+Reviewed: 2026-09-18
 
-## Scope Reviewed
+## Scope reviewed
 
-Whole-repository review of the St. Jude AI and Data Learning Assistant at commit
-`3de0c943a0d4ed021be9e744c5a26f7772497043`. The reviewed project is a Python
-MCP service with local Docker services and pinned Node-based contributor tools.
-Generated dependencies, Docker volumes, caches, binaries, and ignored local
-configuration were excluded.
+Whole-repository review of the public
+`stjude-biohackathon/KIDS26-Team20` repository at commit
+`97c9048db38f855450c5a2e42c8c0186eba1e9b9` on `main`.
 
-Rubric categories scored: Version control and collaborative review; reproducible
+The project is a Python MCP learning-assistant server with agent skills, a
+committed offline source snapshot, Docker/Compose deployment material, and a
+MyGPT backend and data tree. Generated, vendored, binary, model, and large data
+artifacts were excluded from code-quality and testing coverage assessment,
+except when relevant to reproducibility or licensing.
+
+Categories scored: version control and collaborative review; reproducible
 computational environments; testing; continuous integration; code quality:
 style and static analysis; code documentation; licensing and open code; and
 community and stakeholder management.
 
-Project Design checklist evidence: the README records a project question, input
-sources, expected output, stack, and a communication channel. The team/roles
-template and the handoff section retain unresolved placeholders. The contribution
-guidance documents version-control and review expectations. No completed archive
-or post-project publishing plan was observed.
+## Overall score and confidence
 
-## Overall Score And Confidence
+**38 / 65 raw points (58%), Medium confidence.**
 
-**48 / 65 (74%), medium confidence.**
+The repository has a strong documented and locked local setup, broad offline
+tests, helpful layered documentation, and active multi-contributor Git history.
+The combined quality check could not run because `uv` is unavailable in the
+review environment. The public tree exposes only GitHub-managed Copilot
+workflows, not a repository-controlled workflow that runs tests, linting, and
+formatting on project changes.
 
-Repository documentation and tracked configuration were inspected across every
-scored category. The documented offline validation command could not run because
-`uv` is not installed or on this review environment's `PATH`, so test, formatter,
-lint, and skill-validation results could not be independently confirmed.
+## Rubric summary
 
-## Rubric Summary
+| Category | Score | Maturity level | Rationale |
+| --- | ---: | --- | --- |
+| Version control and collaborative review | 7.5 / 10.0 | Strong | Recent scoped commits and repeated merged pull requests show an active, hosted collaboration workflow; universal recorded peer review cannot be confirmed. |
+| Reproducible computational environments | 7.5 / 10.0 | Strong | `uv.lock`, documented frozen setup, a Dockerfile, and Compose provide versioned, portable setup paths. |
+| Testing | 4.0 / 5.0 | Strong | The pytest suite covers normal and invalid-input behavior, supply-chain checks, and skill contracts, but it could not be executed in this environment. |
+| Continuous integration | 0.0 / 5.0 | Missing | No tracked workflow runs the repository's formatting, linting, tests, or skill validation. |
+| Code quality: style and static analysis | 5.0 / 10.0 | Developing | Ruff formatting and lint rules are configured and included in one local check command, but neither a passing run nor automatic enforcement was available. |
+| Code documentation | 7.5 / 10.0 | Strong | README, contributor setup, Docker guidance, docstrings, and focused comments support users and developers. |
+| Licensing and open code | 5.0 / 10.0 | Developing | A root MIT license is present, but the licenses and provenance boundaries of bundled third-party backend, model, and data artifacts are not separately documented. |
+| Community and stakeholder management | 1.0 / 5.0 | Initial | Intended users, contributors, a Slack channel, onboarding, and recent activity are documented; the team role template is incomplete and no repository Code of Conduct exists. |
 
-| Category | Earned | Maximum | Maturity level | Rationale |
-| --- | ---: | ---: | --- | --- |
-| Version control and collaborative review | 7.5 | 10 | Strong | Meaningful commits and four recorded merge commits are present; project guidance expects focused branches, pull requests, and teammate review. |
-| Reproducible computational environments | 10.0 | 10 | Exemplary | `uv.lock`, a pinned Dockerfile, Compose services, and documented clean-machine setup provide versioned, automated environment reconstruction. |
-| Testing | 4.0 | 5 | Strong | Nine organized test modules cover normal and failure behavior, including MCP contracts, installation, container boundaries, and supply-chain rules. |
-| Continuous integration | 0.0 | 5 | Missing | No workflow files exist under `.github/workflows`, so no automated repository CI was observable. |
-| Code quality: style and static analysis | 7.5 | 10 | Strong | Ruff rules and formatting/lint commands are configured; the full check could not be run in this environment. |
-| Code documentation | 7.5 | 10 | Strong | README, setup guides, contribution guidance, docstrings, and inline comments cover users and maintainers. |
-| Licensing and open code | 7.5 | 10 | Strong | Root `LICENSE.md` supplies the standard MIT license and the README identifies it; bundled external-source licensing boundaries are described but not exhaustively mapped. |
-| Community and stakeholder management | 2.5 | 5 | Developing | Contributor roles and a Slack channel are named, and the team checklist directs collaboration, but several project-specific roles and communication fields remain templates and the Code of Conduct is external rather than a tracked project file. |
+## Detailed evidence
 
-## Detailed Evidence
+### Project Design checklist
 
-### Version Control And Collaborative Review
+- Present: The README identifies the problem, inputs, expected output, tools,
+  vision, mission, intended users, and a three-day roadmap.
+  (`README.md:11-20`, `README.md:127-135`.)
+- Present: The project has a public contribution path, offline check command,
+  and source and credential boundaries. (`CONTRIBUTING.md:13-76`.)
+- Partly present: `project-management/team.md` names participants and the Slack
+  channel, but its team name, lead, project question, stack, roles, and
+  responsibilities remain placeholders. (`project-management/team.md:3-24`.)
+- Partly present: `project-management/project-plan.md` is an unfilled template
+  for goal, tools, tasks, milestones, definition of done, and risks.
+  (`project-management/project-plan.md:3-31`.)
+- Incomplete: No release, archival, or final handoff plan was identified in the
+  tracked project-management documentation.
 
-- Observed: `git log --oneline -20` shows focused `feat:` and `fix:` commits; `git log --merges --oneline -20` shows four recorded pull-request merges.
-- Observed: `project-management/CHECKLIST.md:45-60` requires a focused branch, a pull request, another teammate's review, and recorded checks or limitations.
-- Rubric cell applied: **Strong (7.5/10)**, “Changes are captured as meaningful, well-messaged commits, and pull or merge requests are the norm, typically reviewed by at least one other contributor before merging.”
+### Version control and collaborative review: 7.5 / 10.0
 
-### Reproducible Computational Environments
+Applied rubric cell: **Strong**. Changes are captured as meaningful,
+well-messaged commits, and pull or merge requests are the normal integration
+path.
 
-- Observed: `pyproject.toml:1-24` declares Python compatibility and development dependencies; `uv.lock` is tracked.
-- Observed: `Dockerfile:1-29` pins Python 3.12 and uv 0.11.8, installs with `uv sync --frozen`, and defines a health check.
-- Observed: `compose.yaml:1-89` versions the local database, MyGPT backend commit, service dependencies, health checks, and local-only ports.
-- Observed: `docs/SETUP.md:15-157` documents installation from a clean machine and pinned tool verification.
-- Rubric cell applied: **Exemplary (10/10)**, “The full computational environment — dependencies, versions, and any needed services — is versioned, automated, and demonstrably reproducible from a clean machine.” The portable build and service setup were inspected; the documented check was not runnable here.
+- The public commit history at the reviewed revision includes recent merge pull
+  requests and scoped commits from multiple contributors, for example the
+  merges for pull requests 9, 10, 11, and 12 and commits headed `fix:` and
+  `feat:`. (`https://github.com/stjude-biohackathon/KIDS26-Team20/commits/97c9048db38f855450c5a2e42c8c0186eba1e9b9`.)
+- The team checklist specifies focused branches and commits, pull requests,
+  peer review before merge, and recording checks.
+  (`project-management/CHECKLIST.md:42-67`.)
+- The public review cannot establish that every non-trivial change has a
+  recorded peer review or that branch protection requires it. Exemplary was
+  therefore not awarded.
 
-### Testing
+### Reproducible computational environments: 7.5 / 10.0
 
-- Observed: `tests/` contains nine test modules. `tests/test_mcp.py:40-73` exercises the in-memory MCP contract and offline source retrieval.
-- Observed: `tests/test_container.py:20-84` checks loopback binding, pinned upstream revisions, secret isolation, and bootstrap configuration. `tests/test_supply_chain.py:19-88` checks lock integrity and immutable external source pins.
-- Rubric cell applied: **Strong (4/5)**, “Tests cover both normal and failure or edge-case behavior, run repeatably, and act as a fail-fast safety net that catches regressions when code changes.”
+Applied rubric cell: **Strong**. The environment is captured in portable,
+versioned artifacts that a new contributor can use with minimal manual steps.
 
-### Continuous Integration
+- `pyproject.toml` declares Python compatibility, application and development
+  dependencies, pytest settings, and Ruff settings. `uv.lock` records the
+  resolved Python environment. (`pyproject.toml:1-36`, `uv.lock`.)
+- The supported setup uses `uv sync --extra dev --frozen`; the setup guide says
+  that `--frozen` keeps contributors on the same reviewed dependency set.
+  (`docs/SETUP.md:49-68`.)
+- `Dockerfile` uses Python 3.12 and `uv sync --frozen`; `compose.yaml` defines
+  the local multi-service stack, health checks, loopback ports, and persistent
+  volumes. (`Dockerfile:1-29`, `compose.yaml:1-89`.)
+- A clean-machine setup and full Docker bootstrap were not run. The fully
+  demonstrated end-to-end reproduction required for Exemplary was not shown.
 
-- Observed: `.github/` contains only `copilot-instructions.md`; no `.github/workflows` directory or workflow configuration was found in the tracked checkout.
-- Rubric cell applied: **Missing (0/5)**, “No CI is configured; any tests that exist are only ever run manually by individuals.”
+### Testing: 4.0 / 5.0
 
-### Code Quality: Style And Static Analysis
+Applied rubric cell: **Strong**. Tests cover normal and failure or edge-case
+behavior, run repeatably, and provide a fail-fast regression safety net.
 
-- Observed: `pyproject.toml:38-43` configures Ruff formatting/linting with rules `E`, `F`, `I`, `UP`, `B`, and `SIM`.
-- Observed: `scripts/project.py:34-38` makes `ruff format --check .` and `ruff check .` part of the documented check.
-- Rubric cell applied: **Strong (7.5/10)**, “A linter or static analysis tool is configured and passes cleanly, or with justified exceptions, across most of the codebase, and style is consistent.” Passing output was not independently available.
+- Pytest is configured with `tests` as the test path and automatic asyncio mode.
+  (`pyproject.toml:27-36`.)
+- `tests/test_mcp.py` exercises the in-memory MCP contract and invalid review
+  inputs; `tests/test_supply_chain.py` covers lockfile integrity, exact build
+  pins, no floating package execution, and commit-pinned corpus sources.
+- Container tests verify loopback binding, pinned upstream MyGPT revision,
+  provider-setting boundaries, and bootstrap provenance.
+  (`tests/test_container.py:20-84`.)
+- Contributors are instructed to keep default tests offline and deterministic,
+  with live tests behind an explicit integration marker.
+  (`CONTRIBUTING.md:20-27`.)
+- The suite was not run because the `uv` command is unavailable. Automatic test
+  execution was also not established, so Exemplary was not awarded.
 
-### Code Documentation
+### Continuous integration: 0.0 / 5.0
 
-- Observed: `README.md:11-25` describes the purpose, input sources, expected output, stack, and project roles; `README.md:35-110` documents local and Docker setup.
-- Observed: `docs/SETUP.md:1-242` provides ordered onboarding, verification, failure guidance, and explicit credential boundaries.
-- Observed: `scripts/project.py:1-24` and `tests/test_supply_chain.py:1-18` include docstrings and comments for non-obvious behavior.
-- Rubric cell applied: **Strong (7.5/10)**, “A README, inline comments, and docstrings or API documentation together let both users and future developers understand what the code does, why, and how to use or extend it.”
+Applied rubric cell: **Missing**. No project CI is configured to run automated
+checks on commits or pull requests.
 
-### Licensing And Open Code
+- The complete public tree at the reviewed revision contains no tracked
+  `.github/workflows` directory or workflow YAML file. The GitHub Actions API
+  lists only GitHub-managed Copilot workflows, not a repository workflow that
+  runs `scripts/project.py check`.
+- `scripts/project.py` provides a sound local aggregate check, running Ruff
+  format checking, Ruff linting, pytest, and skill validation.
+  (`scripts/project.py:31-38`.) It is not connected to a tracked CI trigger.
 
-- Observed: `LICENSE.md:1-21` contains the MIT license; `README.md:195-197` links to it.
-- Observed: `README.md:14-16` identifies the Turing Way corpus as CC-BY-4.0 and states that institutional resources are disabled pending ownership, scope, and license review.
-- Rubric cell applied: **Strong (7.5/10)**, “A clear, standard license file, recognizable by hosting platforms such as GitHub or GitLab, is present, and it is reasonably clear what license applies to which part of the project.”
+### Code quality: style and static analysis: 5.0 / 10.0
 
-### Community And Stakeholder Management
+Applied rubric cell: **Developing**. A linter is configured, but regular,
+automatically enforced successful execution is not observable.
 
-- Observed: `README.md:13-20` identifies the intended audience, a team lead placeholder, team-role reference, and a Slack channel.
-- Observed: `CONTRIBUTING.md:6-16` defines contribution tracks, while `project-management/CHECKLIST.md:42-60` documents the contributor workflow and review expectation.
-- Observed limitation: `project-management/team.md:3-24` retains placeholders for team name, lead, problem, tools, roles, and responsibilities. `project-management/CHECKLIST.md:122-133` also retains communication placeholders; it links to an external Code of Conduct at lines 71-75 rather than including a repository `CODE_OF_CONDUCT` file.
-- Rubric cell applied: **Developing (2.5/5)**, “Roles or stakeholder groups are documented ... and a `CODE_OF_CONDUCT` file is present, but there is no explicit persona/pathway analysis or onboarding guidance for newcomers.” This repository has documented roles, channels, contributor onboarding, and an external code-of-conduct reference, but the project-specific role and channel documentation is incomplete; the score does not assume the external document is a tracked code-of-conduct file.
+- Ruff has a 100-character line length, Python 3.11 target, and E/F/I/UP/B/SIM
+  lint selections. (`pyproject.toml:38-45`.)
+- The local aggregate check invokes `ruff format --check .` and `ruff check .`.
+  (`scripts/project.py:31-38`.)
+- Source modules use annotations, module docstrings, and focused helpers; for
+  example, the review renderer validates exact score areas and evidence before
+  emitting a report. (`src/learning_assistant/server.py:37-153`.)
+- No tracked CI or pre-commit configuration runs the configured checks. The
+  local command exited `127` because `uv` is not installed, so a clean result
+  could not be observed.
 
-## Checks Run
+### Code documentation: 7.5 / 10.0
+
+Applied rubric cell: **Strong**. README, inline comments, and docstrings or API
+documentation allow users and future developers to understand and extend the
+project.
+
+- `README.md` explains the project purpose, data boundary, stack, local setup,
+  Docker bootstrap, MCP tools, roadmap, and contributor checks.
+- `START_HERE.md`, `docs/SETUP.md`, and `docs/DOCKER.md` provide progressive
+  onboarding for contributors and deployment users.
+- Source and script modules include concise module and function docstrings;
+  non-obvious package-install handling is also commented.
+  (`scripts/project.py:1-24`, `src/learning_assistant/server.py:1-90`.)
+- The project profile and team-management documentation retain placeholders,
+  and there is no generated API reference. Exemplary was not awarded.
+
+### Licensing and open code: 5.0 / 10.0
+
+Applied rubric cell: **Developing**. A project-root license is present, but the
+reuse terms for bundled third-party components are not distinguished.
+
+- `LICENSE.md` is the standard MIT license, and the README identifies the
+  project license. (`LICENSE.md:1-21`, `README.md:184-197`.)
+- Contribution guidance requires source ownership, access, and license review
+  before enabling institutional content. (`CONTRIBUTING.md:66-75`.)
+- The repository includes `MyGPT_backend/`, committed model/data artifacts, and
+  a separately pinned upstream MyGPT build source; a third-party notices file
+  or per-component license inventory was not identified.
+- This is below Strong because a reader cannot determine which root license
+  applies to each bundled component.
+
+### Community and stakeholder management: 1.0 / 5.0
+
+Applied rubric cell: **Initial**. The project identifies contributors and
+communication paths, but does not satisfy the next discrete level's required
+project Code of Conduct and complete role documentation.
+
+- The README identifies a broad set of intended user groups and names project
+  contributors. (`README.md:11-20`, `README.md:29-40`.)
+- The contribution guide and team checklist provide a newcomer path. The team
+  file provides a Slack channel. (`CONTRIBUTING.md:1-76`,
+  `project-management/CHECKLIST.md:42-67`, `project-management/team.md:3-26`.)
+- Recent activity spans several named contributors and merged pull requests,
+  demonstrating an active project rather than a stale repository.
+- The complete recursive public tree contains no `CODE_OF_CONDUCT` file, and
+  `project-management/team.md` still has unfilled lead and role fields. Under
+  the rubric's discrete levels, Developing cannot be awarded.
+
+## Checks run
 
 | Command | Exit status | Result |
 | --- | ---: | --- |
-| `git status --short --branch` | 0 | Working tree was clean on `rubric-review`, tracking `origin/rubric-review`. |
-| `git log --oneline -20` | 0 | Recent history has meaningful, scoped commit messages. |
-| `git log --merges --oneline -20` | 0 | Four recorded pull-request merge commits found. |
-| `uv run python scripts/project.py check` | 127 | Not run: `uv` was not found on `PATH`. |
+| `git log --format='%h %ad %an <%ae>%n%s' --date=short -30` | 0 | The local checkout showed recent activity, merge commits, scoped commit messages, and multiple contributors. |
+| `uv run python scripts/project.py check` | 127 | Not run: `zsh: command not found: uv`. Dependencies were not installed or modified during this review. |
 
-## Prioritized Improvements
+## Prioritized improvements
 
-1. Add a GitHub Actions workflow that runs the existing `uv run python scripts/project.py check` command on pushes and pull requests.
-2. Complete `project-management/team.md` with real roles, responsibilities, ownership, and backup support, then complete the communication and check-in fields in the team checklist.
-3. Add a repository `CODE_OF_CONDUCT.md` or clearly document the project adoption and accessible location of the existing event Code of Conduct.
-4. Add CI enforcement for Ruff formatting and linting, preserving the existing single local check command as the common source of truth.
-5. Run the documented check in a clean contributor environment and record its result in the pull request or project documentation; this confirms that the strong test and style claims hold in practice.
+1. Add a tracked GitHub Actions workflow that runs `uv sync --extra dev --frozen`
+   and `uv run python scripts/project.py check` on pushes and pull requests.
+   This closes the CI gap and enforces the existing formatting, linting, tests,
+   and skill validation.
+2. Add a root `CODE_OF_CONDUCT.md`, assign a reporting contact and ownership,
+   and link it from the README and contribution guide.
+3. Complete `project-management/team.md` and `project-management/project-plan.md`
+   with the accountable lead, roles, decision process, milestones, risks, and
+   handoff/archive plan.
+4. Add a third-party notices and provenance document for `MyGPT_backend/` and
+   bundled model/data artifacts, clearly separating their reuse terms from the
+   root MIT license.
+5. Run the documented offline check from a supported clean environment and
+   retain its result in pull-request or release evidence.
 
-## The Turing Way Sources
+## The Turing Way sources
 
-These are public best-practice guidance from The Turing Way, not St. Jude policy or a certification.
+These are public guidance from The Turing Way, not St. Jude policy or a formal
+certification. The rubric and source map are pinned in
+`.agents/skills/turing-healthcheck-prototype/references/rubric.md`.
 
-| Area | Title | Repository | Path | Ref | URL |
-| --- | --- | --- | --- | --- | --- |
-| Project design and stakeholder management | Project Design Overview | the-turing-way/the-turing-way | `book/website/project-design/pd-overview.md` | `7b7c9a5904a4c9382933b74409ca0705439baa27` | https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/project-design/pd-overview.md |
-| Version control and review | Version Control; Code Review | the-turing-way/the-turing-way | `book/website/reproducible-research/vcs.md`; `book/website/reproducible-research/reviewing.md` | `7b7c9a5904a4c9382933b74409ca0705439baa27` | https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/vcs.md ; https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/reviewing.md |
-| Reproducible environments | Reproducible Environments | the-turing-way/the-turing-way | `book/website/reproducible-research/renv.md` | `7b7c9a5904a4c9382933b74409ca0705439baa27` | https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/renv.md |
-| Testing | Testing | the-turing-way/the-turing-way | `book/website/reproducible-research/testing.md` | `7b7c9a5904a4c9382933b74409ca0705439baa27` | https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/testing.md |
-| Continuous integration | Continuous Integration | the-turing-way/the-turing-way | `book/website/reproducible-research/ci.md` | `7b7c9a5904a4c9382933b74409ca0705439baa27` | https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/ci.md |
-| Code quality | Code Quality | the-turing-way/the-turing-way | `book/website/reproducible-research/code-quality.md` | `7b7c9a5904a4c9382933b74409ca0705439baa27` | https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/code-quality.md |
-| Documentation | Code Documentation; Code Reuse | the-turing-way/the-turing-way | `book/website/reproducible-research/code-documentation.md`; `book/website/reproducible-research/code-reuse.md` | `7b7c9a5904a4c9382933b74409ca0705439baa27` | https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/code-documentation.md ; https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/code-reuse.md |
-| Licensing | Licensing; Open Research | the-turing-way/the-turing-way | `book/website/reproducible-research/licensing.md`; `book/website/reproducible-research/open.md` | `7b7c9a5904a4c9382933b74409ca0705439baa27` | https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/licensing.md ; https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/open.md |
-| Community and stakeholder management | Stakeholders: Personas and Pathways; Code of Conduct; Contributing to The Turing Way; Guide for Collaboration | the-turing-way/the-turing-way | `book/website/project-design/stakeholders/persona.md`; `book/website/community-handbook/coc.md`; `book/website/community-handbook/contributing.md`; `book/website/collaboration/collaboration.md` | `7b7c9a5904a4c9382933b74409ca0705439baa27` | https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/project-design/stakeholders/persona.md ; https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/community-handbook/coc.md ; https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/community-handbook/contributing.md ; https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/collaboration/collaboration.md |
+| Categories | Source |
+| --- | --- |
+| Project Design checklist; community | [Project Design Overview](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/project-design/pd-overview.md) |
+| Version control and collaborative review | [Version Control](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/vcs.md), [Code Review](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/reviewing.md) |
+| Reproducible computational environments | [Reproducible Environments](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/renv.md) |
+| Testing | [Testing](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/testing.md) |
+| Continuous integration | [Continuous Integration](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/ci.md) |
+| Code quality | [Code Quality](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/code-quality.md) |
+| Documentation | [Code Documentation](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/code-documentation.md), [Code Reuse](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/code-reuse.md) |
+| Licensing and open code | [Licensing](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/licensing.md), [Open Research](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/open.md) |
+| Community and stakeholder management | [Stakeholders: Personas and Pathways](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/project-design/stakeholders/persona.md), [Code of Conduct](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/community-handbook/coc.md), [Contributing](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/community-handbook/contributing.md), [Guide for Collaboration](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/collaboration/collaboration.md) |
 
 ## Limitations
 
-- This report evaluates visible repository practices, not security, legal compliance, clinical suitability, accessibility, performance, or institutional policy.
-- `uv` was unavailable, so the repository's documented formatter, linter, test, and skill-validation command was not executed.
-- Git history and merge commits demonstrate a review path but do not prove that every change received peer review.
-- No live Turing Way retrieval was used for this prototype; citations are the skill rubric's pinned source map.
+- This is a transparent rubric-based healthcheck, not an official Turing Way
+  certification, security audit, legal review, clinical assessment, or
+  institutional-policy evaluation.
+- The assessment targets the public `main` revision
+  `97c9048db38f855450c5a2e42c8c0186eba1e9b9`. Local checkout differences were
+  not used to lower the public repository score.
+- `uv` is unavailable in the review environment. Formatting, linting, tests,
+  and skill validation were not executed, and this report does not claim they
+  pass.
+- Generated, vendored, model, and data material was not reviewed for code
+  correctness or test coverage. Its licensing boundary was included because it
+  affects reuse.
