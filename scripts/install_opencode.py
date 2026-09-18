@@ -21,7 +21,7 @@ CANONICAL_SKILLS = (
     "skill-maintainer",
     "skill-template",
     "teacher-skill",
-    "turing-healthcheck-prototype",
+    "turing-healthcheck",
     "turing-way-pathfinder",
     "turing-way-guidance",
     "turing-way-review",
@@ -84,6 +84,7 @@ def update_opencode_config(config_path: Path, repository_root: Path) -> None:
             "turing-way-*": "allow",
         }
     )
+    skill_permissions.setdefault("turing-healthcheck", "allow")
 
     mcp_servers = _mapping(config.setdefault("mcp", {}), "mcp")
     mcp_servers["turing-way-mygpt"] = {

@@ -68,11 +68,20 @@ It checks that every skill has:
 - a `description` between 1 and 1024 characters;
 - the sections `## Use this skill when`, `## Do not use this skill when`, and
   `## Evaluation cases`;
-- only real MCP tool names, if you reference any. The server is deliberately
-  small and provides two: `learning-assistant_list_resources` and
-  `learning-assistant_get_resource`. A typo here fails the build rather than
-  failing silently at runtime. If your team adds a tool, add its name to
-  `KNOWN_TOOLS` in `src/learning_assistant/skill_validation.py`.
+- only real MCP tool names, if you reference any. The server provides resource
+  discovery and retrieval (`learning-assistant_list_resources`,
+  `learning-assistant_get_resource`), approved MyGPT library discovery and
+  retrieval (`learning-assistant_list_mygpt_datasets`,
+  `learning-assistant_list_mygpt_documents`,
+  `learning-assistant_query_mygpt_context`), RAG status
+  (`learning-assistant_get_rag_status`), and citation-preserving Turing Way
+  review evidence (`learning-assistant_get_turing_way_review_evidence`,
+  `learning-assistant_get_turing_way_evidence_packets`,
+  `learning-assistant_validate_turing_way_review`, and
+  `learning-assistant_render_validated_turing_way_review`). A typo here fails
+  the build rather than failing silently at runtime. If your team adds a tool,
+  add its name to `KNOWN_TOOLS` in
+  `src/learning_assistant/skill_validation.py`.
 
 It also refuses anything that looks like a credential or private key. Never put
 an API key, a token, an internal endpoint, or patient data in a skill.
@@ -113,6 +122,11 @@ For a behavior change or a new project skill, use `skill-maintainer`. It
 handles the complete create-or-update workflow, including validation and the
 OpenCode installer link. Use `skill-formatter` only for specification-format
 repairs.
+
+The OpenCode installer links `turing-healthcheck` and adds an explicit `allow`
+permission for it by default; `turing-way-*` does not match that skill name.
+An existing exact `turing-healthcheck` permission is preserved, including
+`ask` or `deny`.
 
 See the contribution tracks in [CONTRIBUTING.md](../../CONTRIBUTING.md) and the
 setup steps in [docs/SETUP.md](../../docs/SETUP.md).
