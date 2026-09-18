@@ -14,7 +14,9 @@ earned raw total is converted to an overall percentage out of 100 by dividing
 by 65 and multiplying by 100.
 
 Select exactly one maturity level per category from observable repository
-evidence.
+evidence. Follow [MCP source selection](#mcp-source-selection) below for the
+required discovery, retrieval, and claim-level evidence workflow for every
+selected category.
 Do not average adjacent levels or silently reweight categories.
 Category points are the category weight multiplied by the listed maturity
 fraction; report category points to one decimal place and round the final
@@ -41,7 +43,16 @@ in the evidence you cite for those categories.
 - **After completion:** archiving the project's outputs and code, and
   publishing or otherwise sharing the work with its intended audience.
 
-Source: [Project Design Overview](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/project-design/pd-overview.md).
+MCP support: discover the Project Design Overview with
+`learning-assistant_list_resources` and read it with
+`learning-assistant_get_resource` before using this checklist. For each
+checklist-based claim, call `learning-assistant_get_turing_way_evidence_packets`
+with the Overview's returned `resource_id` and the applicable repository fact
+under the skill's evidence rules. Each request selects one `resource_id` and
+returns one citation. If a category also relies on another chapter, request a
+separate evidence packet for that chapter's supporting claim and retain both
+packets under the same category. Do not insert or replace citations in a
+returned packet, or score the checklist separately.
 
 ## Version control and collaborative review (10 points)
 
@@ -138,20 +149,36 @@ history allows) via `git log` before scoring.
 | Strong | 3.5 | Distinct stakeholder groups and their engagement pathways are documented (for example, separate guidance for users vs. contributors vs. maintainers, or a described decision-making/governance process), multiple communication channels are named and accessible, and the Code of Conduct and contributing guide are specific to the project; the commit history is active, with regular, recent commits. |
 | Exemplary | 5 | Stakeholder and community management is explicit and actively maintained — documented personas or pathways for how different groups engage with the project, clearly signposted communication channels, onboarding (and, where relevant, offboarding) guidance, plus a specific Code of Conduct and contributing guide — matching the guide's view that "there is more to collaboration than we see" and that project design "is about people first." The commit history is active and sustained, with frequent, recent commits from more than one contributor where history allows, evidencing a genuinely engaged community rather than documentation alone. |
 
-## The Turing Way source map
+## MCP source selection
 
-- **Version control and collaborative review:** [Version Control](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/vcs.md) and [Code Review](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/reviewing.md).
-- **Reproducible computational environments:** [Reproducible Environments](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/renv.md).
-- **Testing:** [Testing](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/testing.md).
-- **Continuous integration:** [Continuous Integration](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/ci.md).
-- **Code quality: style and static analysis:** [Code Quality](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/code-quality.md).
-- **Code documentation:** [Code Documentation](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/code-documentation.md) and [Code Reuse](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/code-reuse.md).
-- **Licensing and open code:** [Licensing](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/licensing.md) and [Open Research](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/open.md).
-- **Community and stakeholder management:** [Project Design Overview](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/project-design/pd-overview.md), [Stakeholders: Personas and Pathways](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/project-design/stakeholders/persona.md), [Code of Conduct](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/community-handbook/coc.md), [Contributing to The Turing Way](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/community-handbook/contributing.md), and [Guide for Collaboration](https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/collaboration/collaboration.md).
+Use `learning-assistant_list_resources` to discover the current resource IDs,
+then `learning-assistant_get_resource` to read the applicable sources before
+scoring. For every selected category, use
+`learning-assistant_get_turing_way_evidence_packets` with one focused score
+claim and one exact supporting `resource_id` per request. Include a
+commit-pinned public GitHub repository fact when available; retain local
+evidence separately under the skill's evidence rules otherwise. A category
+may need multiple packets, but receives only one maturity level and score.
+Send one to five requests per call, batching by request count.
 
-These pages are public guidance from [The Turing Way](https://github.com/the-turing-way/the-turing-way),
-a handbook to reproducible, ethical, and collaborative data science. The score
-is this prototype's transparent mapping of that guidance, not an official The
-Turing Way certification or institutional policy. No live retrieval tool is
-available yet, so a review cites the repository, path, ref, and URL directly
-from the pinned links above.
+Cite only each packet's returned Turing Way citation and matching RAG
+relevance score. Do not manually construct a source URL, resource ID, or
+relevance score. Choose only from the following chapter topics; the MCP
+output, not this list, supplies the final title, repository, path, ref, URL,
+and relevance score.
+
+| Category | Turing Way chapter topics to retrieve |
+|---|---|
+| Version control and collaborative review | Version Control; Code Review |
+| Reproducible computational environments | Reproducible Environments |
+| Testing | Testing |
+| Continuous integration | Continuous Integration |
+| Code quality: style and static analysis | Code Quality |
+| Code documentation | Code Documentation; Code Reuse |
+| Licensing and open code | Licensing; Open Research |
+| Community and stakeholder management | Project Design Overview; Stakeholders: Personas and Pathways; Code of Conduct; Contributing; Guide for Collaboration |
+
+These chapters are public guidance from The Turing Way, a handbook to
+reproducible, ethical, and collaborative data science. The score is a
+transparent mapping of that guidance, not an official Turing Way certification
+or institutional policy.

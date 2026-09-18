@@ -25,6 +25,7 @@ def test_installer_preserves_existing_config_and_registers_mcp(tmp_path: Path) -
             {
                 "model": "test/model",
                 "instructions": [agent_instructions, "shared.md", agent_instructions],
+                "permission": {"skill": {"*": "ask", "unrelated-skill": "deny"}},
             }
         ),
         encoding="utf-8",
@@ -39,6 +40,28 @@ def test_installer_preserves_existing_config_and_registers_mcp(tmp_path: Path) -
     assert config["mcp"]["turing-way-mygpt"]["url"] == "http://127.0.0.1:8000/mcp"
     assert config["instructions"] == [agent_instructions, "shared.md"]
     assert config["permission"]["skill"]["turing-way-*"] == "allow"
+    assert config["permission"]["skill"]["turing-healthcheck"] == "allow"
+    assert config["permission"]["skill"]["*"] == "ask"
+    assert config["permission"]["skill"]["unrelated-skill"] == "deny"
+    assert config_path.read_text(encoding="utf-8") == first_install
+
+
+@pytest.mark.parametrize("permission", ["allow", "ask", "deny"])
+def test_installer_preserves_explicit_healthcheck_permission(
+    tmp_path: Path, permission: str
+) -> None:
+    config_path = tmp_path / "opencode.json"
+    config_path.write_text(
+        json.dumps({"permission": {"skill": {"turing-healthcheck": permission}}}),
+        encoding="utf-8",
+    )
+
+    update_opencode_config(config_path, ROOT)
+    first_install = config_path.read_text(encoding="utf-8")
+    update_opencode_config(config_path, ROOT)
+
+    config = json.loads(config_path.read_text(encoding="utf-8"))
+    assert config["permission"]["skill"]["turing-healthcheck"] == permission
     assert config_path.read_text(encoding="utf-8") == first_install
 
 
@@ -47,6 +70,7 @@ def test_installer_links_global_skills_to_canonical_repository_files(tmp_path: P
 
     install_skill_links(skills_root, ROOT)
 
+    assert "turing-healthcheck" in CANONICAL_SKILLS
     for name in CANONICAL_SKILLS:
         target = skills_root / name
         assert target.is_symlink()
