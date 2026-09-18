@@ -1,6 +1,6 @@
 ---
 name: turing-healthcheck-prototype
-description: Looks at a repository's code and gives it a score against a rubric built from The Turing Way's Reproducible Research guide, Project Design guide, and Community Handbook (version control, environments, testing, CI, code quality, documentation, licensing, community and stakeholder management). Also checks the repository against the Project Design guide's before/during/after checklist (team, funding, question, methodology, approval, license, version control, documentation, archiving, publishing). Asks the user up front which of the eight categories to score, or all of them for a full 100-point analysis, then saves the report to TURING_HEALTHCHECK.md so it can be checked back on later. Use for repository health checks, code-development scoring, reproducibility reviews, or Turing-Way-aligned improvement advice.
+description: Looks at a repository's code and gives it a score against a rubric built from The Turing Way's Reproducible Research guide, Project Design guide, and Community Handbook (version control, environments, testing, CI, code quality, documentation, licensing, community and stakeholder management). Also checks the repository against the Project Design guide's before/during/after checklist (team, funding, question, methodology, approval, license, version control, documentation, archiving, publishing). Asks the user up front which of the eight categories to score, or all of them for a full analysis out of the rubric's 65 raw points, scaled to a 100% overall score, then saves the report to TURING_HEALTHCHECK.md so it can be checked back on later. Use for repository health checks, code-development scoring, reproducibility reviews, or Turing-Way-aligned improvement advice.
 license: MIT
 compatibility: Requires Git and local file and command tools.
 metadata:
@@ -15,10 +15,11 @@ metadata:
 Use this skill when a user asks to score, grade, audit, or health-check a whole
 software repository or a specified set of code changes against The Turing Way
 (TTW), the handbook to reproducible, ethical, and collaborative data science.
-Also use it for a 100-point review of version control, reproducible
-environments, testing, continuous integration, code quality, documentation,
-licensing, and community and stakeholder management, plus a check against the
-Project Design guide's before/during/after project checklist.
+Also use it for a full review of version control, reproducible environments,
+testing, continuous integration, code quality, documentation, licensing, and
+community and stakeholder management (65 raw points, scaled to a 100% overall
+score), plus a check against the Project Design guide's before/during/after
+project checklist.
 
 ## Do not use this skill when
 
@@ -39,17 +40,22 @@ result as official TTW certification or institutional policy.
 Read [references/rubric.md](references/rubric.md) before gathering evidence.
 Its eight categories and their weights come directly from named chapters of The
 Turing Way's Reproducible Research guide, Project Design guide, and Community
-Handbook / Guide for Collaboration, not invented criteria. The rubric also
+Handbook / Guide for Collaboration, not invented criteria. The eight category
+weights sum to 65 raw points (10+10+5+5+10+10+10+5), not 100; when all eight
+are scored, convert the earned raw total to an overall percentage by dividing
+by 65 and multiplying by 100. The rubric also
 embeds the Project Design guide's before/during/after project checklist
 (team, funding, question, methodology, approval, license, version control,
 documentation, archiving, publishing); use it as supporting evidence for the
 Version control, Licensing, and Community and stakeholder management
 categories, not as a separately scored item. A user may
-choose to score all eight categories for a full 100-point analysis, or only a
-subset when they do not want a full analysis; see Workflow step 1. No live TTW retrieval tool is available yet, so cite The Turing Way only through the pinned
+choose to score all eight categories for a full analysis (65 raw points,
+scaled to a 100% overall score), or only a subset when they do not want a full
+analysis; see Workflow step 1. No live TTW retrieval tool is available yet, so cite The Turing Way only through the pinned
 source map at the bottom of `references/rubric.md`; do not fetch or invent
 other sources. Select one cell per scored category, report category points to
-one decimal place, and round the final total to the nearest whole number.
+one decimal place, and round the final raw total and the final percentage to
+the nearest whole number.
 Never silently reweight or invent criteria.
 
 ## Workflow
@@ -108,11 +114,14 @@ include, in order:
 
 1. **Scope reviewed:** scope boundaries, detected project type, and the exact
    list of rubric categories scored (all eight, or the user-selected subset).
-2. **Overall score and confidence:** integer earned points out of the maximum
-   possible for only the scored categories (out of 100 when all eight were
-   scored; out of the summed weight of the selected categories otherwise),
-   confidence level, and confidence rationale. Never label a partial-category
-   score as "out of 100."
+2. **Overall score and confidence:** when all eight categories were scored,
+   report the earned raw points out of 65, then convert to an overall
+   percentage by dividing by 65 and multiplying by 100 (round to the nearest
+   whole number), and report both, for example "42.5/65 raw points (65%)."
+   When only a subset was scored, report the integer earned points out of the
+   summed weight of only the selected categories, and do not convert to a
+   percentage or label it "out of 100" or "out of 65." Also include the
+   confidence level and confidence rationale.
 3. **Rubric summary:** category, earned points, maximum points, maturity level,
    and concise rationale.
 4. **Detailed evidence:** findings by category with file and line references or
@@ -139,8 +148,9 @@ TTW guidance, citations, or institutional policy.
 
 ## Evaluation cases
 
-- Positive: "Score this whole repository out of 100 against The Turing Way and
-  tell me the highest-impact improvements."
+- Positive: "Score this whole repository against The Turing Way and tell me
+  the highest-impact improvements." Report the raw total out of 65 and the
+  overall percentage out of 100.
 - Positive: "Evaluate my branch changes with the Turing healthcheck rubric;
   treat existing main-branch problems as context only."
 - Positive: "Review this package's version control, testing, CI, and

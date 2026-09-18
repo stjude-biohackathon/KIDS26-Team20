@@ -8,7 +8,10 @@ Seven categories score code-facing practices; the eighth, added to reflect
 that The Turing Way is a handbook to "reproducible, ethical, and collaborative" 
 data science, scores whether theproject identifies and manages its project 
 team  and community.
-The code-facing categories are weighted to sum to 100 points.
+The seven code-facing categories are weighted to sum to 60 points, and all
+eight categories together sum to 65 raw points; when all eight are scored, the
+earned raw total is converted to an overall percentage out of 100 by dividing
+by 65 and multiplying by 100.
 
 Select exactly one maturity level per category from observable repository
 evidence.
