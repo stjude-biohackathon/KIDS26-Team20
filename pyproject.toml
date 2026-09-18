@@ -34,6 +34,7 @@ addopts = "-q"
 asyncio_mode = "auto"
 pythonpath = ["."]
 testpaths = ["tests"]
+markers = ["integration: opt-in live service checks; skipped unless explicitly configured"]
 
 [tool.ruff]
 line-length = 100

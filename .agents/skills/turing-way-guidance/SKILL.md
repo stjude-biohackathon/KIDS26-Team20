@@ -31,6 +31,9 @@ content not supported by the approved learning-resource corpus.
 1. Identify the learner's goal and experience level from their request. Ask for
    only the missing detail needed to make a recommendation.
 2. Call `learning-assistant_list_resources` and select relevant resources.
+   Start with `limit: 200, offset: 0`; advance `offset` by the returned entry
+   count until the needed resources are found or a page has fewer than 200
+   entries. Do not infer that a resource is absent from the first page.
 3. Call `learning-assistant_get_resource` for the selected resources before
    making claims about their content.
 4. Draft one to five practical next steps, then call

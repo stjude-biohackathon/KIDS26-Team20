@@ -180,16 +180,21 @@ def test_healthcheck_skill_distinguishes_registry_and_rag_failures() -> None:
         assert phrase in failure
 
 
-def test_healthcheck_skill_accounts_for_bounded_resource_discovery() -> None:
+def test_healthcheck_skill_pages_until_required_chapters_or_exhaustion() -> None:
     _, body = parse_skill(SKILL_PATH)
     discovery = body.split("\n3. ", 1)[1].split("\n4. ", 1)[0]
     discovery = " ".join(discovery.split())
 
-    assert "`learning-assistant_list_resources` with `limit: 200`" in discovery
-    assert "the default returns only 25 entries" in discovery
-    assert "The list has no pagination" in discovery
-    assert "not proof that it is absent from the registry or MyGPT" in discovery
-    assert "report that discovery limitation rather than inventing an ID" in discovery
+    assert "`learning-assistant_list_resources` with `limit: 200, offset: 0`" in discovery
+    assert "Increase `offset` by the number of entries returned" in discovery
+    assert "until all required chapters are found" in discovery
+    assert "contains fewer than 200 entries, including an empty page" in discovery
+    assert "Reuse this discovered inventory across categories" in discovery
+    assert "The default limit remains 25" in discovery
+    assert "still missing after exhausting the pages" in discovery
+    assert "do not infer its absence from MyGPT or invent an ID" in discovery
+    assert "If the server rejects `offset`, stop" in discovery
+    assert "do not retry the first page indefinitely" in discovery
 
 
 def test_healthcheck_skill_asks_which_categories_to_score() -> None:

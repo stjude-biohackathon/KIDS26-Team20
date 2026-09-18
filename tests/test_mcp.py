@@ -1,11 +1,15 @@
 import json
+from collections.abc import AsyncIterator
 from pathlib import Path
 
 import httpx
+import pytest
 from mcp import Client
+from mcp.types import TextContent
 
 from learning_assistant.models import (
     RepositoryFact,
+    ResourceRecord,
     TuringWayReviewScoreRow,
 )
 from learning_assistant.mygpt import MyGPTClient, MyGPTSettings
@@ -13,6 +17,38 @@ from learning_assistant.server import create_server
 from learning_assistant.sources import SourceRegistry
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+@pytest.fixture
+async def paginated_registry(tmp_path: Path) -> AsyncIterator[SourceRegistry]:
+    snapshot = tmp_path / "snapshot"
+    filler = snapshot / "a-filler"
+    filler.mkdir(parents=True)
+    for index in reversed(range(404)):
+        (filler / f"chapter-{index:03}.md").write_text(
+            f"# Fixture chapter {index}\n\nOffline pagination evidence.\n", encoding="utf-8"
+        )
+    chapter = snapshot / "reproducible-research" / "testing.md"
+    chapter.parent.mkdir()
+    chapter.write_text("# Testing\n\nUse repeatable automated tests.\n", encoding="utf-8")
+    manifest = tmp_path / "sources.yaml"
+    manifest.write_text(
+        "sources:\n"
+        "  - id: turing-way\n"
+        "    title: The Turing Way\n"
+        "    repository: the-turing-way/the-turing-way\n"
+        "    ref: bb3f7abb56a40cd92a654fb51e4ec91f429cca2a\n"
+        "    content_root: book/website\n"
+        "    snapshot_path: snapshot\n"
+        "    license: CC-BY-4.0\n"
+        "    enabled: true\n",
+        encoding="utf-8",
+    )
+    registry = SourceRegistry(manifest, offline=True)
+    try:
+        yield registry
+    finally:
+        await registry.close()
 
 
 def test_repository_fact_accepts_commit_pinned_history_url() -> None:
@@ -56,6 +92,12 @@ async def test_mcp_contract_in_memory() -> None:
             "render_validated_turing_way_review",
             "validate_turing_way_review",
         }
+        list_tool = next(tool for tool in tools_result.tools if tool.name == "list_resources")
+        offset_schema = list_tool.input_schema["properties"]["offset"]
+        assert offset_schema["type"] == "integer"
+        assert offset_schema["minimum"] == 0
+        assert offset_schema["default"] == 0
+        assert "offset" not in list_tool.input_schema.get("required", [])
 
         listed = await client.call_tool("list_resources", {})
         assert listed.structured_content is not None
@@ -398,6 +440,165 @@ async def test_list_resources_respects_its_limit() -> None:
         assert len(result.structured_content["result"]) == 1
 
     await registry.close()
+
+
+async def test_list_resources_pages_without_gaps_and_preserves_metadata(
+    paginated_registry: SourceRegistry, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    records = await paginated_registry.list_resources()
+    expected = [
+        {
+            "resource_id": record.id,
+            "title": record.title,
+            "path": record.path,
+            "url": record.url,
+            "origin": record.origin,
+        }
+        for record in sorted(records, key=lambda record: record.id)
+    ]
+    assert len(expected) == 405
+    server = create_server(paginated_registry)
+
+    async def reversed_records() -> list[ResourceRecord]:
+        return list(reversed(records))
+
+    async with Client(server) as client:
+        first = await client.call_tool("list_resources", {"limit": 200})
+        assert not first.is_error and first.structured_content is not None
+        entries = list(first.structured_content["result"])
+        assert entries == expected[:200]
+
+        monkeypatch.setattr(paginated_registry, "list_resources", reversed_records)
+        for offset, count in ((200, 200), (400, 5), (405, 0), (10000, 0)):
+            page = await client.call_tool("list_resources", {"limit": 200, "offset": offset})
+            assert not page.is_error
+            assert page.structured_content == {"result": expected[offset : offset + 200]}
+            assert len(page.structured_content["result"]) == count
+            entries.extend(page.structured_content["result"])
+
+        repeated = await client.call_tool("list_resources", {"limit": 200, "offset": 0})
+        assert repeated.structured_content == first.structured_content
+
+    assert entries == expected
+    assert len({entry["resource_id"] for entry in entries}) == 405
+
+
+async def test_list_resources_preserves_defaults_and_limit_clamping(
+    paginated_registry: SourceRegistry,
+) -> None:
+    server = create_server(paginated_registry)
+    async with Client(server) as client:
+        default = await client.call_tool("list_resources", {})
+        explicit = await client.call_tool("list_resources", {"limit": 25, "offset": 0})
+        assert not default.is_error and default.structured_content is not None
+        assert default.structured_content == explicit.structured_content
+        assert len(default.structured_content["result"]) == 25
+
+        for limit, count in ((-1, 1), (0, 1), (1, 1), (25, 25), (200, 200), (999, 200)):
+            page = await client.call_tool("list_resources", {"limit": limit, "offset": 25})
+            assert not page.is_error and page.structured_content is not None
+            assert len(page.structured_content["result"]) == count
+            assert page.structured_content["result"][0]["resource_id"].endswith("chapter-025")
+
+        exact_end = await client.call_tool("list_resources", {"limit": 5, "offset": 400})
+        after_end = await client.call_tool("list_resources", {"limit": 5, "offset": 405})
+        assert exact_end.structured_content is not None
+        assert len(exact_end.structured_content["result"]) == 5
+        assert after_end.structured_content == {"result": []}
+
+
+async def test_list_resources_returns_typed_empty_pages_for_empty_registry(tmp_path: Path) -> None:
+    manifest = tmp_path / "sources.yaml"
+    manifest.write_text("sources: []\n", encoding="utf-8")
+    registry = SourceRegistry(manifest, offline=True)
+    try:
+        async with Client(create_server(registry)) as client:
+            for arguments in ({}, {"limit": 200, "offset": 0}, {"offset": 10}):
+                result = await client.call_tool("list_resources", arguments)
+                assert not result.is_error
+                assert result.structured_content == {"result": []}
+    finally:
+        await registry.close()
+
+
+@pytest.mark.parametrize("offset", [-1, -200, 1.5, "invalid", "1", True, None])
+async def test_list_resources_rejects_invalid_offsets(offset: object) -> None:
+    registry = SourceRegistry(ROOT / "corpus/sources.yaml", offline=True)
+    try:
+        async with Client(create_server(registry)) as client:
+            result = await client.call_tool("list_resources", {"offset": offset})
+            assert result.is_error
+            assert any(
+                "offset" in block.text for block in result.content if isinstance(block, TextContent)
+            )
+            valid = await client.call_tool("list_resources", {"limit": 1, "offset": 0})
+            assert not valid.is_error and valid.structured_content is not None
+            assert len(valid.structured_content["result"]) == 1
+    finally:
+        await registry.close()
+
+
+async def test_later_page_resource_can_be_read_and_used_in_evidence_packet(
+    paginated_registry: SourceRegistry,
+) -> None:
+    async def handler(request: httpx.Request) -> httpx.Response:
+        assert request.url.path == "/api/get_context/"
+        payload = json.loads(request.content)
+        assert payload["text"] == "Use repeatable automated tests."
+        assert payload["dataset"] == "turing-way"
+        return httpx.Response(
+            200,
+            json={
+                "context": "Use repeatable automated tests.",
+                "relevance_score": 80,
+                "sources": [{"title": "Testing", "url": "https://example.org/testing"}],
+            },
+        )
+
+    async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as http_client:
+        mygpt = MyGPTClient(
+            MyGPTSettings("https://mygpt.example", model_id="test-model"), client=http_client
+        )
+        async with Client(create_server(paginated_registry, mygpt)) as client:
+            page = await client.call_tool("list_resources", {"limit": 200, "offset": 400})
+            assert page.structured_content is not None
+            entry = next(
+                entry
+                for entry in page.structured_content["result"]
+                if entry["path"].endswith("/reproducible-research/testing.md")
+            )
+            document = await client.call_tool("get_resource", {"resource_id": entry["resource_id"]})
+            assert not document.is_error and document.structured_content is not None
+            assert document.structured_content["content"] == (
+                "# Testing\n\nUse repeatable automated tests.\n"
+            )
+            fact = {
+                "statement": "The repository documents how to run tests.",
+                "url": "https://github.com/example/repository/blob/1234567/README.md",
+            }
+            packets = await client.call_tool(
+                "get_turing_way_evidence_packets",
+                {
+                    "requests": [
+                        {
+                            "claim": "Use repeatable automated tests.",
+                            "resource_id": entry["resource_id"],
+                            "repository_fact": fact,
+                        }
+                    ]
+                },
+            )
+            assert not packets.is_error and packets.structured_content is not None
+            packet = packets.structured_content["result"][0]
+            assert packet["claim"] == "Use repeatable automated tests."
+            assert packet["repository_fact"] == fact
+            assert packet["citation"] == {
+                **entry,
+                "repository": "the-turing-way/the-turing-way",
+                "ref": "bb3f7abb56a40cd92a654fb51e4ec91f429cca2a",
+            }
+            assert packet["retrieval"]["relevance_score"] == 80
+            assert packet["retrieval"]["context"] == "Use repeatable automated tests."
 
 
 async def test_unknown_resource_id_is_rejected() -> None:

@@ -79,15 +79,22 @@ Never silently reweight or invent criteria.
    failure plainly and do not give a Turing Way-grounded score or
    recommendation. Do not substitute static, remembered, or fabricated
    guidance.
-3. Call `learning-assistant_list_resources` with `limit: 200` (the server
-   maximum; the default returns only 25 entries), then use
+3. Call `learning-assistant_list_resources` with `limit: 200, offset: 0`.
+   Increase `offset` by the number of entries returned and request the next
+   page with the same limit until all required chapters are found or a page
+   contains fewer than 200 entries, including an empty page. Reuse this
+   discovered inventory across categories; do not restart listing for every
+   claim. The default limit remains 25; 200 is the maximum page size, not a
+   limit on the whole corpus. Then use
    `learning-assistant_get_resource` for each relevant Turing Way chapter
    selected through `references/rubric.md`. Use only the returned source
    content and pinned citation fields as best-practice evidence; never guess a
-   `resource_id` or cite a mutable URL. The list has no pagination; a chapter
-   missing from this bounded result is not proof that it is absent from the
-   registry or MyGPT. If a required ID cannot be discovered, report that
-   discovery limitation rather than inventing an ID.
+   `resource_id` or cite a mutable URL. A chapter missing from the first page
+   is not absent from the registry. If a required ID is still missing after
+   exhausting the pages, report that discovery limitation; do not infer its
+   absence from MyGPT or invent an ID. If the server rejects `offset`, stop
+   and report that the deployed server needs the pagination update; do not
+   retry the first page indefinitely.
 4. Call `learning-assistant_get_turing_way_review_evidence` once to obtain
    focused RAG context for project design, reproducibility, and version
    control and collaboration. Use its returned contexts and source records to

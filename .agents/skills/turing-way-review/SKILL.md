@@ -47,7 +47,11 @@ request.
    records as evidence for best-practice claims.
 4. Call `learning-assistant_list_resources`, then
    `learning-assistant_get_resource` for the relevant Turing Way resources
-   before assigning any ratings. Use the returned pinned GitHub URLs as
+   before assigning any ratings. For listing, start with
+   `limit: 200, offset: 0`; advance `offset` by the returned entry count until
+   the needed resources are found or a page has fewer than 200 entries.
+   Do not infer that a resource is absent from the first page.
+   Use the returned pinned GitHub URLs as
    citations for the RAG-grounded findings. Retain the `relevance_score`
    returned for the relevant review area.
 5. Draft evidence-backed score rows for each review area. Each row must contain

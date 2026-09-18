@@ -8,7 +8,10 @@ hackathon work, not inherited code.
 
 from __future__ import annotations
 
+from typing import Annotated
+
 from mcp.server import MCPServer
+from pydantic import Field
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
@@ -162,7 +165,10 @@ def create_server(
         "St. Jude AI and Data Learning Assistant",
         instructions=(
             "Use list_resources to see what is available, then get_resource to read one "
-            "page in full. Cite the returned source URL. Do not invent institutional "
+            "page in full. For discovery, use limit=200 and offset=0, then advance offset "
+            "by the number of entries returned until the needed resources are found or "
+            "a page has fewer than 200 entries. Cite the returned source URL. "
+            "Do not invent institutional "
             "policy or claim that public guidance is St. Jude policy."
         ),
     )
@@ -173,9 +179,18 @@ def create_server(
         return JSONResponse({"status": "ok"})
 
     @server.tool()
-    async def list_resources(limit: int = DEFAULT_LIMIT) -> list[ResourceSummary]:
-        """List available resources. Each entry's origin is 'github' or 'snapshot'."""
-        records = await source_registry.list_resources()
+    async def list_resources(
+        limit: int = DEFAULT_LIMIT,
+        offset: Annotated[int, Field(ge=0, strict=True)] = 0,
+    ) -> list[ResourceSummary]:
+        """List resources sorted by resource ID, starting at zero-based offset.
+
+        Limit defaults to 25 and is clamped to 1-200. Advance offset by the
+        number of entries returned; a page shorter than the effective limit
+        ends the listing. Offsets at or beyond the end return an empty list.
+        Each entry's origin is 'github' or 'snapshot'.
+        """
+        records = sorted(await source_registry.list_resources(), key=lambda record: record.id)
         capped = max(1, min(limit, MAX_LIMIT))
         return [
             ResourceSummary(
@@ -185,7 +200,7 @@ def create_server(
                 url=record.url,
                 origin=record.origin,
             )
-            for record in records[:capped]
+            for record in records[offset : offset + capped]
         ]
 
     @server.tool()

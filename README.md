@@ -166,7 +166,8 @@ The MCP server provides citation-preserving source retrieval plus local MyGPT
 RAG evidence:
 
 - `list_resources` — what Turing Way pages are available, each tagged with an
-  `origin` of `github` or `snapshot`
+  `origin` of `github` or `snapshot`, in resource-ID order with optional
+  `limit` and zero-based `offset` pagination
 - `get_resource` — the full text of one page, by the identifier `list_resources`
   returned
 - `get_rag_status` — a live Turing Way retrieval probe for the configured local
@@ -176,6 +177,17 @@ RAG evidence:
   recommendation or checklist action
 - `get_turing_way_review_evidence` — runs the required broad RAG queries for
   project design, reproducibility, and version control/collaboration
+
+To discover chapters beyond the first page, call `list_resources` with
+`{"limit": 200, "offset": 0}`, then advance `offset` by the number of entries
+returned. Keep the same limit and stop when the required chapters are found
+or a page contains fewer than 200 entries (an empty page also ends the list).
+The default limit is still 25, limits are clamped to 1-200, and omitted offsets
+default to zero; existing callers retain the same list response and resource
+metadata. A negative or non-integer offset produces a tool error. The order
+is stable for the server's loaded registry; restart discovery at offset zero
+if the server or source configuration changes during listing. These are
+arguments to the `list_resources` tool, not MCP protocol resource cursors.
 
 For a repository review, each evidence packet can also carry a separately
 observed public GitHub URL for the repository fact. The Turing Way citation
