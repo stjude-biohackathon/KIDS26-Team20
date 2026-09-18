@@ -23,7 +23,7 @@ configure institutional credentials, or run containers against patient data.
 ## Workflow
 
 1. Confirm Docker Desktop, OpenCode, and the required host Ollama model
-   `qwen2.5:3b` are installed and running. If Docker is
+   `nomic-embed-text` is installed and running. If Docker is
    absent or stopped, direct the user to
    `https://docs.docker.com/get-docker/`; do not silently install system
    software, download a large model, or request credentials.

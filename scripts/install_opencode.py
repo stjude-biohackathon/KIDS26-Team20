@@ -29,7 +29,7 @@ CANONICAL_SKILLS = (
 DEFAULT_CONFIG = Path.home() / ".config/opencode/opencode.json"
 DEFAULT_SKILLS_ROOT = Path.home() / ".config/opencode/skills"
 DOCKER_DESKTOP_URL = "https://docs.docker.com/get-docker/"
-REQUIRED_OLLAMA_MODELS = ("qwen2.5:3b", "nomic-embed-text")
+REQUIRED_OLLAMA_MODELS = ("nomic-embed-text",)
 
 
 def _mapping(value: object, name: str) -> MutableMapping[str, object]:
