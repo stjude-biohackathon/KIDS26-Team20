@@ -9,24 +9,25 @@ RUBRIC_PATH = SKILL_ROOT / "references/rubric.md"
 SKILL_PATH = SKILL_ROOT / "SKILL.md"
 
 CATEGORIES = {
-    "Version control and collaborative review": 15,
-    "Reproducible computational environments": 15,
-    "Testing": 20,
-    "Continuous integration": 10,
-    "Code quality: style and static analysis": 15,
-    "Code documentation": 15,
+    "Version control and collaborative review": 10,
+    "Reproducible computational environments": 10,
+    "Testing": 5,
+    "Continuous integration": 5,
+    "Code quality: style and static analysis": 10,
+    "Code documentation": 10,
     "Licensing and open code": 10,
+    "Community and stakeholder management": 5,
 }
 LEVELS = ("Missing", "Initial", "Developing", "Strong", "Exemplary")
 
 
-def test_healthcheck_rubric_has_100_points_and_complete_unique_cells() -> None:
+def test_healthcheck_rubric_has_65_points_and_complete_unique_cells() -> None:
     text = RUBRIC_PATH.read_text(encoding="utf-8")
     heading_pattern = re.compile(r"^## (.+) \((\d+) points\)$", re.MULTILINE)
     headings = list(heading_pattern.finditer(text))
 
     assert {match.group(1): int(match.group(2)) for match in headings} == CATEGORIES
-    assert sum(int(match.group(2)) for match in headings) == 100
+    assert sum(int(match.group(2)) for match in headings) == 65
 
     descriptions: list[str] = []
     for index, match in enumerate(headings):
@@ -107,7 +108,7 @@ def test_healthcheck_skill_asks_which_categories_to_score() -> None:
         "ask the user which rubric categories to score",
         "all categories",
         "do not score a category the user did not select",
-        'Never label a partial-category\n   score as "out of 100."',
+        'do not convert to a\n   percentage or label it "out of 100" or "out of 65."',
     )
     for phrase in required_phrases:
         assert phrase in body

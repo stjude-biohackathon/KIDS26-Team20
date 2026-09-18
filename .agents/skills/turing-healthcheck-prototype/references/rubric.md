@@ -8,7 +8,10 @@ Seven categories score code-facing practices; the eighth, added to reflect
 that The Turing Way is a handbook to "reproducible, ethical, and collaborative" 
 data science, scores whether theproject identifies and manages its project 
 team  and community.
-The code-facing categories are weighted to sum to 100 points.
+The seven code-facing categories are weighted to sum to 60 points, and all
+eight categories together sum to 65 raw points; when all eight are scored, the
+earned raw total is converted to an overall percentage out of 100 by dividing
+by 65 and multiplying by 100.
 
 Select exactly one maturity level per category from observable repository
 evidence.
@@ -118,15 +121,22 @@ whether the project has identified who its stakeholders are (maintainers,
 contributors, users, funders, affected communities) and how they engage with
 and communicate with the project, per the Project Design guide's Stakeholders
 (Personas and Pathways) chapter and the Community Handbook's guidance on
-communication channels and onboarding.
+communication channels and onboarding. Commit activity is scored as an
+observable proxy for a living community: a project with no recent or ongoing
+commit history has no active stakeholders to engage with, no matter how well
+its governance documents read, so an inactive commit history caps the level
+this category can reach even when documentation is otherwise strong. Check
+recency (for example commits within roughly the last 3–6 months) and cadence
+(more than a single burst of commits, from more than one contributor where
+history allows) via `git log` before scoring.
 
 | Level | Points | Observable description |
 |---|---:|---|
-| Missing | 0 | Nothing identifies who the project's stakeholders are (maintainers, contributors, users, or affected parties), there is no documented communication channel, and there is no documented way for a newcomer to propose or make a change. |
-| Initial | 1 | Stakeholders or contributors are named informally (for example in a README credits section), but there is no stakeholder analysis, no defined communication channel (issue tracker use, mailing list, chat), and no `CONTRIBUTING` file or Code of Conduct. |
-| Developing | 2.5 | Roles or stakeholder groups are documented (for example a `CONTRIBUTING` file describing maintainers vs. contributors, or a named communication channel such as issues or discussions), and a `CODE_OF_CONDUCT` file is present, but there is no explicit persona/pathway analysis or onboarding guidance for newcomers. |
-| Strong | 3.5 | Distinct stakeholder groups and their engagement pathways are documented (for example, separate guidance for users vs. contributors vs. maintainers, or a described decision-making/governance process), multiple communication channels are named and accessible, and the Code of Conduct and contributing guide are specific to the project. |
-| Exemplary | 5 | Stakeholder and community management is explicit and actively maintained — documented personas or pathways for how different groups engage with the project, clearly signposted communication channels, onboarding (and, where relevant, offboarding) guidance, plus a specific Code of Conduct and contributing guide — matching the guide's view that "there is more to collaboration than we see" and that project design "is about people first." |
+| Missing | 0 | Nothing identifies who the project's stakeholders are (maintainers, contributors, users, or affected parties), there is no documented communication channel, there is no documented way for a newcomer to propose or make a change, and the commit history is stale or abandoned (no commits in a long time, or a single one-off dump with no ongoing activity). |
+| Initial | 1 | Stakeholders or contributors are named informally (for example in a README credits section), but there is no stakeholder analysis, no defined communication channel (issue tracker use, mailing list, chat), and no `CONTRIBUTING` file or Code of Conduct; commit activity is sparse or irregular, with long gaps between commits. |
+| Developing | 2.5 | Roles or stakeholder groups are documented (for example a `CONTRIBUTING` file describing maintainers vs. contributors, or a named communication channel such as issues or discussions), and a `CODE_OF_CONDUCT` file is present, but there is no explicit persona/pathway analysis or onboarding guidance for newcomers; commit history shows some recent, ongoing activity but is inconsistent. |
+| Strong | 3.5 | Distinct stakeholder groups and their engagement pathways are documented (for example, separate guidance for users vs. contributors vs. maintainers, or a described decision-making/governance process), multiple communication channels are named and accessible, and the Code of Conduct and contributing guide are specific to the project; the commit history is active, with regular, recent commits. |
+| Exemplary | 5 | Stakeholder and community management is explicit and actively maintained — documented personas or pathways for how different groups engage with the project, clearly signposted communication channels, onboarding (and, where relevant, offboarding) guidance, plus a specific Code of Conduct and contributing guide — matching the guide's view that "there is more to collaboration than we see" and that project design "is about people first." The commit history is active and sustained, with frequent, recent commits from more than one contributor where history allows, evidencing a genuinely engaged community rather than documentation alone. |
 
 ## The Turing Way source map
 
