@@ -62,6 +62,11 @@ def test_docker_documentation_explains_local_mcp_and_mygpt_boundary() -> None:
     assert "http://127.0.0.1:8001" in text
     assert "does not call a model" in text
     assert "MyGPT" in text
+    assert '{"limit": 200, "offset": 0}' in text
+    assert "fewer than 200 entries" in text
+    assert "--no-deps --wait learning-assistant" in text
+    assert "Reconnect the MCP" in text
+    assert "LEARNING_ASSISTANT_LIVE_MCP_URL" in text
 
 
 def test_mygpt_bootstrap_settings_pin_a_safe_turing_way_embedding_configuration() -> None:

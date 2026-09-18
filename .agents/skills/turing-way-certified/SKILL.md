@@ -84,6 +84,10 @@ recommendations.
 3. Call `learning-assistant_get_turing_way_review_evidence`, then use
    `learning-assistant_list_resources` and `learning-assistant_get_resource` to
    retrieve the relevant pinned Turing Way guidance.
+   For listing, start with `limit: 200, offset: 0`; advance `offset` by the
+   returned entry count until the needed resources are found or a page has
+   fewer than 200 entries. Do not infer that a resource is absent from the
+   first page.
 4. For each proposed readiness recommendation, call
    `learning-assistant_get_turing_way_evidence_packets` with one focused claim,
    one exact `resource_id`, and one directly observed repository fact with its

@@ -61,7 +61,10 @@ sensitive information.
 
 4. Always call `learning-assistant_list_resources` before
    `learning-assistant_get_resource`, including when the selected resource ID
-   is known. Do not retrieve a known ID directly. Then call
+   is known. Do not retrieve a known ID directly. Start with
+   `limit: 200, offset: 0`; advance `offset` by the returned entry count until
+   the needed resources are found or a page has fewer than 200 entries.
+   Do not infer that a resource is absent from the first page. Then call
    `learning-assistant_get_resource` for the selected pathway's exact resource
    ID before drafting actions:
 

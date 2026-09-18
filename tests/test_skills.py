@@ -1,8 +1,30 @@
 from pathlib import Path
 
+import pytest
+
 from learning_assistant.skill_validation import validate_skill
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+@pytest.mark.parametrize(
+    "name",
+    [
+        "turing-healthcheck",
+        "turing-way-guidance",
+        "turing-way-pathfinder",
+        "turing-way-review",
+        "turing-way-certified",
+    ],
+)
+def test_turing_way_skills_page_through_resource_discovery(name: str) -> None:
+    text = (ROOT / ".agents/skills" / name / "SKILL.md").read_text(encoding="utf-8")
+    normalized = " ".join(text.split())
+
+    assert "`limit: 200, offset: 0`" in normalized
+    assert "`offset` by the" in normalized
+    assert "fewer than 200 entries" in normalized
+    assert "first page" in normalized
 
 
 def test_all_canonical_skills_are_valid() -> None:

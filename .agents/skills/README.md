@@ -86,6 +86,14 @@ It checks that every skill has:
 It also refuses anything that looks like a credential or private key. Never put
 an API key, a token, an internal endpoint, or patient data in a skill.
 
+When a skill discovers resources, use `learning-assistant_list_resources`
+with `limit: 200, offset: 0`, then advance `offset` by the number of returned
+entries. Stop when the required resources are found or a page contains fewer
+than 200 entries, including zero. Reuse discovered IDs rather than repeatedly
+listing the first page; the page-size limit is not the corpus size. If the
+deployed server rejects `offset`, report that it must be updated instead of
+silently falling back to incomplete discovery.
+
 ## Writing a skill that actually triggers
 
 The `description` and the two "when" sections are what an agent reads to decide

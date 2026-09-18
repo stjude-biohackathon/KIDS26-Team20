@@ -152,8 +152,9 @@ history allows) via `git log` before scoring.
 ## MCP source selection
 
 Use `learning-assistant_list_resources` to discover the current resource IDs,
+following the pagination loop in step 3 of the [skill workflow](../SKILL.md#workflow),
 then `learning-assistant_get_resource` to read the applicable sources before
-scoring. For every selected category, use
+scoring. Do not treat the first page as the full corpus. For every selected category, use
 `learning-assistant_get_turing_way_evidence_packets` with one focused score
 claim and one exact supporting `resource_id` per request. Include a
 commit-pinned public GitHub repository fact when available; retain local

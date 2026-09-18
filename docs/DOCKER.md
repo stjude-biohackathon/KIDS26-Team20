@@ -61,8 +61,39 @@ Configure a client that supports Streamable HTTP MCP with this URL:
 http://127.0.0.1:8000/mcp
 ```
 
-The server exposes `list_resources` and `get_resource`. The server does not call a model,
-store chat history, or accept model-provider credentials.
+Use `list_resources` to discover source IDs, then `get_resource` to read a
+chapter. Resource discovery does not call a model; the separate MyGPT tools
+perform the retrieval queries described below. Start discovery with
+`{"limit": 200, "offset": 0}` and advance
+`offset` by the number of entries returned until the needed chapters are
+found or a page contains fewer than 200 entries.
+
+After a server-tool change, rebuild and recreate only the MCP service from
+the configured deployment checkout:
+
+```bash
+docker compose up --detach --build --no-deps --wait learning-assistant
+```
+
+This does not rebuild MyGPT or change its data volumes. Reconnect the MCP
+client so it discovers the updated tool schema; a client still advertising
+only `limit` cannot request later pages.
+
+The default tests remain offline. To explicitly verify the running server's
+pagination, all healthcheck chapter reads, and MyGPT evidence retrieval, run
+this optional live check in PowerShell:
+
+```powershell
+$env:LEARNING_ASSISTANT_LIVE_MCP_URL = "http://127.0.0.1:8000/mcp"
+try {
+    uv run python -m pytest tests\test_live_mcp_pagination.py -m integration -s
+} finally {
+    Remove-Item Env:\LEARNING_ASSISTANT_LIVE_MCP_URL
+}
+```
+
+This check performs read-only calls to the configured MCP server, GitHub,
+and MyGPT; it does not write a repository score report.
 
 ## MyGPT and skills
 
