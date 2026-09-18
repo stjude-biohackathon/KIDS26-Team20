@@ -442,7 +442,7 @@ const reportProjects = [
   {
     "name": "KIDS25 Team8 · OnDemand WDL",
     "cohort": "KIDS25 Hackathon",
-    "score": 49,
+    "score": 43,
     "status": "Progressing",
     "confidence": "Moderate",
     "description": "A Turing Way-aligned readiness snapshot of the KIDS25 Team8 · OnDemand WDL public hackathon repository, based on observable evidence.",
@@ -1056,3 +1056,1015 @@ const reportProjects = [
     "repository": "https://github.com/stjude-biohackathon/KIDS25-Team22"
   }
 ];
+
+
+const reportCriteria = {
+  "KIDS25 Team1": [
+    [
+      "Project purpose and scope",
+      6
+    ],
+    [
+      "Version control and provenance",
+      4
+    ],
+    [
+      "Open collaboration",
+      0
+    ],
+    [
+      "Reproducible environments",
+      5
+    ],
+    [
+      "Data and workflow provenance",
+      5
+    ],
+    [
+      "Testing and validation",
+      2
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      7
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      6
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      1
+    ]
+  ],
+  "KIDS25 Team10": [
+    [
+      "Project purpose and scope",
+      5
+    ],
+    [
+      "Version control and provenance",
+      2
+    ],
+    [
+      "Open collaboration",
+      1
+    ],
+    [
+      "Reproducible environments",
+      1
+    ],
+    [
+      "Data and workflow provenance",
+      3
+    ],
+    [
+      "Testing and validation",
+      0
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      6
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      6
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      1
+    ]
+  ],
+  "KIDS25 Team11": [
+    [
+      "Project purpose and scope",
+      4
+    ],
+    [
+      "Version control and provenance",
+      2
+    ],
+    [
+      "Open collaboration",
+      0
+    ],
+    [
+      "Reproducible environments",
+      1
+    ],
+    [
+      "Data and workflow provenance",
+      1
+    ],
+    [
+      "Testing and validation",
+      0
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      3
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      6
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      0
+    ]
+  ],
+  "KIDS25 Team12": [
+    [
+      "Project purpose and scope",
+      1
+    ],
+    [
+      "Version control and provenance",
+      6
+    ],
+    [
+      "Open collaboration",
+      2
+    ],
+    [
+      "Reproducible environments",
+      5
+    ],
+    [
+      "Data and workflow provenance",
+      1
+    ],
+    [
+      "Testing and validation",
+      1
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      3
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      4
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      1
+    ]
+  ],
+  "KIDS25 Team13": [
+    [
+      "Project purpose and scope",
+      0
+    ],
+    [
+      "Version control and provenance",
+      1
+    ],
+    [
+      "Open collaboration",
+      1
+    ],
+    [
+      "Reproducible environments",
+      0
+    ],
+    [
+      "Data and workflow provenance",
+      0
+    ],
+    [
+      "Testing and validation",
+      0
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      0
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      6
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      0
+    ]
+  ],
+  "KIDS25 Team14": [
+    [
+      "Project purpose and scope",
+      6
+    ],
+    [
+      "Version control and provenance",
+      5
+    ],
+    [
+      "Open collaboration",
+      3
+    ],
+    [
+      "Reproducible environments",
+      2
+    ],
+    [
+      "Data and workflow provenance",
+      4
+    ],
+    [
+      "Testing and validation",
+      0
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      4
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      5
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      3
+    ]
+  ],
+  "KIDS25 Team15": [
+    [
+      "Project purpose and scope",
+      6
+    ],
+    [
+      "Version control and provenance",
+      5
+    ],
+    [
+      "Open collaboration",
+      1
+    ],
+    [
+      "Reproducible environments",
+      5
+    ],
+    [
+      "Data and workflow provenance",
+      1
+    ],
+    [
+      "Testing and validation",
+      0
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      5
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      5
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      0
+    ]
+  ],
+  "KIDS25 Team16": [
+    [
+      "Project purpose and scope",
+      0
+    ],
+    [
+      "Version control and provenance",
+      1
+    ],
+    [
+      "Open collaboration",
+      0
+    ],
+    [
+      "Reproducible environments",
+      0
+    ],
+    [
+      "Data and workflow provenance",
+      0
+    ],
+    [
+      "Testing and validation",
+      0
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      0
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      8
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      0
+    ]
+  ],
+  "KIDS25 Team17": [
+    [
+      "Project purpose and scope",
+      4
+    ],
+    [
+      "Version control and provenance",
+      4
+    ],
+    [
+      "Open collaboration",
+      2
+    ],
+    [
+      "Reproducible environments",
+      4
+    ],
+    [
+      "Data and workflow provenance",
+      3
+    ],
+    [
+      "Testing and validation",
+      0
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      5
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      5
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      1
+    ]
+  ],
+  "KIDS25 Team18": [
+    [
+      "Project purpose and scope",
+      0
+    ],
+    [
+      "Version control and provenance",
+      4
+    ],
+    [
+      "Open collaboration",
+      0
+    ],
+    [
+      "Reproducible environments",
+      2
+    ],
+    [
+      "Data and workflow provenance",
+      2
+    ],
+    [
+      "Testing and validation",
+      0
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      2
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      6
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      0
+    ]
+  ],
+  "KIDS25 Team19": [
+    [
+      "Project purpose and scope",
+      0
+    ],
+    [
+      "Version control and provenance",
+      2
+    ],
+    [
+      "Open collaboration",
+      0
+    ],
+    [
+      "Reproducible environments",
+      1
+    ],
+    [
+      "Data and workflow provenance",
+      1
+    ],
+    [
+      "Testing and validation",
+      0
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      1
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      6
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      0
+    ]
+  ],
+  "KIDS25 Team2": [
+    [
+      "Project purpose and scope",
+      0
+    ],
+    [
+      "Version control and provenance",
+      1
+    ],
+    [
+      "Open collaboration",
+      0
+    ],
+    [
+      "Reproducible environments",
+      0
+    ],
+    [
+      "Data and workflow provenance",
+      0
+    ],
+    [
+      "Testing and validation",
+      0
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      0
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      8
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      0
+    ]
+  ],
+  "KIDS25 Team21": [
+    [
+      "Project purpose and scope",
+      1
+    ],
+    [
+      "Version control and provenance",
+      4
+    ],
+    [
+      "Open collaboration",
+      1
+    ],
+    [
+      "Reproducible environments",
+      2
+    ],
+    [
+      "Data and workflow provenance",
+      1
+    ],
+    [
+      "Testing and validation",
+      0
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      2
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      3
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      0
+    ]
+  ],
+  "KIDS25 Team22": [
+    [
+      "Project purpose and scope",
+      5
+    ],
+    [
+      "Version control and provenance",
+      4
+    ],
+    [
+      "Open collaboration",
+      2
+    ],
+    [
+      "Reproducible environments",
+      5
+    ],
+    [
+      "Data and workflow provenance",
+      3
+    ],
+    [
+      "Testing and validation",
+      0
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      6
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      6
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      1
+    ]
+  ],
+  "KIDS25 Team3": [
+    [
+      "Project purpose and scope",
+      3
+    ],
+    [
+      "Version control and provenance",
+      6
+    ],
+    [
+      "Open collaboration",
+      2
+    ],
+    [
+      "Reproducible environments",
+      3
+    ],
+    [
+      "Data and workflow provenance",
+      2
+    ],
+    [
+      "Testing and validation",
+      1
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      2
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      5
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      1
+    ]
+  ],
+  "KIDS25 Team4": [
+    [
+      "Project purpose and scope",
+      6
+    ],
+    [
+      "Version control and provenance",
+      5
+    ],
+    [
+      "Open collaboration",
+      2
+    ],
+    [
+      "Reproducible environments",
+      4
+    ],
+    [
+      "Data and workflow provenance",
+      3
+    ],
+    [
+      "Testing and validation",
+      1
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      6
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      5
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      1
+    ]
+  ],
+  "KIDS25 Team5": [
+    [
+      "Project purpose and scope",
+      3
+    ],
+    [
+      "Version control and provenance",
+      4
+    ],
+    [
+      "Open collaboration",
+      3
+    ],
+    [
+      "Reproducible environments",
+      1
+    ],
+    [
+      "Data and workflow provenance",
+      6
+    ],
+    [
+      "Testing and validation",
+      0
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      5
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      4
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      1
+    ]
+  ],
+  "KIDS25 Team6": [
+    [
+      "Project purpose and scope",
+      5
+    ],
+    [
+      "Version control and provenance",
+      6
+    ],
+    [
+      "Open collaboration",
+      1
+    ],
+    [
+      "Reproducible environments",
+      7
+    ],
+    [
+      "Data and workflow provenance",
+      5
+    ],
+    [
+      "Testing and validation",
+      2
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      5
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      4
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      1
+    ]
+  ],
+  "KIDS25 Team7": [
+    [
+      "Project purpose and scope",
+      2
+    ],
+    [
+      "Version control and provenance",
+      6
+    ],
+    [
+      "Open collaboration",
+      3
+    ],
+    [
+      "Reproducible environments",
+      5
+    ],
+    [
+      "Data and workflow provenance",
+      1
+    ],
+    [
+      "Testing and validation",
+      0
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      4
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      5
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      0
+    ]
+  ],
+  "KIDS25 Team8 · OnDemand Nextflow": [
+    [
+      "Project purpose and scope",
+      4
+    ],
+    [
+      "Version control and provenance",
+      7
+    ],
+    [
+      "Open collaboration",
+      1
+    ],
+    [
+      "Reproducible environments",
+      4
+    ],
+    [
+      "Data and workflow provenance",
+      3
+    ],
+    [
+      "Testing and validation",
+      0
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      3
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      5
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      1
+    ]
+  ],
+  "KIDS25 Team8 · OnDemand WDL": [
+    [
+      "Project purpose and scope",
+      6
+    ],
+    [
+      "Version control and provenance",
+      7
+    ],
+    [
+      "Open collaboration",
+      3
+    ],
+    [
+      "Reproducible environments",
+      5
+    ],
+    [
+      "Data and workflow provenance",
+      3
+    ],
+    [
+      "Testing and validation",
+      2
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      6
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      6
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      5
+    ]
+  ],
+  "KIDS25 Team8 · cmdsaw": [
+    [
+      "Project purpose and scope",
+      6
+    ],
+    [
+      "Version control and provenance",
+      5
+    ],
+    [
+      "Open collaboration",
+      2
+    ],
+    [
+      "Reproducible environments",
+      5
+    ],
+    [
+      "Data and workflow provenance",
+      6
+    ],
+    [
+      "Testing and validation",
+      6
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      7
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      6
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      1
+    ]
+  ],
+  "KIDS25 Team8 · flowjomojo": [
+    [
+      "Project purpose and scope",
+      7
+    ],
+    [
+      "Version control and provenance",
+      5
+    ],
+    [
+      "Open collaboration",
+      1
+    ],
+    [
+      "Reproducible environments",
+      5
+    ],
+    [
+      "Data and workflow provenance",
+      4
+    ],
+    [
+      "Testing and validation",
+      2
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      7
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      6
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      0
+    ]
+  ],
+  "KIDS25 Team9": [
+    [
+      "Project purpose and scope",
+      4
+    ],
+    [
+      "Version control and provenance",
+      4
+    ],
+    [
+      "Open collaboration",
+      3
+    ],
+    [
+      "Reproducible environments",
+      2
+    ],
+    [
+      "Data and workflow provenance",
+      2
+    ],
+    [
+      "Testing and validation",
+      0
+    ],
+    [
+      "Automation and continuous integration",
+      0
+    ],
+    [
+      "Documentation and usability",
+      3
+    ],
+    [
+      "Licensing, attribution, and responsible reuse",
+      4
+    ],
+    [
+      "Ethics, accessibility, and sustainability",
+      0
+    ]
+  ]
+};

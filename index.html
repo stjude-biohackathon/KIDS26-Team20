@@ -5,30 +5,39 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MyJude Way — Hackathon Health</title>
 <style>
-:root{--ink:#203b32;--muted:#6d8077;--paper:#f6f6f0;--line:#d9e1da;--forest:#c10f3a;--coral:#ef6b57;--gold:#f2c96f}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 90% 0,#dbeee3,transparent 34rem),var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{min-height:100vh;max-width:1680px;margin:auto;padding:22px 4vw 16px;display:flex;flex-direction:column}nav,footer{display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:11px;font-weight:750;letter-spacing:-.035em}.mark{display:grid;place-items:center;width:35px;height:35px;border-radius:50% 50% 50% 10%;background:var(--coral);color:#fff;font-family:Georgia;font-size:23px}.brand small,footer{font-size:11px;color:var(--muted)}button{font:inherit;cursor:pointer}.pause{border:1px solid #cad6cd;border-radius:22px;background:#fff9;padding:8px 13px;font-size:11px;color:#40574d}.stage{flex:1;display:grid;grid-template-columns:.8fr 1.2fr;gap:5vw;align-items:center}.eyebrow{font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:750;color:#84938b}.eyebrow:before{content:"";display:inline-block;width:17px;border-top:2px solid var(--coral);margin:0 9px 3px 0}.intro h1{font-size:clamp(48px,5vw,82px);line-height:.88;letter-spacing:-.075em;margin:15px 0 0}.intro h1 em{font-family:Georgia,serif;font-weight:600}.lede{max-width:400px;line-height:1.6;color:var(--muted);font-size:14px;margin-top:25px}.portfolio{margin-top:34px;display:flex;align-items:center;gap:16px}.ring{width:88px;height:88px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(closest-side,var(--paper) 73%,transparent 74%),conic-gradient(var(--coral) 64%,#dfe7e0 0)}.ring b{font-size:25px;letter-spacing:-.08em}.ring small{display:block;font-size:9px;color:var(--muted)}.portfolio p{font-size:12px;color:var(--muted);line-height:1.55;margin:0}.portfolio b{display:block;color:var(--ink)}.projects{display:flex;gap:8px;margin-top:30px;flex-wrap:wrap}.project{display:flex;align-items:center;gap:7px;padding:7px 11px 7px 7px;border:1px solid var(--line);border-radius:20px;background:#fff8;color:#597067;font-size:11px}.project.active{background:var(--forest);border-color:var(--forest);color:#fff}.initial{width:23px;height:23px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:#5c4a17;font:bold 13px Georgia}.card{overflow:hidden;border-radius:29px;background:#fff;box-shadow:0 25px 70px #29483d1d}.card-grid{min-height:540px;display:grid;grid-template-columns:.88fr 1.12fr}.identity{background:var(--forest);color:#fff;padding:33px;position:relative;display:flex;flex-direction:column;overflow:hidden}.spark{position:absolute;right:-39px;top:-70px;font-size:230px;color:#3a6255;line-height:1}.status-row{display:flex;justify-content:space-between;position:relative;font-size:10px}.status{padding:7px 10px;border-radius:15px;background:#ffffff1f;font-weight:700}.confidence{color:#c0d3c9}.identity-content{position:relative;margin-top:auto}.identity .cohort{color:#bfd2c8;font-size:10px;letter-spacing:.12em;text-transform:uppercase}.identity h2{font-size:50px;letter-spacing:-.08em;margin:9px 0}.description{font-size:14px;line-height:1.55;color:#c6d6cf;max-width:285px}.tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:22px}.tags span{font-size:10px;padding:5px 8px;border-radius:15px;background:#ffffff17}.score{border-top:1px solid #ffffff25;margin-top:27px;padding-top:16px;position:relative}.score label{font-size:10px;color:#bfd2c8}.score strong{display:block;font-size:68px;line-height:.9;letter-spacing:-.09em;margin-top:7px}.score strong span{font-size:13px;letter-spacing:0;font-weight:400;color:#bfd2c8;margin-left:7px}.evidence{padding:34px;display:flex;flex-direction:column}.signal-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px 27px;margin-top:23px}.signal-head{display:flex;justify-content:space-between;font-size:11px;margin-bottom:8px}.signal-head b{font-family:ui-monospace,monospace}.bar{height:6px;background:#edf1ed;border-radius:8px;overflow:hidden}.bar i{display:block;height:100%;background:var(--coral);border-radius:inherit;transition:width .4s}.signal small{display:block;color:#87938d;font-size:10px;margin-top:6px}.moves{margin-top:30px;padding-top:23px;border-top:1px solid #e6ebe6}.moves-header{display:flex;justify-content:space-between;align-items:end}.moves h3{font-size:20px;letter-spacing:-.05em;margin:5px 0 0}.moves-header span{font-size:10px;color:#87938d}.moves ol{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:12px}.moves li{display:flex;gap:10px;font-size:12px;line-height:1.45;color:#586b62}.number{flex:none;width:23px;height:23px;border-radius:50%;display:grid;place-items:center;background:var(--gold);font-size:10px;font-weight:bold;color:#594918}.controls{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:21px}.reviewed{font-size:10px;color:#88958e}.arrows{display:flex;gap:7px}.arrows button{width:31px;height:31px;border-radius:50%;border:1px solid #d8e1da;background:#fff;color:#385249}.arrows button:last-child{background:var(--coral);border-color:var(--coral);color:#fff}footer{border-top:1px solid var(--line);padding-top:13px;margin-top:15px}@media(max-width:900px){main{padding:18px}.stage{grid-template-columns:1fr;gap:25px;padding:25px 0}.intro h1{font-size:50px}.card-grid{grid-template-columns:1fr}.identity{min-height:350px}.evidence{padding:27px}.card{max-width:700px}.stage{align-items:start}}@media(max-height:750px) and (min-width:901px){.stage{gap:35px}.card-grid{min-height:475px}.identity,.evidence{padding:25px}.identity h2{font-size:42px}.signal-grid{gap:15px}.moves{margin-top:20px;padding-top:15px}.moves ol{margin-top:12px;gap:8px}.description{margin:10px 0}.tags{margin-top:12px}}
+:root{--ink:#203b32;--muted:#6d8077;--paper:#f6f6f0;--line:#d9e1da;--forest:#c10f3a;--coral:#ef6b57;--gold:#f2c96f}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 90% 0,#dbeee3,transparent 34rem),var(--paper);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{min-height:100vh;max-width:1680px;margin:auto;padding:22px 4vw 16px;display:flex;flex-direction:column}nav,footer{display:flex;align-items:center;justify-content:space-between}.brand{display:flex;align-items:center;gap:11px;font-weight:750;letter-spacing:-.035em}.mark{display:grid;place-items:center;width:35px;height:35px;border-radius:50% 50% 50% 10%;background:var(--coral);color:#fff;font-family:Georgia;font-size:23px}.brand small,footer{font-size:11px;color:var(--muted)}button{font:inherit;cursor:pointer}.pause{border:1px solid #cad6cd;border-radius:22px;background:#fff9;padding:8px 13px;font-size:11px;color:#40574d}.nav-actions{display:flex;align-items:center;gap:10px}.repo-link{border:1px solid var(--forest);border-radius:22px;background:var(--forest);padding:8px 14px;font-size:11px;font-weight:700;color:#fff;text-decoration:none}.stage{flex:1;display:grid;grid-template-columns:.8fr 1.2fr;gap:5vw;align-items:center}.eyebrow{font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:750;color:#84938b}.eyebrow:before{content:"";display:inline-block;width:17px;border-top:2px solid var(--coral);margin:0 9px 3px 0}.intro h1{font-size:clamp(48px,5vw,82px);line-height:.88;letter-spacing:-.075em;margin:15px 0 0}.intro h1 em{font-family:Georgia,serif;font-weight:600}.lede{max-width:400px;line-height:1.6;color:var(--muted);font-size:14px;margin-top:25px}.portfolio{margin-top:34px;display:flex;align-items:center;gap:16px}.ring{width:88px;height:88px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(closest-side,var(--paper) 73%,transparent 74%),conic-gradient(var(--coral) 64%,#dfe7e0 0)}.ring b{font-size:25px;letter-spacing:-.08em}.ring small{display:block;font-size:9px;color:var(--muted)}.portfolio p{font-size:12px;color:var(--muted);line-height:1.55;margin:0}.portfolio b{display:block;color:var(--ink)}.projects{display:flex;gap:8px;margin-top:30px;flex-wrap:wrap}.project{display:flex;align-items:center;gap:7px;padding:7px 11px 7px 7px;border:1px solid var(--line);border-radius:20px;background:#fff8;color:#597067;font-size:11px}.project.active{background:var(--forest);border-color:var(--forest);color:#fff}.initial{width:23px;height:23px;border-radius:50%;display:grid;place-items:center;background:var(--gold);color:#5c4a17;font:bold 13px Georgia}.card{overflow:hidden;border-radius:29px;background:#fff;box-shadow:0 25px 70px #29483d1d}.card-grid{min-height:540px;display:grid;grid-template-columns:.88fr 1.12fr}.identity{background:var(--forest);color:#fff;padding:33px;position:relative;display:flex;flex-direction:column;overflow:hidden}.spark{position:absolute;right:-70px;top:-90px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,#f2c96f4d 0%,#f2c96f1a 55%,transparent 75%)}.status-row{display:flex;justify-content:space-between;position:relative;font-size:10px}.status{padding:7px 10px;border-radius:15px;background:#ffffff1f;font-weight:700}.confidence{color:#c0d3c9}.identity-content{position:relative;margin-top:18px}.identity .cohort{color:#bfd2c8;font-size:10px;letter-spacing:.12em;text-transform:uppercase}.identity h2{font-size:50px;letter-spacing:-.08em;margin:9px 0;line-height:1.02;overflow-wrap:break-word}.description{font-size:14px;line-height:1.55;color:#c6d6cf;max-width:285px}.tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:22px}.tags span{font-size:10px;padding:5px 8px;border-radius:15px;background:#ffffff17}.score{border-top:1px solid #ffffff25;margin-top:27px;padding-top:16px;position:relative}.score label{font-size:10px;color:#bfd2c8}.score strong{display:block;font-size:68px;line-height:.9;letter-spacing:-.09em;margin-top:7px}.score strong span{font-size:13px;letter-spacing:0;font-weight:400;color:#bfd2c8;margin-left:7px}.evidence{padding:34px;display:flex;flex-direction:column}.signal-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px 27px;margin-top:23px}.signal-head{display:flex;justify-content:space-between;font-size:11px;margin-bottom:8px}.signal-head b{font-family:ui-monospace,monospace}.bar{height:6px;background:#edf1ed;border-radius:8px;overflow:hidden}.bar i{display:block;height:100%;background:var(--coral);border-radius:inherit;transition:width .4s}.signal small{display:block;color:#87938d;font-size:10px;margin-top:6px}.moves{margin-top:30px;padding-top:23px;border-top:1px solid #e6ebe6}.moves-header{display:flex;justify-content:space-between;align-items:end}.moves h3{font-size:20px;letter-spacing:-.05em;margin:5px 0 0}.moves-header span{font-size:10px;color:#87938d}.moves ol{list-style:none;padding:0;margin:18px 0 0;display:grid;gap:12px}.moves li{display:flex;gap:10px;font-size:12px;line-height:1.45;color:#586b62}.number{flex:none;width:23px;height:23px;border-radius:50%;display:grid;place-items:center;background:var(--gold);font-size:10px;font-weight:bold;color:#594918}.controls{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:21px}.reviewed{font-size:10px;color:#88958e}.arrows{display:flex;gap:7px}.arrows button{width:31px;height:31px;border-radius:50%;border:1px solid #d8e1da;background:#fff;color:#385249}.arrows button:last-child{background:var(--coral);border-color:var(--coral);color:#fff}footer{border-top:1px solid var(--line);padding-top:13px;margin-top:15px}@media(max-width:900px){main{padding:18px}.stage{grid-template-columns:1fr;gap:25px;padding:25px 0}.intro h1{font-size:50px}.card-grid{grid-template-columns:1fr}.identity{min-height:350px}.evidence{padding:27px}.card{max-width:700px}.stage{align-items:start}}@media(max-height:750px) and (min-width:901px){.stage{gap:35px}.card-grid{min-height:475px}.identity,.evidence{padding:25px}.identity h2{font-size:42px}.signal-grid{gap:15px}.moves{margin-top:20px;padding-top:15px}.moves ol{margin-top:12px;gap:8px}.description{margin:10px 0}.tags{margin-top:12px}}
 </style>
 <style>
 .portfolio .ring{transition:background .35s}.projects{max-height:150px;overflow:auto;padding-right:5px;scrollbar-width:thin}.project{flex:none}.project:focus-visible,.pause:focus-visible,.arrows button:focus-visible,.report-link:focus-visible,select:focus-visible{outline:3px solid var(--gold);outline-offset:2px}.project-picker{display:grid;gap:6px;margin-top:18px;max-width:400px}.project-picker label{font-size:10px;font-weight:750;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}.project-picker select{width:100%;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font:inherit;font-size:12px;padding:10px 12px}.report-links{display:flex;flex-wrap:wrap;gap:7px}.report-link{border:1px solid var(--line);border-radius:15px;color:var(--forest);font-size:10px;font-weight:700;padding:6px 9px;text-decoration:none}.report-link.primary{background:var(--forest);border-color:var(--forest);color:#fff}.controls{gap:12px;flex-wrap:wrap}.controls-meta{display:grid;gap:8px}.reviewed{display:block}@media(max-width:900px){.projects{max-height:132px}.controls{align-items:flex-end}}
+.certification-summary{margin:30px 0 12px;padding:24px 26px;border:1px solid var(--line);border-radius:24px;background:#fff;box-shadow:0 12px 35px #29483d0d}.summary-heading{display:flex;justify-content:space-between;align-items:end;gap:20px}.summary-heading h2{font-size:25px;letter-spacing:-.06em;margin:5px 0 0}.summary-heading p{max-width:480px;color:var(--muted);font-size:11px;line-height:1.5;margin:0}.summary-total{display:flex;align-items:baseline;gap:7px;white-space:nowrap;color:var(--forest)}.summary-total strong{font-size:34px;letter-spacing:-.08em}.summary-total span{font-size:11px;color:var(--muted)}.criteria-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:22px}.criterion{min-width:0;padding:13px;border:1px solid #e5ebe5;border-radius:15px;background:#fbfcfa}.criterion-top{display:flex;justify-content:space-between;gap:8px;align-items:start}.criterion-name{font-size:11px;font-weight:700;line-height:1.25}.criterion-score{flex:none;font:700 13px ui-monospace,monospace;color:var(--forest)}.criterion-bar{height:5px;margin-top:12px;background:#e9efea;border-radius:8px;overflow:hidden}.criterion-bar i{display:block;height:100%;background:var(--coral);border-radius:inherit}.criterion small{display:block;margin-top:6px;color:var(--muted);font-size:9px}@media(max-width:1100px){.criteria-grid{grid-template-columns:repeat(5,1fr)}.criterion-name{font-size:10px}}@media(max-width:700px){.summary-heading{display:grid;gap:14px}.criteria-grid{grid-template-columns:repeat(2,1fr)}.certification-summary{padding:20px}.summary-total strong{font-size:29px}}
+.project-criteria{margin-top:26px;padding-top:22px;border-top:1px solid #e6ebe6}.project-criteria-header{display:flex;justify-content:space-between;align-items:end;gap:14px}.project-criteria-header h3{font-size:20px;letter-spacing:-.05em;margin:5px 0 0}.project-criteria-header span{font-size:10px;color:#87938d}.project-criteria-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px 22px;margin-top:18px}.project-criterion{min-width:0}.project-criterion-head{display:flex;justify-content:space-between;gap:8px;font-size:10px;line-height:1.25}.project-criterion-head b{flex:none;font-family:ui-monospace,monospace}.project-criterion-bar{height:5px;margin-top:6px;background:#edf1ed;border-radius:8px;overflow:hidden}.project-criterion-bar i{display:block;height:100%;background:var(--coral);border-radius:inherit}.project-criteria-empty{color:var(--muted);font-size:11px;line-height:1.5;margin:16px 0 0}@media(max-width:700px){.project-criteria-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <main>
-  <nav><div class="brand"><span class="mark">M</span>MyJude Way <small>· KIDS26 Team20</small></div><button class="pause" id="pause">Pause rotation</button></nav>
+  <nav><div class="brand"><span class="mark">M</span>MyJude Way <small>· KIDS26 Team20</small></div><div class="nav-actions"><a class="repo-link" href="https://github.com/stjude-biohackathon/KIDS26-Team20" target="_blank" rel="noopener">GitHub ↗</a><button class="pause" id="pause">Pause rotation</button></div></nav>
   <section class="stage">
     <div class="intro">
       <div class="eyebrow">Project spotlight</div>
       <h1>Better research<br><em>starts here.</em></h1>
       <p class="lede">Turing Way-aligned evidence makes each team's next best move easy to see.</p>
-      <div class="portfolio"><div class="ring" id="averageRing"><span><b id="averageScore"></b><small>average</small></span></div><p><b><span id="projectCount"></span> unique spotlights</b><br><span id="reportCount"></span> full KIDS25 reports using ten Turing Way readiness criteria.</p></div>
       <div class="project-picker"><label for="projectSelect">Jump to a project</label><select id="projectSelect"></select></div>
       <div class="projects" id="projects"></div>
     </div>
     <article class="card">
       <div class="card-grid">
-        <section class="identity"><span class="spark">✦</span><div class="status-row"><span class="status" id="status"></span><span class="confidence" id="confidence"></span></div><div class="identity-content"><div class="cohort" id="cohort"></div><h2 id="name"></h2><p class="description" id="description"></p><div class="tags" id="tags"></div><div class="score"><label>Readiness score</label><strong id="score"></strong></div></div></section>
-        <section class="evidence"><div class="eyebrow">Evidence pulse</div><div class="signal-grid" id="signals"></div><div class="moves"><div class="moves-header"><div><div class="eyebrow">The next best moves</div><h3>How to make this project stronger.</h3></div><span>Priority order</span></div><ol id="improvements"></ol></div><div class="controls"><div class="controls-meta"><span class="reviewed" id="reviewed"></span><div class="report-links" id="reportLinks"></div></div><div class="arrows"><button id="previous" aria-label="Previous project">←</button><button id="next" aria-label="Next project">→</button></div></div></section>
+        <section class="identity"><span class="spark"></span><div class="status-row"><span class="status" id="status"></span><span class="confidence" id="confidence"></span></div><div class="identity-content"><div class="cohort" id="cohort"></div><h2 id="name"></h2><p class="description" id="description"></p><div class="tags" id="tags"></div><div class="score"><label>Readiness score</label><strong id="score"></strong></div></div></section>
+        <section class="evidence"><div class="eyebrow">Evidence pulse</div><div class="signal-grid" id="signals"></div><div class="project-criteria"><div class="project-criteria-header"><div><div class="eyebrow">Certification criteria</div><h3>Ten scores for this project.</h3></div><span>0–10 scale</span></div><div class="project-criteria-grid" id="projectCriteria"></div></div><div class="moves"><div class="moves-header"><div><div class="eyebrow">The next best moves</div><h3>How to make this project stronger.</h3></div><span>Priority order</span></div><ol id="improvements"></ol></div><div class="controls"><div class="controls-meta"><span class="reviewed" id="reviewed"></span><div class="report-links" id="reportLinks"></div></div><div class="arrows"><button id="previous" aria-label="Previous project">←</button><button id="next" aria-label="Next project">→</button></div></div></section>
       </div>
     </article>
+  </section>
+  <section class="certification-summary" aria-labelledby="certification-title">
+    <div class="summary-heading">
+      <div><div class="eyebrow">KIDS25 portfolio view</div><h2 id="certification-title">Ten criteria of certification readiness.</h2></div>
+      <div class="summary-total"><strong id="kids25Total"></strong><span>average readiness / 100</span></div>
+    </div>
+    <p id="certificationDescription"></p>
+    <div class="criteria-grid" id="criteriaGrid"></div>
   </section>
   <footer><span>Transparent readiness snapshots — not a certification, audit, or clinical assessment.</span><span>Auto-advances every 12 seconds</span></footer>
 </main>
@@ -40,10 +49,80 @@ const featuredProjects=[
 {name:"The Turing Way",cohort:"Reference project",score:93,status:"Mature",confidence:"High",description:"The open handbook and community guide that provides the readiness-practice framework used in these reviews.",tags:["Open source","Community","Reproducibility"],signals:[["Project design",100,"Purpose and scope: 10 / 10"],["Reproducibility",80,"Environment evidence: 8 / 10"],["Validation",80,"Testing evidence: 8 / 10"],["Automation",100,"CI evidence: 10 / 10"]],improvements:["Make the local build quickstart more prominent beside pinned requirements.","Publish a concise index of the test suite and its local commands.","Document the chapter lifecycle and an explicit sustainability plan."]},
 {name:"MyGPT",cohort:"Reference project",score:80,status:"Advanced",confidence:"High",description:"A privacy-first RAG platform with documented environments, tests, deployment paths, and automation.",tags:["RAG","Privacy-first","Platform"],signals:[["Project design",90,"Purpose and scope: 9 / 10"],["Reproducibility",90,"Environment evidence: 9 / 10"],["Validation",80,"Testing evidence: 8 / 10"],["Automation",80,"CI evidence: 8 / 10"]],improvements:["Make backend pytest a required CI status check with deterministic fixtures.","Add contribution, conduct, review, security-reporting, and maintainer guidance.","Centralize data and model provenance, retention, accessibility, and stewardship documentation."]}
 ];
+Object.assign(reportCriteria,{
+  "MethylMiner":[
+    ["Project purpose and scope",7],
+    ["Version control and provenance",5],
+    ["Open collaboration",2],
+    ["Reproducible environments",6],
+    ["Data and workflow provenance",5],
+    ["Testing and validation",3],
+    ["Automation and continuous integration",1],
+    ["Documentation and usability",6],
+    ["Licensing, attribution, and responsible reuse",5],
+    ["Ethics, accessibility, and sustainability",4]
+  ],
+  "MyGPT":[
+    ["Project purpose and scope",9],
+    ["Version control and provenance",8],
+    ["Open collaboration",7],
+    ["Reproducible environments",9],
+    ["Data and workflow provenance",8],
+    ["Testing and validation",8],
+    ["Automation and continuous integration",8],
+    ["Documentation and usability",8],
+    ["Licensing, attribution, and responsible reuse",8],
+    ["Ethics, accessibility, and sustainability",7]
+  ],
+  "The Turing Way":[
+    ["Project purpose and scope",10],
+    ["Version control and provenance",9],
+    ["Open collaboration",10],
+    ["Reproducible environments",9],
+    ["Data and workflow provenance",8],
+    ["Testing and validation",8],
+    ["Automation and continuous integration",10],
+    ["Documentation and usability",9],
+    ["Licensing, attribution, and responsible reuse",10],
+    ["Ethics, accessibility, and sustainability",10]
+  ]
+});
 const projects=[...featuredProjects.filter(project=>project.name!=="KIDS25 Team15"),...reportProjects];
 let active=0,paused=false,timer;
 const $=id=>document.getElementById(id);
 const element=(tag,text,className)=>{const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(className)node.className=className;return node};
+const certificationProjects=reportProjects.filter(project=>project.name.startsWith("KIDS25"));
+const criteria=[
+  ["Project purpose and scope",84],
+  ["Version control and provenance",100],
+  ["Open collaboration",34],
+  ["Reproducible environments",74],
+  ["Data and workflow provenance",60],
+  ["Testing and validation",17],
+  ["Automation and continuous integration",0],
+  ["Documentation and usability",92],
+  ["Licensing, attribution, and responsible reuse",130],
+  ["Ethics, accessibility, and sustainability",19]
+];
+const certificationTotal=criteria.reduce((total,criterion)=>total+criterion[1],0);
+const certificationAverage=certificationTotal/certificationProjects.length/10;
+const formatAverage=value=>value.toFixed(1);
+function renderCertificationSummary(){
+  $("kids25Total").textContent=formatAverage(certificationAverage);
+  $("certificationDescription").textContent=`Aggregated across ${certificationProjects.length} KIDS25 project reports. Each criterion is scored from 0–10; the portfolio average is shown below.`;
+  $("criteriaGrid").replaceChildren(...criteria.map(([name,total])=>{
+    const average=total/certificationProjects.length;
+    const card=element("article",undefined,"criterion");
+    const top=element("div",undefined,"criterion-top");
+    top.append(element("span",name,"criterion-name"),element("span",formatAverage(average)+"/10","criterion-score"));
+    const bar=element("div",undefined,"criterion-bar");
+    const fill=element("i");
+    fill.style.width=(average*10)+"%";
+    bar.append(fill);
+    card.append(top,bar,element("small",`${total} / ${certificationProjects.length*10} points across reports`));
+    return card;
+  }));
+}
 function render(){
   const p=projects[active];
   $("status").textContent=p.status;
@@ -65,6 +144,20 @@ function render(){
     wrapper.append(head,bar,element("small",signal[2]));
     return wrapper;
   }));
+  const projectCriteria=reportCriteria[p.name];
+  $("projectCriteria").replaceChildren(...(projectCriteria
+    ? projectCriteria.map(([name,score])=>{
+      const wrapper=element("div",undefined,"project-criterion");
+      const head=element("div",undefined,"project-criterion-head");
+      head.append(element("span",name),element("b",score+"/10"));
+      const bar=element("div",undefined,"project-criterion-bar");
+      const fill=element("i");
+      fill.style.width=(score*10)+"%";
+      bar.append(fill);
+      wrapper.append(head,bar);
+      return wrapper;
+    })
+    : [element("p","Detailed ten-criterion scoring is available for the KIDS25 reports. This reference project uses the evidence pulse above.","project-criteria-empty")]));
   $("improvements").replaceChildren(...p.improvements.map((improvement,index)=>{
     const item=element("li");
     item.append(element("span",String(index+1),"number"),element("span",improvement));
@@ -89,11 +182,7 @@ function render(){
 function choose(i){active=i;render()}function move(n){active=(active+n+projects.length)%projects.length;render()}function start(){clearInterval(timer);timer=setInterval(()=>{if(!paused)move(1)},12000)}$("pause").onclick=()=>{paused=!paused;$("pause").textContent=paused?"Resume rotation":"Pause rotation"};$("previous").onclick=()=>move(-1);$("next").onclick=()=>move(1);render();start();
 $("projectSelect").replaceChildren(...projects.map((project,index)=>{const option=element("option",project.name);option.value=String(index);return option}));
 $("projectSelect").addEventListener("change",event=>choose(Number(event.target.value)));
-const average=Math.round(projects.reduce((total,project)=>total+project.score,0)/projects.length);
-$("averageScore").textContent=String(average);
-$("averageRing").style.background=`radial-gradient(closest-side,var(--paper) 73%,transparent 74%),conic-gradient(var(--coral) ${average}%,#dfe7e0 0)`;
-$("projectCount").textContent=String(projects.length);
-$("reportCount").textContent=String(reportProjects.length);
+renderCertificationSummary();
 </script>
 </body>
 </html>
