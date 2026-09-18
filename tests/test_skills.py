@@ -128,3 +128,18 @@ def test_turing_way_pathfinder_uses_curated_paths_and_targeted_rag() -> None:
     assert "its own observable completion checkpoint" in text
     assert "Finish the response immediately after the last action's completion checkpoint." in text
     assert "Do not add a shared final checkpoint" in text
+
+
+def test_turing_way_certified_requires_full_score_and_pdf_artifacts() -> None:
+    skill = ROOT / ".agents/skills/turing-way-certified/SKILL.md"
+    text = skill.read_text(encoding="utf-8")
+
+    assert "100-point readiness review" in text
+    assert "ten-criterion rubric" in text
+    assert "integer score out of 100" in text
+    assert "TURING_WAY_CERTIFICATION.md" in text
+    assert "TURING_WAY_CERTIFICATION.pdf" in text
+    assert "Preserve every Markdown table in the PDF as a readable PDF table" in text
+    assert "contains the report's score table" in text
+    assert "do not claim that a valid PDF was generated" in text
+    assert "substitute the three-area, six-point" in text
