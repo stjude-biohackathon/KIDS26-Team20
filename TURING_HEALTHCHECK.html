@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Turing Way Repository Healthcheck Dashboard</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --panel: #111c33;
+    --panel-border: #22314f;
+    --text: #e5e9f0;
+    --muted: #9aa7bd;
+    --strong: #22c55e;
+    --developing: #eab308;
+    --initial: #f97316;
+    --missing: #ef4444;
+    --accent: #60a5fa;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  header {
+    padding: 28px 32px 12px;
+    border-bottom: 1px solid var(--panel-border);
+  }
+  header h1 { margin: 0 0 6px; font-size: 1.6rem; }
+  header p { margin: 0; color: var(--muted); font-size: 0.95rem; }
+  .disclaimer {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: #1e293b;
+    border: 1px solid var(--panel-border);
+    border-left: 4px solid var(--accent);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  main { padding: 24px 32px 60px; max-width: 1200px; margin: 0 auto; }
+
+  .top-grid {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    gap: 24px;
+    margin-bottom: 28px;
+  }
+  @media (max-width: 900px) {
+    .top-grid { grid-template-columns: 1fr; }
+  }
+
+  .score-card {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+  .score-card .score { font-size: 3rem; font-weight: 700; color: var(--accent); }
+  .score-card .max { color: var(--muted); font-size: 1.1rem; }
+  .score-card .confidence {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    background: #1e293b;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .chart-panel {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    padding: 16px 20px;
+  }
+  .bar-row { display: flex; align-items: center; gap: 12px; margin: 10px 0; }
+  .bar-label { width: 250px; flex-shrink: 0; font-size: 0.85rem; color: var(--text); }
+  .bar-track { flex: 1; background: #1e293b; border-radius: 6px; height: 16px; overflow: hidden; position: relative; }
+  .bar-fill { height: 100%; border-radius: 6px; transition: width 0.4s ease; }
+  .bar-value { width: 70px; text-align: right; font-size: 0.8rem; color: var(--muted); flex-shrink: 0; }
+
+  .legend { display: flex; gap: 16px; margin-top: 14px; flex-wrap: wrap; font-size: 0.78rem; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+  .filter-bar {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px;
+  }
+  .filter-btn {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    color: var(--text);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.82rem;
+    cursor: pointer;
+  }
+  .filter-btn.active { border-color: var(--accent); color: var(--accent); }
+
+  .category-card {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    margin-bottom: 14px;
+    overflow: hidden;
+  }
+  .category-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px; cursor: pointer; gap: 12px;
+  }
+  .category-header:hover { background: #16233d; }
+  .category-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .category-title h3 { margin: 0; font-size: 1rem; }
+  .badge {
+    font-size: 0.72rem; padding: 3px 9px; border-radius: 999px; font-weight: 600;
+    color: #0b1120;
+  }
+  .badge.Strong { background: var(--strong); }
+  .badge.Developing { background: var(--developing); }
+  .badge.Initial { background: var(--initial); }
+  .badge.Missing { background: var(--missing); }
+  .category-score { font-weight: 700; color: var(--accent); font-size: 0.95rem; }
+  .chevron { transition: transform 0.2s ease; color: var(--muted); }
+  .category-card.open .chevron { transform: rotate(90deg); }
+  .category-body {
+    display: none;
+    padding: 0 18px 18px;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+  .category-card.open .category-body { display: block; }
+  .category-body .rationale { color: var(--text); margin-bottom: 10px; font-style: italic; }
+  .category-body ul { padding-left: 18px; margin: 8px 0; }
+  .category-body li { margin-bottom: 6px; }
+  .category-body code { background: #1e293b; padding: 1px 5px; border-radius: 4px; color: #93c5fd; font-size: 0.85em; }
+
+  section.block {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 22px;
+  }
+  section.block h2 { margin-top: 0; font-size: 1.15rem; }
+
+  .improvement-list { list-style: none; padding: 0; margin: 0; counter-reset: imp; }
+  .improvement-list li {
+    counter-increment: imp;
+    padding: 10px 0 10px 40px;
+    position: relative;
+    border-bottom: 1px solid var(--panel-border);
+    font-size: 0.92rem;
+  }
+  .improvement-list li:last-child { border-bottom: none; }
+  .improvement-list li::before {
+    content: counter(imp);
+    position: absolute; left: 0; top: 10px;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent); color: #0b1120;
+    font-weight: 700; font-size: 0.85rem;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--panel-border); vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; }
+  td a { color: var(--accent); text-decoration: none; word-break: break-word; }
+  td a:hover { text-decoration: underline; }
+
+  .checks-table td.ok { color: var(--strong); }
+  .checks-table td.fail { color: var(--missing); }
+
+  footer { text-align: center; color: var(--muted); font-size: 0.8rem; padding: 20px; }
+
+  .search-box {
+    width: 100%; padding: 10px 14px; border-radius: 8px;
+    border: 1px solid var(--panel-border); background: #0b1424; color: var(--text);
+    margin-bottom: 14px; font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Turing Way Repository Healthcheck</h1>
+  <p>stjude-biohackathon/KIDS26-Team20 &middot; commit <code>97c9048</code> (main) &middot; Reviewed 2026-09-18</p>
+  <div class="disclaimer">
+    This is a transparent rubric-based healthcheck, not an official Turing Way certification, security audit,
+    legal review, clinical assessment, or institutional-policy evaluation. Generated from
+    <code>TURING_HEALTHCHECK.md</code>.
+  </div>
+</header>
+
+<main>
+
+  <div class="top-grid">
+    <div class="score-card">
+      <div class="score">38<span class="max">/65</span></div>
+      <div class="max">58% overall</div>
+      <div class="confidence">Medium confidence</div>
+      <p style="color:var(--muted); font-size:0.82rem; margin-top:14px;">
+        The documented offline check could not run (<code>uv</code> unavailable). No tracked project CI
+        workflow runs formatting, linting, tests, or skill validation.
+      </p>
+    </div>
+    <div class="chart-panel" id="chart"></div>
+  </div>
+
+  <div class="filter-bar" id="filterBar"></div>
+  <input class="search-box" id="searchBox" type="text" placeholder="Search categories or evidence (e.g. 'CI', 'license', 'testing')..." />
+
+  <section class="block">
+    <h2>Rubric categories</h2>
+    <div id="categoryList"></div>
+  </section>
+
+  <section class="block">
+    <h2>Prioritized improvements</h2>
+    <ol class="improvement-list" id="improvementList"></ol>
+  </section>
+
+  <section class="block">
+    <h2>Checks run</h2>
+    <table class="checks-table">
+      <thead><tr><th>Command</th><th>Exit</th><th>Result</th></tr></thead>
+      <tbody id="checksBody"></tbody>
+    </table>
+  </section>
+
+  <section class="block">
+    <h2>The Turing Way sources</h2>
+    <table>
+      <thead><tr><th>Categories</th><th>Title</th><th>Path</th><th>Link</th></tr></thead>
+      <tbody id="sourcesBody"></tbody>
+    </table>
+  </section>
+
+  <section class="block">
+    <h2>Limitations</h2>
+    <ul id="limitationsList"></ul>
+  </section>
+
+</main>
+
+<footer>Generated dashboard view of TURING_HEALTHCHECK.md — public Turing Way guidance, not St. Jude policy.</footer>
+
+<script>
+const DATA = {
+  categories: [
+    {
+      area: "Version control and collaborative review",
+      score: 7.5, max: 10.0, level: "Strong",
+       rationale: "Changes are captured as meaningful, well-messaged commits, and pull or merge requests are the normal integration path.",
+      evidence: [
+         "The public commit history at the reviewed revision includes recent merge pull requests and scoped commits from multiple contributors, including the merges for pull requests 9, 10, 11, and 12 and commits headed `fix:` and `feat:`.",
+         "`project-management/CHECKLIST.md:42-67` specifies focused branches and commits, pull requests, peer review before merge, and recording checks.",
+         "The public review cannot establish that every non-trivial change has a recorded peer review or that branch protection requires it; therefore Exemplary was not awarded."
+      ]
+    },
+    {
+      area: "Reproducible computational environments",
+      score: 7.5, max: 10.0, level: "Strong",
+      rationale: "The environment is captured in a portable, versioned artifact ... that a new contributor can use with minimal manual steps.",
+      evidence: [
+         "`pyproject.toml:1-36` declares Python compatibility, application and development dependencies, pytest settings, and Ruff settings; `uv.lock` records the resolved Python environment.",
+         "`docs/SETUP.md:49-68` documents `uv sync --extra dev --frozen` and explicitly states that the lockfile keeps contributors on the same reviewed dependency set.",
+         "`Dockerfile:1-29` uses Python 3.12 and `uv sync --frozen`; `compose.yaml:1-89` captures the multi-service local stack, health checks, loopback ports, and persistent volumes.",
+        "A clean-machine build was not run, so the fully demonstrated reproduction required for Exemplary was not established."
+      ]
+    },
+    {
+      area: "Testing",
+      score: 4.0, max: 5.0, level: "Strong",
+      rationale: "Tests cover both normal and failure or edge-case behavior, run repeatably, and act as a fail-fast safety net that catches regressions when code changes.",
+      evidence: [
+         "`pyproject.toml:27-36` defines a repeatable pytest configuration with `tests` as the test path and automatic asyncio mode.",
+         "`tests/test_mcp.py` exercises the in-memory MCP contract and invalid review inputs; `tests/test_supply_chain.py` covers lockfile integrity, exact build pins, no floating package execution, and commit-pinned corpus sources.",
+         "`tests/test_container.py:20-84` verifies loopback binding, pinned upstream MyGPT revision, provider-setting boundaries, and bootstrap provenance.",
+         "`CONTRIBUTING.md:20-27` requires default tests to be credential-free and offline, with live tests behind an explicit integration marker.",
+         "The suite was not run because the `uv` command is unavailable. Automatic test execution was also not established, so Exemplary was not awarded."
+      ]
+    },
+    {
+      area: "Continuous integration",
+      score: 0.0, max: 5.0, level: "Missing",
+       rationale: "No project CI is configured to run automated checks on commits or pull requests.",
+      evidence: [
+         "The complete public tree at the reviewed revision contains no tracked `.github/workflows` directory or workflow YAML file. The GitHub Actions API lists only GitHub-managed Copilot workflows, not a repository workflow that runs `scripts/project.py check`.",
+         "`scripts/project.py:31-38` provides a sound local aggregate check, running Ruff format checking, Ruff linting, pytest, and skill validation. It is not connected to a tracked CI trigger."
+      ]
+    },
+    {
+      area: "Code quality: style and static analysis",
+      score: 5.0, max: 10.0, level: "Developing",
+      rationale: "A linter or static analysis tool ... is configured, but it is not run consistently and several flagged issues remain unresolved.",
+      evidence: [
+         "`pyproject.toml:38-45` configures Ruff formatting, a 100-character line limit, and E/F/I/UP/B/SIM lint rules.",
+         "`scripts/project.py:31-38` runs `ruff format --check .` and `ruff check .` before tests.",
+         "The sources use annotations, module docstrings, and focused helpers; `src/learning_assistant/server.py:37-153` validates exact score areas and evidence before emitting a report.",
+         "No tracked CI or pre-commit configuration runs the configured checks. The local command exited `127` because `uv` is not installed, so a clean result could not be observed."
+      ]
+    },
+    {
+      area: "Code documentation",
+      score: 7.5, max: 10.0, level: "Strong",
+      rationale: "A README, inline comments, and docstrings or API documentation together let both users and future developers understand what the code does, why, and how to use or extend it.",
+      evidence: [
+         "`README.md` explains purpose, data boundary, stack, local setup, Docker bootstrap, MCP tools, roadmap, and contributor checks.",
+         "`START_HERE.md`, `docs/SETUP.md`, and `docs/DOCKER.md` provide progressive onboarding for contributors and deployment users.",
+         "Source and script modules include concise module and function docstrings; non-obvious package-install handling is also commented.",
+         "The project profile and team-management documentation retain placeholders, and there is no generated API reference. Exemplary was not awarded."
+      ]
+    },
+    {
+      area: "Licensing and open code",
+       score: 5.0, max: 10.0, level: "Developing",
+       rationale: "A project-root license is present, but the reuse terms for bundled third-party components are not distinguished.",
+      evidence: [
+         "`LICENSE.md:1-21` is the standard MIT license, and the README identifies the project license.",
+         "`CONTRIBUTING.md:66-75` requires source ownership, access, and license review before enabling institutional content.",
+         "The repository includes `MyGPT_backend/`, committed model/data artifacts, and a separately pinned upstream MyGPT build source; a third-party notices file or per-component license inventory was not identified.",
+         "A reader cannot determine which root license applies to each bundled component, so Strong was not awarded."
+      ]
+    },
+    {
+      area: "Community and stakeholder management",
+      score: 1.0, max: 5.0, level: "Initial",
+       rationale: "The project identifies contributors and communication paths, but does not satisfy the next discrete level's required project Code of Conduct and complete role documentation.",
+      evidence: [
+         "`README.md:11-20` and `README.md:29-40` identify a broad set of intended user groups and project contributors.",
+         "`CONTRIBUTING.md:1-76` and `project-management/CHECKLIST.md:42-67` provide a newcomer path; `project-management/team.md:3-26` provides a Slack channel.",
+         "Recent activity spans several named contributors and merged pull requests, demonstrating an active project rather than a stale repository.",
+         "The complete recursive public tree contains no `CODE_OF_CONDUCT` file, and `project-management/team.md` still has unfilled lead and role fields. Under the rubric's discrete levels, Developing cannot be awarded."
+      ]
+    }
+  ],
+  improvements: [
+     "Add a tracked GitHub Actions workflow that runs `uv sync --extra dev --frozen` and `uv run python scripts/project.py check` on pushes and pull requests. This closes the CI gap and enforces the existing formatting, linting, tests, and skill validation.",
+     "Add a root `CODE_OF_CONDUCT.md`, assign a reporting contact and ownership, and link it from the README and contribution guide.",
+     "Complete `project-management/team.md` and `project-management/project-plan.md` with the accountable lead, roles, decision process, milestones, risks, and handoff/archive plan.",
+     "Add a third-party notices and provenance document for `MyGPT_backend/` and bundled model/data artifacts, clearly separating their reuse terms from the root MIT license.",
+     "Run the documented offline check from a supported clean environment and retain its result in pull-request or release evidence."
+  ],
+  checks: [
+     { cmd: "git log --format='%h %ad %an <%ae>%n%s' --date=short -30", exit: 0, result: "The local checkout showed recent activity, merge commits, scoped commit messages, and multiple contributors." },
+    { cmd: "uv run python scripts/project.py check", exit: 127, result: "Not run: zsh: command not found: uv. No dependencies were installed or changed during this review." }
+  ],
+  sources: [
+    { cats: "Project Design checklist; community", title: "Project Design Overview", path: "book/website/project-design/pd-overview.md", url: "https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/project-design/pd-overview.md" },
+    { cats: "Version control", title: "Version Control", path: "book/website/reproducible-research/vcs.md", url: "https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/vcs.md" },
+    { cats: "Version control", title: "Code Review", path: "book/website/reproducible-research/reviewing.md", url: "https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/reviewing.md" },
+    { cats: "Environments", title: "Reproducible Environments", path: "book/website/reproducible-research/renv.md", url: "https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/renv.md" },
+    { cats: "Testing", title: "Testing", path: "book/website/reproducible-research/testing.md", url: "https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/testing.md" },
+    { cats: "CI", title: "Continuous Integration", path: "book/website/reproducible-research/ci.md", url: "https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/ci.md" },
+    { cats: "Code quality", title: "Code Quality", path: "book/website/reproducible-research/code-quality.md", url: "https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/code-quality.md" },
+    { cats: "Documentation", title: "Code Documentation; Code Reuse", path: "book/website/reproducible-research/code-documentation.md; book/website/reproducible-research/code-reuse.md", url: "https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/code-documentation.md" },
+    { cats: "Licensing", title: "Licensing; Open Research", path: "book/website/reproducible-research/licensing.md; book/website/reproducible-research/open.md", url: "https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/reproducible-research/licensing.md" },
+    { cats: "Community", title: "Stakeholders: Personas and Pathways; Code of Conduct; Contributing to The Turing Way; Guide for Collaboration", path: "book/website/project-design/stakeholders/persona.md; book/website/community-handbook/coc.md; book/website/community-handbook/contributing.md; book/website/collaboration/collaboration.md", url: "https://github.com/the-turing-way/the-turing-way/blob/7b7c9a5904a4c9382933b74409ca0705439baa27/book/website/collaboration/collaboration.md" }
+  ],
+  limitations: [
+    "This assessment is a transparent rubric-based healthcheck, not an official Turing Way certification, security audit, legal review, clinical assessment, or institutional-policy evaluation.",
+     "The assessment targets the public main revision `97c9048db38f855450c5a2e42c8c0186eba1e9b9`. Local checkout differences were not used to lower the public repository score.",
+     "`uv` is unavailable in the review environment. Formatting, linting, tests, and skill validation were not executed, and this report does not claim they pass.",
+     "Generated, vendored, model, and data material was not reviewed for code correctness or test coverage. Its licensing boundary was included because it affects reuse."
+  ]
+};
+
+const levelColor = { Strong: "var(--strong)", Developing: "var(--developing)", Initial: "var(--initial)", Missing: "var(--missing)" };
+
+function renderChart() {
+  const chart = document.getElementById("chart");
+  chart.innerHTML = "<h3 style='margin-top:0;font-size:0.95rem;color:var(--muted);'>Score by category</h3>";
+  DATA.categories.forEach(c => {
+    const pct = (c.score / c.max) * 100;
+    const row = document.createElement("div");
+    row.className = "bar-row";
+    row.innerHTML = `
+      <div class="bar-label">${c.area}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%; background:${levelColor[c.level]}"></div></div>
+      <div class="bar-value">${c.score}/${c.max}</div>
+    `;
+    chart.appendChild(row);
+  });
+  const legend = document.createElement("div");
+  legend.className = "legend";
+  Object.entries(levelColor).forEach(([lvl, col]) => {
+    legend.innerHTML += `<span><span class="dot" style="background:${col}"></span>${lvl}</span>`;
+  });
+  chart.appendChild(legend);
+}
+
+function renderFilters() {
+  const bar = document.getElementById("filterBar");
+  const levels = ["All", "Strong", "Developing", "Initial", "Missing"];
+  levels.forEach(lvl => {
+    const btn = document.createElement("button");
+    btn.className = "filter-btn" + (lvl === "All" ? " active" : "");
+    btn.textContent = lvl;
+    btn.dataset.level = lvl;
+    btn.onclick = () => {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderCategories(lvl, document.getElementById("searchBox").value);
+    };
+    bar.appendChild(btn);
+  });
+}
+
+function renderCategories(levelFilter = "All", search = "") {
+  const list = document.getElementById("categoryList");
+  list.innerHTML = "";
+  const q = search.trim().toLowerCase();
+  DATA.categories.forEach(c => {
+    if (levelFilter !== "All" && c.level !== levelFilter) return;
+    const haystack = (c.area + " " + c.rationale + " " + c.evidence.join(" ")).toLowerCase();
+    if (q && !haystack.includes(q)) return;
+
+    const card = document.createElement("div");
+    card.className = "category-card";
+    card.innerHTML = `
+      <div class="category-header">
+        <div class="category-title">
+          <span class="badge ${c.level}">${c.level}</span>
+          <h3>${c.area}</h3>
+        </div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span class="category-score">${c.score} / ${c.max}</span>
+          <span class="chevron">&#9656;</span>
+        </div>
+      </div>
+      <div class="category-body">
+        <div class="rationale">${c.rationale}</div>
+        <ul>${c.evidence.map(e => `<li>${mdInlineCode(e)}</li>`).join("")}</ul>
+      </div>
+    `;
+    card.querySelector(".category-header").onclick = () => card.classList.toggle("open");
+    list.appendChild(card);
+  });
+  if (!list.children.length) {
+    list.innerHTML = `<p style="color:var(--muted);">No categories match this filter/search.</p>`;
+  }
+}
+
+function mdInlineCode(text) {
+  return text.replace(/`([^`]+)`/g, "<code>$1</code>");
+}
+
+function renderImprovements() {
+  const ul = document.getElementById("improvementList");
+  DATA.improvements.forEach(i => {
+    const li = document.createElement("li");
+    li.innerHTML = mdInlineCode(i);
+    ul.appendChild(li);
+  });
+}
+
+function renderChecks() {
+  const body = document.getElementById("checksBody");
+  DATA.checks.forEach(chk => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td><code>${chk.cmd.replace(/</g,"&lt;")}</code></td>
+      <td class="${chk.exit === 0 ? 'ok' : 'fail'}">${chk.exit}</td>
+      <td>${chk.result}</td>
+    `;
+    body.appendChild(tr);
+  });
+}
+
+function renderSources() {
+  const body = document.getElementById("sourcesBody");
+  DATA.sources.forEach(s => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${s.cats}</td>
+      <td>${s.title}</td>
+      <td><code>${s.path}</code></td>
+      <td><a href="${s.url}" target="_blank" rel="noopener">Open source</a></td>
+    `;
+    body.appendChild(tr);
+  });
+}
+
+function renderLimitations() {
+  const ul = document.getElementById("limitationsList");
+  DATA.limitations.forEach(l => {
+    const li = document.createElement("li");
+    li.textContent = l;
+    ul.appendChild(li);
+  });
+}
+
+document.getElementById("searchBox").addEventListener("input", (e) => {
+  const activeLevel = document.querySelector(".filter-btn.active").dataset.level;
+  renderCategories(activeLevel, e.target.value);
+});
+
+renderChart();
+renderFilters();
+renderCategories();
+renderImprovements();
+renderChecks();
+renderSources();
+renderLimitations();
+</script>
+
+</body>
+</html>
