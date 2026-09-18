@@ -21,7 +21,7 @@ Onboarding:
 
 ## Vision and Mission
 
-- **Vision:** Create an helpful AI assistant that tailors response to a practical question about reproducible or data-intensive research at their levels (novice vs advances vs specific profile), with citations they can check, drawn only from sources the institution has approved.
+- **Vision:** Create a helpful AI assistant that tailors its responses to practical questions about reproducible or data-intensive research for users at different levels (novice, advanced, or a specific profile), with citations they can check, drawn only from sources the institution has approved.
 - **Mission:** Build and evaluate the retrieval layer, the MCP tool contract, and the skills that sit on top of them, and demonstrate the whole path end to end with honest limitations. Plan a future development scope to make these assistants to help with domain-specific questions.
 
 ## Contributors and Team Members
