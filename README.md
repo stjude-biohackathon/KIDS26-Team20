@@ -207,4 +207,4 @@ under [`corpus/`](corpus/).
 
 ## Licence
 
-MIT Liencense. See [LICENSE.md](LICENSE.md).
+MIT License. See [LICENSE.md](LICENSE.md)
